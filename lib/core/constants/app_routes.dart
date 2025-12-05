@@ -2,6 +2,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.d
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +13,7 @@ class AppRoutes {
   static const String verified = "/verified";
   static const String phoneAuth = "/phone-auth";
   static const String verifyOtp = "/verify-otp";
+  static const String carDetail = "/car-detail";
 }
 
 
@@ -43,5 +45,9 @@ final List<RouteBase> kappRoutes = [
       // final phoneNumber = "+201066670772";
       return VerifyOtpScreen(phoneNumber: phoneNumber);
     },
+  ),
+  GoRoute(
+    path: AppRoutes.carDetail,
+    builder: (context, state) => CarDetailScreen(),
   ),
 ];

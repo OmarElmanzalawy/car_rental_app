@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 0.1.0
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.9.0
 
 dependencies:
   flutter:
@@ -17,6 +17,7 @@ dependencies:
   supabase_flutter: ^2.10.3
   app_links: ^6.4.1
   intl_phone_number_input: ^0.7.5
+  cupertino_native: ^0.1.1
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +31,4 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/images/test_cars/
+    - assets/logos/

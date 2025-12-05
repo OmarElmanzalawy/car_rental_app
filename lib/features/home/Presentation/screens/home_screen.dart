@@ -3,6 +3,7 @@ import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/home/Presentation/bloc/cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
+import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends StatelessWidget {
                 return IndexedStack(
                   index: state.index,
                   children: [
-                    const _HomeContent(),
+                    _HomeContent(),
                     const Center(child: Text("Cars Screen")),
                     const Center(child: Text("Maps Screen")),
                     const Center(child: Text("User Screen")),
@@ -44,7 +45,15 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeContent extends StatelessWidget {
-  const _HomeContent();
+   _HomeContent();
+
+  List<String> testCarsImagePaths = [
+    "assets/images/test_cars/bmw.jpg",
+    "assets/images/test_cars/corolla_14.jpeg",
+    "assets/images/test_cars/audi_a8.avif",
+    // "assets/images/test_cars/mercedes.jpg",
+    // "assets/images/test_cars/tesla.jpg",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +163,7 @@ class _HomeContent extends StatelessWidget {
                         height: 28,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => const GlassCapsule(),
+                          itemBuilder: (context, index) => Capsule(text: "Mercedes",),
                           separatorBuilder:
                               (context, index) => const SizedBox(width: 8),
                           itemCount: 10,
@@ -182,11 +191,18 @@ class _HomeContent extends StatelessWidget {
                             fontSize: 22,
                             fontWeight: FontWeight.w500,
                           ),),
-                          Container(
-                            height: 200,
-                            decoration: BoxDecoration(
-                              // color: Colors.red
-                            ),
+                          const SizedBox(height: 20,),
+                          Flexible(
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: testCarsImagePaths.length,
+                              itemBuilder:(context, index) {
+                                return LargeCarCard(
+                                  carImagePath: testCarsImagePaths[index],
+                                );
+                              },
+                              separatorBuilder: (context, index) => const SizedBox(width: 25),
+                              ),
                           )
                         ],
                       ),

@@ -96,6 +96,18 @@ class AuthService {
     }
   }
 
+  static Future<AuthResult> signOut()async{
+    try{
+      final supabase = Supabase.instance.client;
+      await supabase.auth.signOut();
+      return AuthResult(success: true, message: "Logged out successfully.");
+    } catch (e) {
+      print("error while logging out");
+      print(e.toString());
+      return AuthResult(success: false, message: "Something went wrong. Please try again.");
+    }
+  }
+
   static Future<AuthResult> signUpWithEmail({required String email, required String password}) async{
     final supabase = Supabase.instance.client;
     try {

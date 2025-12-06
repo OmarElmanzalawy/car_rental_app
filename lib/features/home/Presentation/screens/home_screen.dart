@@ -2,9 +2,10 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/home/Presentation/bloc/cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_card.dart';
-import 'package:car_rental_app/core/widgets/custom_bottom_navigation_bar.dart';
+import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
+import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +37,8 @@ class HomeScreen extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              child: CustomBottomNavigationBar(),
+              // child: CustomBottomNavigationBar(),
+              child: PlatformNavBar(),
             ),
           ],
         ),
@@ -110,22 +112,34 @@ class _HomeContent extends StatelessWidget {
                           ),
                         ),
                         const Spacer(),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: 35,
-                            height: 35,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.background,
+                        // InkWell(
+                        //   onTap: () {},
+                        //   child: Container(
+                        //     width: 35,
+                        //     height: 35,
+                        //     decoration: const BoxDecoration(
+                        //       shape: BoxShape.circle,
+                        //       color: AppColors.background,
+                        //     ),
+                        //     child: const Icon(
+                        //       Icons.notifications_outlined,
+                        //       color: Colors.black,
+                        //       size: 20,
+                        //     ),
+                        //   ),
+                        // ),
+                        CNButton.icon(
+                          style: CNButtonStyle.prominentGlass,
+                          size: 36,
+                          onPressed: () {
+
+                          },
+                          icon: CNSymbol(
+                            "bell.fill",
+                            size: 17,
+                            color: Colors.white
                             ),
-                            child: const Icon(
-                              Icons.notifications_outlined,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                          ),
-                        ),
+                          )
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -160,18 +174,32 @@ class _HomeContent extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.background,
+                        // InkWell(
+                        //   onTap: () {},
+                        //   child: Container(
+                        //     width: 50,
+                        //     height: 50,
+                        //     decoration: const BoxDecoration(
+                        //       shape: BoxShape.circle,
+                        //       color: AppColors.background,
+                        //     ),
+                        //     child: const Icon(Icons.tune, color: Colors.black),
+                        //   ),
+                        // ),
+                        CNButton.icon(
+                          style: CNButtonStyle.gray,
+                          // tint: Colors.red,
+                          size: 50,
+                          onPressed: () {
+
+                          },
+                          icon: CNSymbol(
+                            "slider.horizontal.3",
+                            // mode: CNSymbolRenderingMode,
+                            size: 18,
+                            color: Colors.white
                             ),
-                            child: const Icon(Icons.tune, color: Colors.black),
-                          ),
-                        ),
+                          )
                       ],
                     ),
                     const SizedBox(height: 20),

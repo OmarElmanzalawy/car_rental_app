@@ -10,7 +10,6 @@ class AppColors {
   static const Color textSecondary = Color(0xFF6C6C80);
   static const Color border = Color(0xFFECECF0);
   static const Color silverAccent = Color(0xFFECECF0);
-
   
 }
 

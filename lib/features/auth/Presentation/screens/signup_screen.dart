@@ -74,12 +74,23 @@ class SignupScreen extends StatelessWidget {
                     email: _emailController.text.trim(),
                     password: _passwordController.text.trim(),
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(res.message),
-                      backgroundColor: res.success ? Colors.green : Colors.red,
-                    ),
-                  );
+                  if(res.success){
+                    showPlatformDialog(
+                      context: context,
+                      builder: (context) => PlatformAlertDialog(
+                        title: Text("Success"),
+                        content: Text(res.message),
+                        actions: [
+                          PlatformDialogAction(
+                            child: Text("Check your inbox to verify your email"),
+                            onPressed: () {
+                              context.pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
                ),
              ),

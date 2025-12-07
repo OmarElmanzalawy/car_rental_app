@@ -1,6 +1,6 @@
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
-import 'package:car_rental_app/features/home/Presentation/bloc/cubit/navigation_bar_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

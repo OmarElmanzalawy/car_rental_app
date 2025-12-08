@@ -161,7 +161,8 @@ class CarDetailScreen extends StatelessWidget {
                               builder: (context, state) {
                                 final currentMonth = state.months[state.monthIndex];
                                 final days = AppUtils.first30DaysOfMonth(currentMonth);
-                                final selectedDate = state.selectedDate;
+                                final start = state.startDate;
+                                final end = state.endDate;
                                 return Column(
                                   children: [
                                     Row(
@@ -206,6 +207,8 @@ class CarDetailScreen extends StatelessWidget {
                                           4,
                                           math.min(7, estimated),
                                         );
+                                        final now = AppUtils.currentDate();
+                                        final todayDate = DateTime(now.year, now.month, now.day);
                                         return GridView.builder(
                                           shrinkWrap: true,
                                           physics:
@@ -220,14 +223,15 @@ class CarDetailScreen extends StatelessWidget {
                                               ),
                                           itemBuilder: (context, index) {
                                             final d = days[index];
-                                            final isSelected =
-                                                selectedDate != null &&
-                                                selectedDate.year == d.year &&
-                                                selectedDate.month ==
-                                                    d.month &&
-                                                selectedDate.day == d.day;
+                                            bool isSelected = false;
+                                            if (start != null && end != null) {
+                                              isSelected = !d.isBefore(start) && !d.isAfter(end);
+                                            } else if (start != null) {
+                                              isSelected = d.year == start.year && d.month == start.month && d.day == start.day;
+                                            }
+                                            final isDisabled = d.isBefore(todayDate);
                                             return GestureDetector(
-                                              onTap: () {
+                                              onTap: isDisabled ? null : () {
                                                 context.read<DatePickerBloc>().add(SelectDateEvent(selectedDate: d));
                                               },
                                               child: _DateChip(
@@ -236,6 +240,7 @@ class CarDetailScreen extends StatelessWidget {
                                                 ),
                                                 date: d.day,
                                                 selected: isSelected,
+                                                disabled: isDisabled,
                                               ),
                                             );
                                           },
@@ -413,20 +418,29 @@ class _DateChip extends StatelessWidget {
     required this.dayLabel,
     required this.date,
     this.selected = false,
+    this.disabled = false,
   });
   final String dayLabel;
   final int date;
   final bool selected;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
+    final Color bg = disabled
+        ? AppColors.border
+        : (selected ? AppColors.primary : AppColors.silverAccent.withOpacity(0.5));
+    final Color dayColor = disabled
+        ? Colors.grey.shade400
+        : (selected ? Colors.white : Colors.grey.shade700);
+    final Color dateColor = disabled
+        ? Colors.grey.shade400
+        : (selected ? Colors.white : Colors.black);
     return Container(
       width: 64,
       height: 64,
       decoration: BoxDecoration(
-        color: selected
-            ? AppColors.primary
-            : AppColors.silverAccent.withOpacity(0.5),
+        color: bg,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -436,7 +450,7 @@ class _DateChip extends StatelessWidget {
             dayLabel,
             style: TextStyle(
               fontSize: 12,
-              color: selected ? Colors.white : Colors.grey.shade700,
+              color: dayColor,
             ),
           ),
           const SizedBox(height: 4),
@@ -445,7 +459,7 @@ class _DateChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: selected ? Colors.white : Colors.black,
+              color: dateColor,
             ),
           ),
         ],

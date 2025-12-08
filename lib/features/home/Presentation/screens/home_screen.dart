@@ -28,8 +28,8 @@ class HomeScreen extends StatelessWidget {
                   index: state.index,
                   children: [
                     _HomeContent(),
-                    const Center(child: Text("Cars Screen")),
-                    const Center(child: Text("Maps Screen")),
+                    const Center(child: Text("Bookings Screen")),
+                    const Center(child: Text("Chat Screen")),
                     ProfileScreen()
                   ],
                 );

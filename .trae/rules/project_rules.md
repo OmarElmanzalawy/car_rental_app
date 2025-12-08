@@ -137,7 +137,7 @@ lib/
 - Generous spacing  
 - Rounded corners (10–14px)  
 - Soft shadows  
-- Use `flutter_platform_widgets` for native UX feel  
+- Use 'adaptive_platform_ui' for native UX feel  
 
 ### Buttons
 - Primary: `#3466FF`  

@@ -121,7 +121,7 @@ class CompactCarCard extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            Text("Rent now",style: TextStyle(color: Colors.white),),
+                            Text("Rent now",style: TextStyle(color: Colors.white,fontSize: 14),),
                             const SizedBox(width: 5,),
                             Icon(Icons.arrow_forward,color: Colors.white,size: 16,),
                           ],

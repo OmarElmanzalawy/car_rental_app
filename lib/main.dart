@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/app_theme.dart';
@@ -75,30 +76,38 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformProvider(
-          builder: (context) => PlatformTheme(
-            themeMode: ThemeMode.light,
-            materialLightTheme: AppTheme.lightTheme.copyWith(
-              scaffoldBackgroundColor: AppColors.background,
-              textButtonTheme: TextButtonThemeData(
-                style: TextButton.styleFrom(
-                  overlayColor: Colors.transparent,  
-                  splashFactory: NoSplash.splashFactory,
-                ),
-              ),
-            ),
-            builder: (context) => PlatformApp.router(
-              routerConfig: _router,
-              debugShowCheckedModeBanner: false,
-              localizationsDelegates: const [
-                // Add material localizations
-                DefaultMaterialLocalizations.delegate,
-                DefaultCupertinoLocalizations.delegate,
-                DefaultWidgetsLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('en', 'US')],
-            ),
-          )
+    return AdaptiveApp.router(
+      routerConfig: _router,
+      themeMode: ThemeMode.light,
+      cupertinoLightTheme: CupertinoThemeData(
+        scaffoldBackgroundColor: AppColors.background,
+        primaryColor: AppColors.primary,
+      ),
+      materialLightTheme: AppTheme.lightTheme.copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            iconColor: Colors.white,
+            surfaceTintColor: AppColors.primary,
+          ),
+        ),
+        scaffoldBackgroundColor: AppColors.background,
+        primaryColor: AppColors.primary,
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            overlayColor: Colors.transparent,  
+            splashFactory: NoSplash.splashFactory,
+          ),
+        ),
+      ),
+      localizationsDelegates: const [
+        // Add material localizations
+        DefaultMaterialLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('en', 'US')],
     );
   }
 }

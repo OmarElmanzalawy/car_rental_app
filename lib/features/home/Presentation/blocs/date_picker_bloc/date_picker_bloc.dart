@@ -11,12 +11,12 @@ class DatePickerBloc extends Bloc<DatePickerEvent, DatePickerState> {
     on<NextMonthEvent>((event, emit) {
       
       if(state.monthIndex < state.months.length - 1){
-        emit(state.copyWith(monthIndex: state.monthIndex + 1));
+        emit(state.copyWith(monthIndex: state.monthIndex + 1, slideDirection: 1));
       }
     });
     on<PreviousMonthEvent>((event, emit) {
       if(state.monthIndex > 0){
-        emit(state.copyWith(monthIndex: state.monthIndex - 1));
+        emit(state.copyWith(monthIndex: state.monthIndex - 1, slideDirection: -1));
       }
     });
 

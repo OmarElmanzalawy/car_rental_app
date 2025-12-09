@@ -1,11 +1,13 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_card.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
+import 'package:car_rental_app/features/home/data/test_models.dart';
 import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
@@ -50,22 +52,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeContent extends StatelessWidget {
-   _HomeContent();
-
-  List<String> testCarsImagePaths = [
-    "assets/images/test_cars/bmw.jpg",
-    "assets/images/test_cars/corolla_14.jpeg",
-    "assets/images/test_cars/audi_a8.avif",
-    // "assets/images/test_cars/mercedes.jpg",
-    // "assets/images/test_cars/tesla.jpg",
-  ];
-
-  List<String> testCompactCarsImagePaths = [
-    "assets/images/test_cars/tesla.png",
-    "assets/images/test_cars/mustang.avif",
-    "assets/images/test_cars/sclass.png",
-    "assets/images/test_cars/supra.png",
-  ];
+   const _HomeContent();
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +63,7 @@ class _HomeContent extends StatelessWidget {
     final double compactListHeight = 250;
     final double clipMinHeight = size.height * 1.02;
     final double stackHeight = clipTop + clipMinHeight;
+    final availableCars = AppUtils.availableCarBrands([...TestModels.testCompactCars,...TestModels.testLargeCars]);
     return SingleChildScrollView(
       child: SizedBox(
         height: stackHeight,
@@ -175,10 +163,12 @@ class _HomeContent extends StatelessWidget {
                       height: 28,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Capsule(text: "Mercedes",),
+                        itemBuilder: (context, index) {
+                          return Capsule(text: availableCars[index],includeCarLogo: true,);
+                        },
                         separatorBuilder:
                             (context, index) => const SizedBox(width: 8),
-                        itemCount: 10,
+                        itemCount: availableCars.length,
                       ),
                     ),
                   ],
@@ -228,12 +218,10 @@ class _HomeContent extends StatelessWidget {
                           height: compactListHeight,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            itemCount: testCompactCarsImagePaths.length,
+                            itemCount: TestModels.testCompactCars.length,
                             itemBuilder: (context, index) {
                               return CompactCarCard(
-                                carImagePath: testCompactCarsImagePaths[index],
-                                carName: "BMW M4 Coupe",
-                                carPrice: "340",
+                                model: TestModels.testCompactCars[index],
                               );
                             },
                             separatorBuilder: (context, index) => const SizedBox(width: 15),
@@ -267,10 +255,10 @@ class _HomeContent extends StatelessWidget {
                           height: largeListHeight,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            itemCount: testCarsImagePaths.length,
+                            itemCount: TestModels.testLargeCars.length,
                             itemBuilder: (context, index) {
                               return LargeCarCard(
-                                carImagePath: testCarsImagePaths[index],
+                                model: TestModels.testLargeCars[index],
                               );
                             },
                             separatorBuilder: (context, index) => const SizedBox(width: 25),

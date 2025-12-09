@@ -1,24 +1,29 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
-import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math' as math;
+import 'package:car_rental_app/features/home/Presentation/widgets/date_picker_grid.dart';
 
 class CarDetailScreen extends StatelessWidget {
-  const CarDetailScreen({super.key});
+  const CarDetailScreen({super.key,required this.model});
+
+  final CarModel model;
 
   @override
   Widget build(BuildContext context) {
+    final bool isImageTransparent = model.images!.first.endsWith(".png");
     final Size size = MediaQuery.sizeOf(context);
     return AdaptiveScaffold(
+      enableBlur: false,
       appBar: AdaptiveAppBar(
-        title: "\tCar details\t",
-        // leading: Icon(Icons.phone),
+        title: isImageTransparent ? "\tCar details\t" : null,
         useNativeToolbar: true,
         actions: [
           AdaptiveAppBarAction(
@@ -38,6 +43,7 @@ class CarDetailScreen extends StatelessWidget {
       body: BlocProvider(
         create: (context) => DatePickerBloc()..add(SelectDateEvent(selectedDate: AppUtils.currentDate())),
         child: SafeArea(
+          top: isImageTransparent ? true : false,
           bottom: false,
           child: Stack(
             children: [
@@ -45,14 +51,15 @@ class CarDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 50),
+                    SizedBox(height:  isImageTransparent ? 40 : 0),
                     SizedBox(
-                      height: size.height * 0.27,
+                      // height: size.height * 0.27,
                       child: Center(
                         child: Image.asset(
-                          "assets/images/test_cars/sclass.png",
-                          fit: BoxFit.cover,
-                          width: size.width * 0.8,
+                          "assets/images/test_cars/${model.images!.first}",
+                          fit: isImageTransparent ? BoxFit.cover : BoxFit.cover,
+                          width: isImageTransparent ? size.width * 0.9 : size.width,
+                          height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
                         ),
                       ),
                     ),
@@ -90,24 +97,24 @@ class CarDetailScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  "Audi Q7",
-                                  style: TextStyle(
+                                Text(
+                                  model.title,
+                                  style: const TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.black,
                                   ),
                                 ),
                                 Row(
-                                  children: const [
-                                    Icon(
+                                  children: [
+                                    const Icon(
                                       Icons.star,
                                       color: Colors.amber,
                                       size: 20,
                                     ),
                                     SizedBox(width: 4),
                                     Text(
-                                      "4.8",
+                                      "${model.rating}",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -118,15 +125,6 @@ class CarDetailScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            Text(
-                              "The Audi Q7 is a luxury 7-seater SUV that combines powerful performance, it a premium choice for both long drives and family trips........ Read More",
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.5,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
                             const SizedBox(height: 20),
                             const Text(
                               "Overview",
@@ -136,122 +134,74 @@ class CarDetailScreen extends StatelessWidget {
                                 color: Colors.black,
                               ),
                             ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "${model.description}........ Read More",
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.5,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Features",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black,
+                              ),
+                            ),
                             const SizedBox(height: 12),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              spacing: 8,
+                              children: [
                                 _DetailTile(
                                   icon: Icons.speed,
                                   label: "Max Speed",
-                                  value: "438 Km/h",
+                                  value: "${model.maxSpeed} Km/h",
                                 ),
                                 _DetailTile(
                                   icon: Icons.airline_seat_recline_normal,
                                   label: "Ability",
-                                  value: "4 Seats",
+                                  value: "${model.seats} Seats",
                                 ),
                                 _DetailTile(
-                                  icon: Icons.door_front_door,
-                                  label: "Door",
-                                  value: "2 Door",
+                                  icon: Icons.car_repair,
+                                  label: "Gearbox",
+                                  value: "${model.gearbox.name}",
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20),
-                            BlocBuilder<DatePickerBloc, DatePickerState>(
-                              builder: (context, state) {
-                                final currentMonth = state.months[state.monthIndex];
-                                final days = AppUtils.first30DaysOfMonth(currentMonth);
-                                final start = state.startDate;
-                                final end = state.endDate;
-                                return Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          AppUtils.monthYearLabel(currentMonth),
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            _RoundIconButton(
-                                              icon: Icons.chevron_left,
-                                              onPressed: (){
-                                                context
-                                                    .read<DatePickerBloc>()
-                                                    .add(PreviousMonthEvent());
-                                              },
-                                            ),
-                                            const SizedBox(width: 10),
-                                            _RoundIconButton(
-                                              icon: Icons.chevron_right,
-                                              onPressed:() {
-                                                context.read<DatePickerBloc>().add(NextMonthEvent());
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                    LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        final width = constraints.maxWidth;
-                                        final estimated = (width / 72).floor();
-                                        final columns = math.max(
-                                          4,
-                                          math.min(7, estimated),
-                                        );
-                                        final now = AppUtils.currentDate();
-                                        final todayDate = DateTime(now.year, now.month, now.day);
-                                        return GridView.builder(
-                                          shrinkWrap: true,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          itemCount: days.length,
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: columns,
-                                                mainAxisSpacing: 8,
-                                                crossAxisSpacing: 8,
-                                                childAspectRatio: 1,
-                                              ),
-                                          itemBuilder: (context, index) {
-                                            final d = days[index];
-                                            bool isSelected = false;
-                                            if (start != null && end != null) {
-                                              isSelected = !d.isBefore(start) && !d.isAfter(end);
-                                            } else if (start != null) {
-                                              isSelected = d.year == start.year && d.month == start.month && d.day == start.day;
-                                            }
-                                            final isDisabled = d.isBefore(todayDate);
-                                            return GestureDetector(
-                                              onTap: isDisabled ? null : () {
-                                                context.read<DatePickerBloc>().add(SelectDateEvent(selectedDate: d));
-                                              },
-                                              child: _DateChip(
-                                                dayLabel: AppUtils.shortWeekday(
-                                                  d,
-                                                ),
-                                                date: d.day,
-                                                selected: isSelected,
-                                                disabled: isDisabled,
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
+                            const SizedBox(height: 8,),
+                             Row(
+                              spacing: 8,
+                              children: [
+                                _DetailTile(
+                                  icon: switch (model.fuelType) {
+                                    FuelType.electric => Icons.electric_bolt_outlined,
+                                    FuelType.petrol => Icons.local_gas_station_outlined,
+                                    FuelType.naturalGas => Icons.propane_tank_outlined,
+                                    FuelType.hybrid => Icons.tonality_outlined
+                                  },
+                                  label: "Fuel Type",
+                                  value: "${AppUtils.capitalize(model.fuelType.name)}",
+
+                                ),
+                                // _DetailTile(
+                                //   icon: Icons.airline_seat_recline_normal,
+                                //   label: "Ability",
+                                //   value: "${model.seats} Seats",
+                                // ),
+                                // _DetailTile(
+                                //   icon: Icons.car_repair,
+                                //   label: "Gearbox",
+                                //   value: "${model.gearbox.name}",
+                                // ),
+                              ],
                             ),
+                            const SizedBox(height: 20),
+                            const DatePickerGrid(),
 
                             const SizedBox(height: 100),
                           ],
@@ -336,24 +286,30 @@ class _DetailTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
+    this.isDense = false,
   });
   final IconData icon;
   final String label;
   final String value;
+  final bool isDense;
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(right: 8.0),
-        child: Container(
-          height: 100,
-          decoration: BoxDecoration(
-            color: AppColors.silverAccent.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Column(
+    final size = MediaQuery.sizeOf(context);
+    return Flexible(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                // height: 100,
+                // width: 120,
+                height: size.height * 0.11,
+                width: size.width * 0.28,
+                decoration: BoxDecoration(
+                  color: AppColors.silverAccent.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

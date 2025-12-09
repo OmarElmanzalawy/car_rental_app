@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+
 class AppUtils {
 
   static bool isiOS26OrAbove() {
@@ -65,4 +67,15 @@ class AppUtils {
     const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     return names[date.weekday - 1];
   }
+
+  static List<String> availableCarBrands(List<CarModel> cars){
+    //fetch brands from testcars
+    final brands = cars.map((e) => e.brand).toSet().toList();
+    return brands;
+  }
+
+  static String capitalize(String s) {
+  if (s.isEmpty) return s;
+  return s[0].toUpperCase() + s.substring(1);
+}
 }

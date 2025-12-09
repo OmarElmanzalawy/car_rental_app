@@ -5,6 +5,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_scr
 import 'package:car_rental_app/features/home/Presentation/screens/book_rental_car_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRoutes {
@@ -54,6 +55,9 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.carDetail,
-    builder: (context, state) => CarDetailScreen(),
+    builder: (context, state) {
+      final model = state.extra as CarModel;
+      return CarDetailScreen(model: model);
+    },
   ),
 ];

@@ -1,5 +1,7 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/action_button.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/custom_textfield.dart';
@@ -7,11 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   SignupScreen({super.key});
 
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
+  final TextEditingController _nameController = TextEditingController();
+
+  UserType _userType = UserType.customer;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +57,27 @@ class SignupScreen extends StatelessWidget {
                 letterSpacing: 0,
                 
               ),),
-              const SizedBox(height: 35,),
+              const SizedBox(height: 15,),
+              AdaptiveSegmentedControl(
+                labels: ["Customer","Seller"],
+                selectedIndex: _userType == UserType.customer ? 0 : 1,
+                onValueChanged: (value){
+                  _userType = value == 0 ? UserType.customer : UserType.seller;
+                  setState(() {
+                    
+                  });
+                }
+              ),
+              const SizedBox(height: 20,),
+               CustomTextfield(
+                controller: _nameController,
+                cursorColor: AppColors.textPrimary,
+                hintText: "Enter your name",
+                keyboardType: TextInputType.name,
+                prefixIcon: Icons.person_outline,
+                obscureText: false,
+              ),
+              const SizedBox(height: 15,),
               CustomTextfield(
                 controller: _emailController,
                 cursorColor: AppColors.textPrimary,
@@ -71,8 +103,10 @@ class SignupScreen extends StatelessWidget {
                 onPressed: () async {
                   print("click");
                   final res = await AuthService.signUpWithEmail(
+                    name: _nameController.text,
                     email: _emailController.text.trim(),
                     password: _passwordController.text.trim(),
+                    userType: _userType
                   );
                   if(res.success){
                     showPlatformDialog(

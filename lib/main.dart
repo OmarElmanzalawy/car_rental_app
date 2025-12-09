@@ -30,6 +30,7 @@ final _router = GoRouter(
 
     // 1) Deep link handling takes priority
     if (uri.startsWith('com.meshwari.app://auth-callback')) {
+      //Add user to database
       // Route only once and allow /verified through
       if (loc != AppRoutes.verified) return AppRoutes.verified;
       return null;

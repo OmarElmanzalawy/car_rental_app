@@ -28,9 +28,9 @@ class DeepLinkHandler {
     final isAuthCallback = uri.host == 'auth-callback' || uri.path == '/auth-callback';
 
     if (type == "signup" || type == "email_verification" || (isAuthCallback && code != null)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email verified. You can now log in.")),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("Email verified. You can now log in.")),
+      // );
       context.go(AppRoutes.verified);
     }
   }

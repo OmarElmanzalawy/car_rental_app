@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
@@ -311,7 +312,7 @@ class CarDetailScreen extends StatelessWidget {
                           minSize: Size(140, 40),
                           size: AdaptiveButtonSize.large,
                           onPressed: () {
-                            print("book now clicked");
+                            context.push(AppRoutes.bookRentalCar);
                           },
                           label: "Book Now",
                           borderRadius: BorderRadius.circular(25),

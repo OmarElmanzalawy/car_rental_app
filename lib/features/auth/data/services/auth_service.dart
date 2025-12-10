@@ -1,6 +1,9 @@
+import 'package:car_rental_app/core/constants/enums.dart';
+import 'package:car_rental_app/features/auth/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class AuthResult {
   final bool success;
@@ -10,7 +13,7 @@ class AuthResult {
 
 class AuthService {
 
-  static Future<AuthResult> signInWithPhone(String phoneNumber)async{
+  static Future<AuthResult> signInWithPhone(String phoneNumber)  async{
     try{
       print("AuthFunction phone: $phoneNumber");
       final supabase = Supabase.instance.client;
@@ -18,6 +21,7 @@ class AuthService {
         phone: phoneNumber,
         channel: OtpChannel.sms
       );
+
       return AuthResult(success: true, message: "Verification code sent. Check your inbox.");
     } on AuthException catch (e) {
       print(e.code);
@@ -108,7 +112,7 @@ class AuthService {
     }
   }
 
-  static Future<AuthResult> signUpWithEmail({required String email, required String password}) async{
+  static Future<AuthResult> signUpWithEmail({required String email, required String password,required String name,required UserType userType}) async{
     final supabase = Supabase.instance.client;
     try {
       await supabase.auth.signUp(
@@ -116,6 +120,18 @@ class AuthService {
         password: password,
         emailRedirectTo: "com.meshwari.app://auth-callback",
       );
+      //Insert user into users table
+      final userModel = UserModel(
+        id: Uuid().v4(),
+        name: name,
+        email: email,
+        password: password,
+        role: userType,
+        createdAt: DateTime.now()
+      );
+
+      await supabase.from("users").insert(userModel.toMap());
+
       return AuthResult(success: true, message: "Verification email sent. Check your inbox.");
     } on AuthException catch (e) {
       print(e.code);
@@ -123,6 +139,7 @@ class AuthService {
       return AuthResult(success: false, message: e.message);
     } catch (e) {
       print("error signing up");
+      print(e.toString());
       return AuthResult(success: false, message: "Something went wrong. Please try again.");
     }
   }

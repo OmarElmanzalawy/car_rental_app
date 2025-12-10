@@ -1,17 +1,32 @@
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LargeCarCard extends StatelessWidget {
-  const LargeCarCard({super.key, required this.carImagePath});
+  const LargeCarCard({super.key,required this.model,required this.isLoading});
 
-  final String carImagePath;  
+  // final String carImagePath;  
+  final CarModel model;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push(AppRoutes.carDetail),
+    return isLoading ? 
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: 200,
+          width: 260,
+          color: Colors.white,
+        ),
+      )
+     : GestureDetector(
+      onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,7 +44,7 @@ class LargeCarCard extends StatelessWidget {
                   ),
                 ],
                 image: DecorationImage(
-                  image: AssetImage(carImagePath),
+                  image: AssetImage("assets/images/test_cars/${model.images!.first}"),
                   fit: BoxFit.cover
                   ),
               ),
@@ -40,25 +55,25 @@ class LargeCarCard extends StatelessWidget {
             spacing: 10,
             runSpacing: 5,
             children: [
-              Capsule(text: "4 Seater",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
-              Capsule(text: "Automatic",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
-              Capsule(text: "Petrol",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
+              Capsule(text: "${model.seats} Seater",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
+              Capsule(text: model.gearbox == GearBox.automatic ? "Automatic" : "Manual",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
+              Capsule(text: model.fuelType == FuelType.petrol ? "Petrol" : model.fuelType == FuelType.electric ? "Electric" : model.fuelType == FuelType.hybrid ? "Hybrid" : "Natural Gas",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
             ],
           ),
           const SizedBox(height: 8,),
-          Text("BMW F80 340I XDRIVE 2018", style: TextStyle(
+          Text(model.title, style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),),
           const SizedBox(height: 5,),
           Row(
             children: [
-              Text("4.5", style: TextStyle(
+              Text("${model.rating}", style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),),
               Icon(Icons.star, color: Colors.amber,),
-              Text("(4.5k)", style: TextStyle(
+              Text("(${model.totalRatingCount})", style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
               ),),
@@ -67,7 +82,7 @@ class LargeCarCard extends StatelessWidget {
           const SizedBox(height: 5,),
           RichText(
             text: TextSpan(
-              text: "\$500/",
+              text: "\$${model.pricePerDay.toStringAsFixed(0)}/",
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,

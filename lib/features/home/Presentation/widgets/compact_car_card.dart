@@ -1,24 +1,24 @@
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CompactCarCard extends StatelessWidget {
   const CompactCarCard({
     super.key,
-    required this.carImagePath,
-    required this.carName,
-    required this.carPrice,
+    required this.model,
+    required this.isLoading,
   });
 
-  final String carImagePath;
-  final String carName;
-  final String carPrice;
+  final CarModel model;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.carDetail),
+      onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Container(
@@ -34,7 +34,17 @@ class CompactCarCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
+          child: isLoading ? 
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                height: 200,
+                width: 190,
+                color: Colors.white,
+              ),
+            )
+          : Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // const SizedBox(height: 12),
@@ -47,7 +57,7 @@ class CompactCarCard extends StatelessWidget {
                         top: 15,
                         left: 15,
                         child: Image.asset(
-                          "assets/logos/mercedes-logo.png",
+                          "assets/logos/${model.brand.toLowerCase()}.png",
                           width: 40,
                           height: 40,
                         ),
@@ -57,7 +67,7 @@ class CompactCarCard extends StatelessWidget {
                           right: 15,
                           child: RichText(
                             text: TextSpan(
-                              text: "\$$carPrice",
+                              text: "\$${model.pricePerDay.toStringAsFixed(0)}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -84,7 +94,7 @@ class CompactCarCard extends StatelessWidget {
                           child: Image.asset(
                             width: 200,
                             height: 200,
-                            carImagePath,
+                            "assets/images/test_cars/${model.images!.first}",
                             fit: BoxFit.cover,
                           ),
                         ),

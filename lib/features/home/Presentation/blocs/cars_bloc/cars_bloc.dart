@@ -14,8 +14,16 @@ class CarsBloc extends Bloc<CarsEvent, CarsState> {
       try {
       final dtos = await remoteClient.fetchAll();
       final cars = dtos.map((e) => e.toEntity()).toList();
+
+      //separate topdeals from normal cars (top deals are cars that end with .png  (for testing only))
+      final topDeals = cars.where((element) => element.images!.first.endsWith(".png")).toList();
+      final normalCars = cars.where((element) => !element.images!.first.endsWith(".png")).toList();
+
+      print("topdeals car length: ${topDeals.length}");
+      print("normal cars length: ${normalCars.length}");
+
       print("Loaded cars: $cars");
-      emit(state.copyWith(status: CarsStatus.loaded, availableNearYouCars: cars));
+      emit(state.copyWith(status: CarsStatus.loaded, availableNearYouCars: normalCars, topDealCars: topDeals,allCars: cars));
     } catch (e) {
       emit(state.copyWith(status: CarsStatus.error, message: e.toString()));
     }

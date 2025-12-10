@@ -61,7 +61,7 @@ class LargeCarCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8,),
-          Text("BMW F80 340I XDRIVE 2018", style: TextStyle(
+          Text(model.title, style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),),

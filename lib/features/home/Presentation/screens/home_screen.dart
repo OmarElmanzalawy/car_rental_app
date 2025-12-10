@@ -10,10 +10,10 @@ import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.
 import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
 import 'package:car_rental_app/features/home/data/test_models.dart';
 import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.dart';
-import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -69,10 +69,6 @@ class _HomeContent extends StatelessWidget {
     final double compactListHeight = 250;
     final double clipMinHeight = size.height * 1.02;
     final double stackHeight = clipTop + clipMinHeight;
-    final availableCars = AppUtils.availableCarBrands([
-      ...TestModels.testCompactCars,
-      ...TestModels.testLargeCars,
-    ]);
     return SingleChildScrollView(
       child: SizedBox(
         height: stackHeight,
@@ -171,19 +167,33 @@ class _HomeContent extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 20),
+                        state.status == CarsStatus.loading ? 
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              height: 28,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.white.withOpacity(0.4)
+                              ),
+                            ),
+                          )
+                        :
                         SizedBox(
                           height: 28,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return Capsule(
-                                text: availableCars[index],
+                                text: state.allCars[index].brand,
                                 includeCarLogo: true,
                               );
                             },
                             separatorBuilder: (context, index) =>
                                 const SizedBox(width: 8),
-                            itemCount: availableCars.length,
+                            itemCount: state.allCars.length,
                           ),
                         ),
                       ],
@@ -233,11 +243,11 @@ class _HomeContent extends StatelessWidget {
                               height: compactListHeight,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: TestModels.testCompactCars.length,
+                                itemCount: state.topDealCars.length,
                                 itemBuilder: (context, index) {
                                   return CompactCarCard(
                                     isLoading: state.status == CarsStatus.loading,
-                                    model: TestModels.testCompactCars[index],
+                                    model: state.topDealCars[index],
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
@@ -272,11 +282,11 @@ class _HomeContent extends StatelessWidget {
                               height: largeListHeight,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: TestModels.testLargeCars.length,
+                                itemCount: state.availableNearYouCars.length,
                                 itemBuilder: (context, index) {
                                   return LargeCarCard(
                                     isLoading: state.status == CarsStatus.loading,
-                                    model: TestModels.testLargeCars[index],
+                                    model: state.availableNearYouCars[index],
                                   );
                                 },
                                 separatorBuilder: (context, index) =>

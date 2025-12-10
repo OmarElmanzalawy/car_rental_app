@@ -27,6 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -59,6 +60,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),),
               const SizedBox(height: 15,),
               AdaptiveSegmentedControl(
+                height: size.height * 0.05,
                 labels: ["Customer","Seller"],
                 selectedIndex: _userType == UserType.customer ? 0 : 1,
                 onValueChanged: (value){

@@ -22,7 +22,9 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => NavigationBarCubit(),
       child: AdaptiveScaffold(
-        body: Stack(
+        body: Material(
+          color: Colors.transparent,
+          child: Stack(
           children: [
             BlocBuilder<NavigationBarCubit, NavigationBarState>(
               builder: (context, state) {
@@ -41,10 +43,10 @@ class HomeScreen extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              // child: CustomBottomNavigationBar(),
               child: PlatformNavBar(),
             ),
           ],
+          ),
         ),
       ),
     );

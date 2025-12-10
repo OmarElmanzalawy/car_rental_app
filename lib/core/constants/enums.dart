@@ -5,7 +5,7 @@ enum UserType {
 }
 
 enum GearBox{
-  automaic,
+  automatic,
   manual,
 }
 
@@ -13,7 +13,21 @@ enum FuelType{
   petrol,
   electric,
   hybrid,
-  naturalGas
+  naturalGas;
+
+  String get value {
+    switch (this) {
+      case petrol:
+        return 'petrol';
+      case electric:
+        return 'electric';
+      case hybrid:
+        return 'hybrid';
+      case naturalGas:
+        return 'natural gas';
+    }
+  }
+
 }
 
 enum RentalStatus{

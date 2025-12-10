@@ -8,7 +8,6 @@ import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:math' as math;
 import 'package:car_rental_app/features/home/Presentation/widgets/date_picker_grid.dart';
 
 class CarDetailScreen extends StatelessWidget {
@@ -34,7 +33,7 @@ class CarDetailScreen extends StatelessWidget {
           ),
           AdaptiveAppBarAction(
             iosSymbol: "info.circle.fill",
-            icon: Icons.access_alarm,
+            icon: Icons.info_outline,
             spacerAfter: ToolbarSpacerType.none,
             onPressed: () {},
           ),
@@ -63,21 +62,21 @@ class CarDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: const BoxDecoration(
-                            color: Colors.blueAccent,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
+                    // const SizedBox(height: 8),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Container(
+                    //       width: 6,
+                    //       height: 6,
+                    //       decoration: const BoxDecoration(
+                    //         color: Colors.blueAccent,
+                    //         shape: BoxShape.circle,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // const SizedBox(height: 12),
                     Container(
                       width: size.width,
                       decoration: BoxDecoration(
@@ -175,6 +174,7 @@ class CarDetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8,),
                              Row(
+                              mainAxisSize: MainAxisSize.min,
                               spacing: 8,
                               children: [
                                 _DetailTile(
@@ -188,16 +188,6 @@ class CarDetailScreen extends StatelessWidget {
                                   value: "${AppUtils.capitalize(model.fuelType.name)}",
 
                                 ),
-                                // _DetailTile(
-                                //   icon: Icons.airline_seat_recline_normal,
-                                //   label: "Ability",
-                                //   value: "${model.seats} Seats",
-                                // ),
-                                // _DetailTile(
-                                //   icon: Icons.car_repair,
-                                //   label: "Gearbox",
-                                //   value: "${model.gearbox.name}",
-                                // ),
                               ],
                             ),
                             const SizedBox(height: 20),
@@ -300,9 +290,7 @@ class _DetailTile extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 8.0),
               child: Container(
-                // height: 100,
-                // width: 120,
-                height: size.height * 0.11,
+                height: size.height * 0.12,
                 width: size.width * 0.28,
                 decoration: BoxDecoration(
                   color: AppColors.silverAccent.withOpacity(0.4),
@@ -322,6 +310,7 @@ class _DetailTile extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 value,
+                maxLines: 1,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,

@@ -44,7 +44,7 @@ class LargeCarCard extends StatelessWidget {
             runSpacing: 5,
             children: [
               Capsule(text: "${model.seats} Seater",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
-              Capsule(text: model.gearbox == GearBox.automaic ? "Automatic" : "Manual",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
+              Capsule(text: model.gearbox == GearBox.automatic ? "Automatic" : "Manual",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
               Capsule(text: model.fuelType == FuelType.petrol ? "Petrol" : model.fuelType == FuelType.electric ? "Electric" : model.fuelType == FuelType.hybrid ? "Hybrid" : "Natural Gas",isGlass: false,backgroundColor: Colors.grey.shade300,textColor: Colors.black54,),
             ],
           ),

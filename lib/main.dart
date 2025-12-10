@@ -5,16 +5,13 @@ import 'package:car_rental_app/core/constants/app_theme.dart';
 import 'package:car_rental_app/core/services/routing_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:car_rental_app/core/services/startup_service.dart';
 
 void main() async{
-  await Supabase.initialize(
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhndnZ0dnJidnd1dXpveHh5bnRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NzYzNTUsImV4cCI6MjA4MDM1MjM1NX0.4T2uHbXlaukVXLDXvoJ4gMJq8ZTFONLMlcIPqAGv4AI",
-    url: "https://xgvvtvrbvwuuzoxxyntk.supabase.co"
-  );
-  
+  await StartupService.init();
+  // await StartupService.insertCarsIntoSupabase();
   runApp(const MainApp());
 }
 

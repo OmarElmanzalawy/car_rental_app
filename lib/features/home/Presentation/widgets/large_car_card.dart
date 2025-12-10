@@ -4,16 +4,28 @@ import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LargeCarCard extends StatelessWidget {
-  const LargeCarCard({super.key,required this.model});
+  const LargeCarCard({super.key,required this.model,required this.isLoading});
 
   // final String carImagePath;  
   final CarModel model;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return isLoading ? 
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: 200,
+          width: 260,
+          color: Colors.white,
+        ),
+      )
+     : GestureDetector(
       onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

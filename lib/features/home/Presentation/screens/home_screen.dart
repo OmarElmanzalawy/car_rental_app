@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
+import 'package:car_rental_app/features/home/Presentation/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_card.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
@@ -19,33 +20,36 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NavigationBarCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => NavigationBarCubit()),
+        BlocProvider(create: (context) => CarsBloc()..add(LoadCarsEvent())),
+      ],
       child: AdaptiveScaffold(
         body: Material(
           color: Colors.transparent,
           child: Stack(
-          children: [
-            BlocBuilder<NavigationBarCubit, NavigationBarState>(
-              builder: (context, state) {
-                return IndexedStack(
-                  index: state.index,
-                  children: [
-                    _HomeContent(),
-                    const Center(child: Text("Bookings Screen")),
-                    const Center(child: Text("Chat Screen")),
-                    ProfileScreen()
-                  ],
-                );
-              },
-            ),
-            const Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: PlatformNavBar(),
-            ),
-          ],
+            children: [
+              BlocBuilder<NavigationBarCubit, NavigationBarState>(
+                builder: (context, state) {
+                  return IndexedStack(
+                    index: state.index,
+                    children: [
+                      _HomeContent(),
+                      const Center(child: Text("Bookings Screen")),
+                      const Center(child: Text("Chat Screen")),
+                      ProfileScreen(),
+                    ],
+                  );
+                },
+              ),
+              const Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: PlatformNavBar(),
+              ),
+            ],
           ),
         ),
       ),
@@ -54,7 +58,7 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _HomeContent extends StatelessWidget {
-   const _HomeContent();
+  const _HomeContent();
 
   @override
   Widget build(BuildContext context) {
@@ -65,214 +69,229 @@ class _HomeContent extends StatelessWidget {
     final double compactListHeight = 250;
     final double clipMinHeight = size.height * 1.02;
     final double stackHeight = clipTop + clipMinHeight;
-    final availableCars = AppUtils.availableCarBrands([...TestModels.testCompactCars,...TestModels.testLargeCars]);
+    final availableCars = AppUtils.availableCarBrands([
+      ...TestModels.testCompactCars,
+      ...TestModels.testLargeCars,
+    ]);
     return SingleChildScrollView(
       child: SizedBox(
         height: stackHeight,
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              height: headerHeight,
-              width: size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.0, 0.45, 1.0],
-                  colors: [
-                    Colors.blue.shade600,
-                    Colors.grey.shade900,
-                    Colors.blue.shade600,
-                  ],
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 55),
-                    Row(
-                      children: [
-                        const Text(
-                          "Available rides",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const Spacer(),
-                        AdaptiveButton.icon(
-                          onPressed: (){},
-                           icon: Icons.notifications_outlined,
-                           size: AdaptiveButtonSize.small,
-                           color: AppColors.primary,
-                           padding: EdgeInsets.all(8),
-                           iconColor: Colors.white,
-                           style: AdaptiveButtonStyle.prominentGlass,
-                           minSize: Size(38, 38),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            height: 50,
-                            child: SearchAnchor.bar(
-                              barHintText: "Search for a ride",
-                              viewBackgroundColor: AppColors.background,
-                              viewLeading: IconButton(
-                                onPressed: () {
-                                  context.pop();
-                                },
-                                icon: const Icon(Icons.arrow_back_ios),
-                                color: Colors.black,
-                              ),
-                              barBackgroundColor:
-                                  const WidgetStatePropertyAll(
-                                AppColors.background,
-                              ),
-                              barLeading: const Icon(
-                                Icons.search,
-                                color: Colors.black,
-                              ),
-                              isFullScreen: false,
-                              suggestionsBuilder: (context, controller) {
-                                return [];
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        AdaptiveButton.icon(
-                          onPressed: (){},
-                          icon: Icons.tune,
-                          size: AdaptiveButtonSize.small,
-                          color: AppColors.primary,
-                          padding: EdgeInsets.all(8),
-                          iconColor: Colors.white,
-                          style: AdaptiveButtonStyle.tinted,
-                          minSize: Size(50, 50),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 28,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Capsule(text: availableCars[index],includeCarLogo: true,);
-                        },
-                        separatorBuilder:
-                            (context, index) => const SizedBox(width: 8),
-                        itemCount: availableCars.length,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              top: clipTop,
-              left: 0,
-              right: 0,
-              child: ClipPath(
-                clipper: OvalTopBorderClipper(),
-                child: Container(
+        child: BlocBuilder<CarsBloc, CarsState>(
+          builder: (context, state) {
+            print(state.status);
+            return Stack(
+              // clipBehavior: Clip.none,
+              children: [
+                Container(
+                  height: headerHeight,
                   width: size.width,
-                  constraints: BoxConstraints(minHeight: clipMinHeight),
-                  color: AppColors.background,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [0.0, 0.45, 1.0],
+                      colors: [
+                        Colors.blue.shade600,
+                        Colors.grey.shade900,
+                        Colors.blue.shade600,
+                      ],
+                    ),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0,right: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(height: 55),
+                        Row(
+                          children: [
+                            const Text(
+                              "Available rides",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Spacer(),
+                            AdaptiveButton.icon(
+                              onPressed: () {},
+                              icon: Icons.notifications_outlined,
+                              size: AdaptiveButtonSize.small,
+                              color: AppColors.primary,
+                              padding: EdgeInsets.all(8),
+                              iconColor: Colors.white,
+                              style: AdaptiveButtonStyle.prominentGlass,
+                              minSize: Size(38, 38),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 30),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "Top Deals",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                "View all",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w500,
+                            Expanded(
+                              child: SizedBox(
+                                height: 50,
+                                child: SearchAnchor.bar(
+                                  barHintText: "Search for a ride",
+                                  viewBackgroundColor: AppColors.background,
+                                  viewLeading: IconButton(
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    icon: const Icon(Icons.arrow_back_ios),
+                                    color: Colors.black,
+                                  ),
+                                  barBackgroundColor:
+                                      const WidgetStatePropertyAll(
+                                        AppColors.background,
+                                      ),
+                                  barLeading: const Icon(
+                                    Icons.search,
+                                    color: Colors.black,
+                                  ),
+                                  isFullScreen: false,
+                                  suggestionsBuilder: (context, controller) {
+                                    return [];
+                                  },
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: compactListHeight,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: TestModels.testCompactCars.length,
-                            itemBuilder: (context, index) {
-                              return CompactCarCard(
-                                model: TestModels.testCompactCars[index],
-                              );
-                            },
-                            separatorBuilder: (context, index) => const SizedBox(width: 15),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Available Near You",
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            TextButton(
+                            const SizedBox(width: 10),
+                            AdaptiveButton.icon(
                               onPressed: () {},
-                              child: const Text(
-                                "View all",
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                              icon: Icons.tune,
+                              size: AdaptiveButtonSize.small,
+                              color: AppColors.primary,
+                              padding: EdgeInsets.all(8),
+                              iconColor: Colors.white,
+                              style: AdaptiveButtonStyle.tinted,
+                              minSize: Size(50, 50),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
                         SizedBox(
-                          height: largeListHeight,
+                          height: 28,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
-                            itemCount: TestModels.testLargeCars.length,
                             itemBuilder: (context, index) {
-                              return LargeCarCard(
-                                model: TestModels.testLargeCars[index],
+                              return Capsule(
+                                text: availableCars[index],
+                                includeCarLogo: true,
                               );
                             },
-                            separatorBuilder: (context, index) => const SizedBox(width: 25),
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(width: 8),
+                            itemCount: availableCars.length,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
+                Positioned(
+                  top: clipTop,
+                  left: 0,
+                  right: 0,
+                  child: ClipPath(
+                    clipper: OvalTopBorderClipper(),
+                    child: Container(
+                      width: size.width,
+                      constraints: BoxConstraints(minHeight: clipMinHeight),
+                      color: AppColors.background,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 30),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Top Deals",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    "View all",
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: compactListHeight,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: TestModels.testCompactCars.length,
+                                itemBuilder: (context, index) {
+                                  return CompactCarCard(
+                                    isLoading: state.status == CarsStatus.loading,
+                                    model: TestModels.testCompactCars[index],
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 15),
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Available Near You",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    "View all",
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: largeListHeight,
+                              child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: TestModels.testLargeCars.length,
+                                itemBuilder: (context, index) {
+                                  return LargeCarCard(
+                                    isLoading: state.status == CarsStatus.loading,
+                                    model: TestModels.testLargeCars[index],
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 25),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

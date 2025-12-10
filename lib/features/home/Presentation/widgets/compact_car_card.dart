@@ -3,14 +3,17 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CompactCarCard extends StatelessWidget {
   const CompactCarCard({
     super.key,
-    required this.model
+    required this.model,
+    required this.isLoading,
   });
 
   final CarModel model;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,17 @@ class CompactCarCard extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
+          child: isLoading ? 
+            Shimmer.fromColors(
+              baseColor: Colors.grey.shade300,
+              highlightColor: Colors.grey.shade100,
+              child: Container(
+                height: 200,
+                width: 190,
+                color: Colors.white,
+              ),
+            )
+          : Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // const SizedBox(height: 12),

@@ -167,20 +167,6 @@ class _HomeContent extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        state.status == CarsStatus.loading ? 
-                          Shimmer.fromColors(
-                            baseColor: Colors.grey.shade300,
-                            highlightColor: Colors.grey.shade100,
-                            child: Container(
-                              height: 28,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Colors.white.withOpacity(0.4)
-                              ),
-                            ),
-                          )
-                        :
                         SizedBox(
                           height: 28,
                           child: ListView.separated(

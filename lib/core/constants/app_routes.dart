@@ -23,24 +23,11 @@ class AppRoutes {
   static const String map = "/map";
 }
 
-
 final List<RouteBase> kappRoutes = [
-  GoRoute(
-    path: AppRoutes.signup,
-    builder: (context, state) => SignupScreen(),
-  ),
-  GoRoute(
-    path: AppRoutes.login,
-    builder: (context, state) => LoginScreen(),
-  ),
-  GoRoute(
-    path: AppRoutes.home,
-    builder: (context, state) => HomeScreen(),
-  ),
-  GoRoute(
-    path: AppRoutes.verified,
-    builder: (context, state) => HomeScreen(),
-  ),
+  GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
+  GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
+  GoRoute(path: AppRoutes.home, builder: (context, state) => HomeScreen()),
+  GoRoute(path: AppRoutes.verified, builder: (context, state) => HomeScreen()),
   GoRoute(
     path: AppRoutes.phoneAuth,
     builder: (context, state) => PhoneAuthScreen(),
@@ -55,7 +42,10 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.bookRentalCar,
-    builder: (context, state) => BookRentalCarScreen(),
+    builder: (context, state) => BlocProvider(
+      create: (context) => MapCubit(context)..getUserCurrentPosition(),
+      child: BookRentalCarScreen(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.carDetail,
@@ -66,9 +56,10 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.map,
-    builder: (context, state) => BlocProvider(
-      create: (context) => MapCubit(context)..getUserCurrentPosition(),
-      child: MapScreen(),
-    ),
+    builder: (context, state) =>
+        BlocProvider.value(
+          value: state.extra! as MapCubit,
+          child: MapScreen(),
+        ),
   ),
 ];

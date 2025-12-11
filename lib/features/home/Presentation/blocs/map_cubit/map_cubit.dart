@@ -78,7 +78,7 @@ class MapCubit extends Cubit<MapState> {
       position: position,
       icon: state.markerIcon ?? BitmapDescriptor.defaultMarker,
     );
-    emit(state.copyWith(markers: {marker}));
+    emit(state.copyWith(markers: {marker},pickupPosition: position));
   }
 
 }

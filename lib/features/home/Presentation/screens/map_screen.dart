@@ -1,7 +1,9 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/map_cubit/map_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapScreen extends StatefulWidget {
@@ -17,10 +19,9 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_)async{
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await context.read<MapCubit>().loadMarkerIcon();
     });
-    
   }
 
   @override
@@ -29,7 +30,9 @@ class _MapScreenState extends State<MapScreen> {
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(),
       body: BlocListener<MapCubit, MapState>(
-        listenWhen: (previous, current) => previous.currentPosition != current.currentPosition && current.currentPosition != null,
+        listenWhen: (previous, current) =>
+            previous.currentPosition != current.currentPosition &&
+            current.currentPosition != null,
         listener: (context, state) {
           final pos = state.currentPosition!;
           _controller?.moveCamera(
@@ -41,18 +44,44 @@ class _MapScreenState extends State<MapScreen> {
         child: Container(
           height: size.height,
           width: size.width,
-          child: BlocBuilder<MapCubit, MapState>(
-            builder: (context, state) {
-              return GoogleMap(
-                onMapCreated: (c) => _controller = c,
-                onTap: (pos) => context.read<MapCubit>().setTapMarker(pos),
-                initialCameraPosition: CameraPosition(
-                  target: state.currentPosition ?? LatLng(39.208259265734636, 29.965139724025835),
-                  zoom: 14,
-                ),
-                markers: state.markers,
-              );
-            },
+          child: Stack(
+            children: [
+              BlocBuilder<MapCubit, MapState>(
+                builder: (context, state) {
+                  return GoogleMap(
+                    onMapCreated: (c) => _controller = c,
+                    onTap: (pos) => context.read<MapCubit>().setTapMarker(pos),
+                    initialCameraPosition: CameraPosition(
+                      target:
+                          state.currentPosition ??
+                          LatLng(39.208259265734636, 29.965139724025835),
+                      zoom: 14,
+                    ),
+                    markers: state.markers,
+                    zoomControlsEnabled: false,
+                  );
+                },
+              ),
+              BlocBuilder<MapCubit, MapState>(
+                builder: (context, state) {
+                  return Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: AdaptiveButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      enabled: state.pickupPosition != null,
+                      label: "Confirm pickup",
+                      color: AppColors.primary,
+                      textColor: Colors.white,
+                      size: AdaptiveButtonSize.medium,
+                      minSize: Size(70, 40),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

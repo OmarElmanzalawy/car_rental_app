@@ -33,9 +33,7 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: BlocProvider(
-            create: (context) => MapCubit(context)..getUserCurrentPosition(),
-            child: Column(
+          child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -150,19 +148,23 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                           ),
                                           zoom: 14.4746,
                                         ),
+                                        markers: state.markers,
                                       );
                                     },
                                   ),
                                 ),
                                 Positioned.fill(
                                   child: GestureDetector(
-                                    onTap: () => context.push(AppRoutes.map),
+                                    onTap: () => context.push(
+                                      AppRoutes.map,
+                                      extra: context.read<MapCubit>(),
+                                    ),
                                     child: Container(color: Colors.transparent),
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
+            ),
+          ),
                         ),
                         const SizedBox(height: 22),
                         const Text(
@@ -364,7 +366,6 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
             ),
           ),
         ),
-      ),
     );
   }
 

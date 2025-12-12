@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
+import 'package:car_rental_app/features/home/data/geocoding_api.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -48,6 +49,17 @@ class MapCubit extends Cubit<MapState> {
       return true;
     }
   }
+
+  Future<void> getPickupAddress()async{
+    if(state.pickupPosition == null){
+      print("pickup position is null");
+      return;
+    }
+    final address = await GeocodingApi.getPlaceName(state.pickupPosition!.latitude, state.pickupPosition!.longitude);
+    print("pickup address: $address");
+    emit(state.copyWith(pickupAddress: address));
+  }
+  
 
   Future<void> getUserCurrentPosition()async{
     final hasPermission = await checkPermission();

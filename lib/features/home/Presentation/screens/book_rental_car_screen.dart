@@ -166,7 +166,31 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
             ),
           ),
                         ),
-                        const SizedBox(height: 22),
+
+                        BlocBuilder<MapCubit, MapState>(
+                          builder: (context, state) {
+                            return  state.pickupAddress == null ? const SizedBox.shrink() : 
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
+                              child: Row(
+                                spacing: 4,
+                                children: [
+                                  Spacer(),
+                                  Icon(Icons.location_on, color: AppColors.primary,size: 20,),
+                                  Text(
+                                    state.pickupAddress!,
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
                         const Text(
                           "Duration",
                           style: TextStyle(

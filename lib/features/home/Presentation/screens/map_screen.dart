@@ -68,7 +68,8 @@ class _MapScreenState extends State<MapScreen> {
                     bottom: 20,
                     right: 20,
                     child: AdaptiveButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await context.read<MapCubit>().getPickupAddress();
                         context.pop();
                       },
                       enabled: state.pickupPosition != null,

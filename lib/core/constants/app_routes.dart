@@ -11,6 +11,7 @@ import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/map_cubit/map_cubit.dart';
+import 'package:flutter/widgets.dart';
 
 class AppRoutes {
   static const String signup = "/signup";
@@ -23,6 +24,8 @@ class AppRoutes {
   static const String bookRentalCar = "/book-rental-car";
   static const String map = "/map";
   static const String bookings = "/bookings";
+
+  static final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 }
 
 final List<RouteBase> kappRoutes = [

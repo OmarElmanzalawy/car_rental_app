@@ -1,7 +1,9 @@
 import 'package:app_links/app_links.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DeepLinkHandler {
   final AppLinks _appLinks = AppLinks();
@@ -19,19 +21,21 @@ class DeepLinkHandler {
     });
   }
 
-  void _handleUri(Uri uri, BuildContext context) {
+  void _handleUri(Uri uri, BuildContext context) async{
     debugPrint("Deep link received: $uri");
-    // Supabase email verification link example:
-    // https://project.supabase.co/auth/v1/callback?type=signup
     final type = uri.queryParameters["type"];
-    final code = uri.queryParameters["code"];
+    final code = uri.queryParameters["code"] ?? uri.queryParameters['access_token'];
     final isAuthCallback = uri.host == 'auth-callback' || uri.path == '/auth-callback';
 
     if (type == "signup" || type == "email_verification" || (isAuthCallback && code != null)) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(content: Text("Email verified. You can now log in.")),
-      // );
-      context.go(AppRoutes.verified);
+      if (code != null) {
+        await Supabase.instance.client.auth.exchangeCodeForSession(code);
+      }
+      await AuthService.completeEmailVerification();
+      final navCtx = AppRoutes.rootNavigatorKey.currentContext;
+      if (navCtx != null) {
+        navCtx.go(AppRoutes.verified);
+      }
     }
   }
 }

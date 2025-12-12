@@ -17,6 +17,7 @@ void main() async{
 }
 
 final _router = GoRouter(
+  navigatorKey: AppRoutes.rootNavigatorKey,
   initialLocation: AppRoutes.signup,
   routes: kappRoutes,
   redirect: (context, state) {
@@ -68,7 +69,7 @@ class _MainAppState extends State<MainApp> {
   @override
   void initState() {
      WidgetsBinding.instance.addPostFrameCallback((_) async{
-      DeepLinkHandler().init(context);
+      await DeepLinkHandler().init(context);
     });
     super.initState();
   }

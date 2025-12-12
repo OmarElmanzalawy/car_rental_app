@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/auth/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:uuid/uuid.dart';
 
 class AuthResult {
   final bool success;
@@ -118,19 +119,23 @@ class AuthService {
       await supabase.auth.signUp(
         email: email,
         password: password,
-        emailRedirectTo: "com.meshwari.app://auth-callback",
+        emailRedirectTo: Platform.isAndroid || Platform.isIOS ? "com.meshwari.app://auth-callback" : null,
+        data: {
+          "full_name": name,
+          "role": userType.name,
+        },
       );
       //Insert user into users table
-      final userModel = UserModel(
-        id: Uuid().v4(),
-        name: name,
-        email: email,
-        password: password,
-        role: userType,
-        createdAt: DateTime.now()
-      );
+      // final userModel = UserModel(
+      //   id: Uuid().v4(),
+      //   name: name,
+      //   email: email,
+      //   password: password,
+      //   role: userType,
+      //   createdAt: DateTime.now()
+      // );
 
-      await supabase.from("users").insert(userModel.toMap());
+      // await supabase.from("users").insert(userModel.toMap());
 
       return AuthResult(success: true, message: "Verification email sent. Check your inbox.");
     } on AuthException catch (e) {
@@ -142,6 +147,43 @@ class AuthService {
       print(e.toString());
       return AuthResult(success: false, message: "Something went wrong. Please try again.");
     }
+  }
+
+  static Future<void> completeEmailVerification()async{
+
+    print("complete email verification function triggered");
+
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      print("No user found");
+      return;
+    }
+    final existing = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+    if (existing != null) {
+      return;
+    }
+    final metadata = user.userMetadata ?? {};
+    final name = (metadata['full_name'] as String?) ?? '';
+    final roleName = (metadata['role'] as String?) ?? 'customer';
+    final role = UserType.values.firstWhere(
+      (r) => r.name == roleName,
+      orElse: () => UserType.customer,
+    );
+    final model = UserModel(
+      id: user.id,
+      name: name,
+      email: user.email,
+      password: '',
+      role: role,
+      createdAt: DateTime.now(),
+      phoneNumber: user.phone,
+    );
+    await supabase.from('users').insert(model.toMap());
   }
 
   static Future<AuthResult> signInWithEmail({required String email, required String password}) async{

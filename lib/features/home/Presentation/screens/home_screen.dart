@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
+import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_card.dart';
@@ -36,7 +37,7 @@ class HomeScreen extends StatelessWidget {
                     index: state.index,
                     children: [
                       _HomeContent(),
-                      const Center(child: Text("Bookings Screen")),
+                      BookingsScreen(),
                       const Center(child: Text("Chat Screen")),
                       ProfileScreen(),
                     ],

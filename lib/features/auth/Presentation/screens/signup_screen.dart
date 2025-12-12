@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
+import 'package:car_rental_app/core/widgets/adaptive_custom_segment_control.dart';
 import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/action_button.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/custom_textfield.dart';
@@ -59,17 +60,24 @@ class _SignupScreenState extends State<SignupScreen> {
                 
               ),),
               const SizedBox(height: 15,),
-              AdaptiveSegmentedControl(
-                height: size.height * 0.05,
-                labels: ["Customer","Seller"],
-                selectedIndex: _userType == UserType.customer ? 0 : 1,
-                onValueChanged: (value){
+              // AdaptiveSegmentedControl(
+              //   height: size.height * 0.05,
+              //   labels: ["Customer","Seller"],
+              //   selectedIndex: _userType == UserType.customer ? 0 : 1,
+              //   onValueChanged: (value){
+              //     _userType = value == 0 ? UserType.customer : UserType.seller;
+              //     setState(() {
+                    
+              //     });
+              //   }
+              // ),
+              AdaptiveCustomSegmentControl(
+                labels: ["Customer","Seller"], selectedIndex: _userType == UserType.customer ? 0 : 1, onValueChanged: (value){
                   _userType = value == 0 ? UserType.customer : UserType.seller;
                   setState(() {
                     
                   });
-                }
-              ),
+                }),
               const SizedBox(height: 20,),
                CustomTextfield(
                 controller: _nameController,

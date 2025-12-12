@@ -2,6 +2,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.d
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/book_rental_car_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
@@ -21,6 +22,7 @@ class AppRoutes {
   static const String carDetail = "/car-detail";
   static const String bookRentalCar = "/book-rental-car";
   static const String map = "/map";
+  static const String bookings = "/bookings";
 }
 
 final List<RouteBase> kappRoutes = [
@@ -61,5 +63,9 @@ final List<RouteBase> kappRoutes = [
           value: state.extra! as MapCubit,
           child: MapScreen(),
         ),
+  ),
+  GoRoute(
+    path: AppRoutes.bookings,
+    builder: (context, state) => BookingsScreen(),
   ),
 ];

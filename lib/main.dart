@@ -3,6 +3,7 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/app_theme.dart';
 import 'package:car_rental_app/core/services/routing_service.dart';
+import 'package:car_rental_app/features/home/data/geocoding_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -66,7 +67,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void initState() {
-     WidgetsBinding.instance.addPostFrameCallback((_) {
+     WidgetsBinding.instance.addPostFrameCallback((_) async{
       DeepLinkHandler().init(context);
     });
     super.initState();

@@ -15,6 +15,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    //Specify the google maps api key as a build variable
+    //This is used to avoid exposing the api key in the code
+    val mapsKey: String = project.findProperty("GOOGLE_MAPS_API_KEY") as? String ?: ""
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
@@ -22,6 +26,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.car_rental_app"
+        manifestPlaceholders.put("GOOGLE_MAPS_API_KEY", mapsKey)
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

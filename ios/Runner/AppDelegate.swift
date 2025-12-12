@@ -8,7 +8,14 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyDfLBp_375y8bL7j1DOCPUNW8H-0iNnL0A")
+
+    // Read API key from Info.plist (injected from dart-define)
+    if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String {
+        GMSServices.provideAPIKey(apiKey)
+    } else {
+        print("❌ ERROR: Google Maps API key not found in Info.plist")
+    }
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

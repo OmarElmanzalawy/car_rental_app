@@ -9,9 +9,12 @@ class StartupService {
 
   static Future<void> init()async{
     WidgetsFlutterBinding.ensureInitialized();
+    print("supabase anon key: ${const String.fromEnvironment('SUPABASE_ANON_KEY')}");
+    print("supabase url: ${const String.fromEnvironment('SUPABASE_URL')}");
+    print("google maps api key: ${const String.fromEnvironment('GOOGLE_MAPS_API_KEY')}");
     await Supabase.initialize(
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhndnZ0dnJidnd1dXpveHh5bnRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3NzYzNTUsImV4cCI6MjA4MDM1MjM1NX0.4T2uHbXlaukVXLDXvoJ4gMJq8ZTFONLMlcIPqAGv4AI",
-    url: "https://xgvvtvrbvwuuzoxxyntk.supabase.co"
+    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY'),
+    url: const String.fromEnvironment('SUPABASE_URL'),
     );
   }
 

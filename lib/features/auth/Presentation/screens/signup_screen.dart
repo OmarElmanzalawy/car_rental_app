@@ -72,10 +72,13 @@ class _SignupScreenState extends State<SignupScreen> {
               //   }
               // ),
               AdaptiveCustomSegmentControl(
-                labels: ["Customer","Seller"], selectedIndex: _userType == UserType.customer ? 0 : 1, onValueChanged: (value){
+                labels: ["Customer","Seller"],
+                selectedIndex: _userType == UserType.customer ? 0 : 1, 
+                onValueChanged: (value){
                   _userType = value == 0 ? UserType.customer : UserType.seller;
+                  print(_userType);
                   setState(() {
-                    
+                     
                   });
                 }),
               const SizedBox(height: 20,),

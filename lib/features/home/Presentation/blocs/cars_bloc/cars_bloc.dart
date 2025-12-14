@@ -19,6 +19,8 @@ class CarsBloc extends Bloc<CarsEvent, CarsState> {
       final topDeals = cars.where((element) => element.images!.first.endsWith(".png")).toList();
       final normalCars = cars.where((element) => !element.images!.first.endsWith(".png")).toList();
 
+      print(topDeals);
+
       print("topdeals car length: ${topDeals.length}");
       print("normal cars length: ${normalCars.length}");
 

@@ -1,6 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/map_cubit/map_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +20,7 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<MapCubit>().loadMarkerIcon();
+      await context.read<BookRentalCubit>().loadMarkerIcon();
     });
   }
 
@@ -29,7 +29,7 @@ class _MapScreenState extends State<MapScreen> {
     final size = MediaQuery.sizeOf(context);
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(),
-      body: BlocListener<MapCubit, MapState>(
+      body: BlocListener<BookRentalCubit, BookRentalState>(
         listenWhen: (previous, current) =>
             previous.currentPosition != current.currentPosition &&
             current.currentPosition != null,
@@ -46,11 +46,11 @@ class _MapScreenState extends State<MapScreen> {
           width: size.width,
           child: Stack(
             children: [
-              BlocBuilder<MapCubit, MapState>(
+              BlocBuilder<BookRentalCubit, BookRentalState>(
                 builder: (context, state) {
                   return GoogleMap(
                     onMapCreated: (c) => _controller = c,
-                    onTap: (pos) => context.read<MapCubit>().setTapMarker(pos),
+                    onTap: (pos) => context.read<BookRentalCubit>().setTapMarker(pos),
                     initialCameraPosition: CameraPosition(
                       target:
                           state.currentPosition ??
@@ -62,14 +62,14 @@ class _MapScreenState extends State<MapScreen> {
                   );
                 },
               ),
-              BlocBuilder<MapCubit, MapState>(
+              BlocBuilder<BookRentalCubit, BookRentalState>(
                 builder: (context, state) {
                   return Positioned(
                     bottom: 20,
                     right: 20,
                     child: AdaptiveButton(
                       onPressed: () async {
-                        await context.read<MapCubit>().getPickupAddress();
+                        await context.read<BookRentalCubit>().getPickupAddress();
                         context.pop();
                       },
                       enabled: state.pickupPosition != null,

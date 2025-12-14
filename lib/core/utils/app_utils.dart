@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AppUtils {
 
@@ -78,4 +79,24 @@ class AppUtils {
   if (s.isEmpty) return s;
   return s[0].toUpperCase() + s.substring(1);
 }
+
+  static String toDayMonth(DateTime date) {
+    return "${date.day}/${date.month}";
+  }
+
+  static String toReadableTime(DateTime date) {
+    final h12 = date.hour % 12 == 0 ? 12 : date.hour % 12;
+    final mm = date.minute.toString().padLeft(2, '0');
+    final period = date.hour < 12 ? 'am' : 'pm';
+    return "$h12:$mm $period";
+  }
+
+  static String latLngToWkt(LatLng latLng) {
+  return 'POINT(${latLng.longitude} ${latLng.latitude})';
+  }
+
+  static LatLng latLngFromSupabase(Map<String, dynamic> geo) {
+  final coords = geo['coordinates'];
+  return LatLng(coords[1], coords[0]);
+  }
 }

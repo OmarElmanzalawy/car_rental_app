@@ -10,10 +10,12 @@ class CustomTextfield extends StatefulWidget {
     this.validator,
     this.keyboardType,
     this.prefixIcon, this.cursorColor, this.borderColor, this.textColor, this.hintColor, this.fillColor, this.isFilled, this.borderRadius, this.focusColor, this.errorStyle, this.errorBorder, this.focusedErrorBorder,
+    this.isEnabled = true
   });
 
   final String hintText;
   final bool obscureText;
+  final bool isEnabled;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
@@ -51,6 +53,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       cursorColor: widget.cursorColor,
       obscureText: widget.obscureText,
       validator: widget.validator,
+      enabled: widget.isEnabled,
       keyboardType: widget.keyboardType,
       style: TextStyle(color: widget.textColor ?? Colors.black),
       decoration: InputDecoration(
@@ -68,8 +71,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             });
           },
         ) : null,
-        // filled: widget.isFilled ?? true,
-        // fillColor: widget.fillColor ?? Colors.white.withOpacity(0.1),
+        filled: widget.isEnabled ? false : true,
+        fillColor: Colors.grey.shade200,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
           borderSide:  BorderSide(color: widget.borderColor ?? Colors.white),
@@ -81,6 +84,10 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
           borderSide: BorderSide(color: widget.focusColor ?? widget.borderColor ?? Colors.black.withOpacity(0.4), width: 2),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
+          borderSide: BorderSide(color: Colors.transparent),
         ),
         errorBorder: widget.errorBorder ?? OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

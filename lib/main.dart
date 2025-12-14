@@ -92,6 +92,21 @@ class _MainAppState extends State<MainApp> {
             surfaceTintColor: AppColors.primary,
           ),
         ),
+        timePickerTheme: TimePickerThemeData(
+          backgroundColor: AppColors.background,
+          hourMinuteColor: AppColors.silverAccent,
+          dialBackgroundColor: AppColors.silverAccent,
+          confirmButtonStyle: TextButton.styleFrom(
+            foregroundColor: AppColors.primary,
+          ),
+          cancelButtonStyle: TextButton.styleFrom(
+            foregroundColor: Colors.red,
+          ),
+          dayPeriodColor: Colors.blue,
+          dayPeriodTextColor: Colors.black,
+          hourMinuteTextColor: Colors.black,
+          dialHandColor: AppColors.primary,
+        ),
         scaffoldBackgroundColor: AppColors.background,
         primaryColor: AppColors.primary,
         textButtonTheme: TextButtonThemeData(

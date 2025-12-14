@@ -32,6 +32,8 @@ class AdaptiveCustomSegmentControl extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: labels.map((label) => _SegmentChip(
+                      labels: labels,
+                      onValueChanged: onValueChanged,
                       label: label,
                       selected: selectedIndex == labels.indexOf(label),
                     )).toList(),
@@ -51,26 +53,31 @@ class AdaptiveCustomSegmentControl extends StatelessWidget {
 
 
 class _SegmentChip extends StatelessWidget {
-  const _SegmentChip({required this.label, this.selected = false});
+  const _SegmentChip({required this.label, this.selected = false,required this.onValueChanged,required this.labels});
   final String label;
   final bool selected;
+  final List<String> labels;
+  final Function(int) onValueChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.background : Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: selected ? AppColors.primary : Colors.black,
+    return GestureDetector(
+      onTap: () => onValueChanged(labels.indexOf(label)),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.background : Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: selected ? AppColors.primary : Colors.black,
+          ),
         ),
       ),
     );

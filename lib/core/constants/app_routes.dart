@@ -1,8 +1,10 @@
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/book_rental_car_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
@@ -10,7 +12,7 @@ import 'package:car_rental_app/features/home/Presentation/screens/map_screen.dar
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/map_cubit/map_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:flutter/widgets.dart';
 
 class AppRoutes {
@@ -25,7 +27,8 @@ class AppRoutes {
   static const String map = "/map";
   static const String bookings = "/bookings";
 
-  static final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
 }
 
 final List<RouteBase> kappRoutes = [
@@ -47,25 +50,30 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.bookRentalCar,
-    builder: (context, state) => BlocProvider(
-      create: (context) => MapCubit(context)..getUserCurrentPosition(),
-      child: BookRentalCarScreen(),
-    ),
+    builder: (context, state) {
+     final extra = state.extra as Map<String,dynamic>;
+      return BlocProvider(
+        create: (context) => BookRentalCubit(context)..getUserCurrentPosition(),
+        child: BookRentalCarScreen(datePickerBloc: extra["datePickerBloc"] as DatePickerBloc, carModel: extra["model"] as CarModel),
+      );
+    },
   ),
   GoRoute(
     path: AppRoutes.carDetail,
     builder: (context, state) {
       final model = state.extra as CarModel;
-      return CarDetailScreen(model: model);
+      return BlocProvider(
+        create: (context) => DatePickerBloc()..add(SelectDateEvent(selectedDate: AppUtils.currentDate())),
+        child: CarDetailScreen(model: model),
+      );
     },
   ),
   GoRoute(
     path: AppRoutes.map,
-    builder: (context, state) =>
-        BlocProvider.value(
-          value: state.extra! as MapCubit,
-          child: MapScreen(),
-        ),
+    builder: (context, state) => BlocProvider.value(
+      value: state.extra! as BookRentalCubit,
+      child: MapScreen(),
+    ),
   ),
   GoRoute(
     path: AppRoutes.bookings,

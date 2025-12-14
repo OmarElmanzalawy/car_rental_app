@@ -1,5 +1,6 @@
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/core/widgets/phone_textfield.dart';
 import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/action_button.dart';
 import 'package:car_rental_app/features/auth/Presentation/widgets/custom_textfield.dart';
@@ -78,60 +79,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                InternationalPhoneNumberInput(
-                  textFieldController: _phoneController,
-                  initialValue: phoneNumber,
-                  onInputValidated: (value) {
-                    
-                      isValidNumber = value;
-                    
-                  },
-                  selectorConfig: const SelectorConfig(
-                    selectorType: PhoneInputSelectorType.DIALOG,
-                    useEmoji: true,
-                    setSelectorButtonAsPrefixIcon: true,
-                    leadingPadding: 12,
-                  ),
-                  validator: (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return "This field can't be empty";
-                    }else if(!isValidNumber){
-                      return "Invalid phone number";
-                    }
-                    return null;
-                  },
-                  inputDecoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.grey.shade400),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: AppColors.textPrimary, width: 2),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.red.shade800, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-                  ),
-                  formatInput: false,
-                  spaceBetweenSelectorAndTextField: 8,
-                  keyboardType: TextInputType.phone,
-                  autoValidateMode: AutovalidateMode.onUserInteraction,
-                  onFieldSubmitted: (value) {
-                    print("onFieldSubmitted: $value");
-                  },
-                  onInputChanged: (value) async {
-                    try {
-                      phoneNumber = value;
-                    } catch (_) {}
-                  },
+                PhoneTextfield(
+                  initialCountry: initialCountry, 
+                  phoneNumber: phoneNumber, 
+                  phoneController: _phoneController,
                   errorMessage: 'Invalid phone number',
                 ),
                 const SizedBox(height: 18),

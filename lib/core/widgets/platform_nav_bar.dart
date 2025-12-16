@@ -56,7 +56,6 @@ class GlassNavBar extends StatelessWidget {
                   ),
                   CNTabBarItem(
                     icon: CNSymbol("person"),
-                    label: "Profile",
                   ),
                 ]
               : const [

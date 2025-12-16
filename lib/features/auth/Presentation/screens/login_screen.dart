@@ -103,7 +103,7 @@ class LoginScreen extends StatelessWidget {
                     email: _emailController.text,
                     password: _passwordController.text);
                   if(response.success){
-                    context.go(AppRoutes.home);
+                    await AuthService.navigateToAppropriateHomeScreen(context);
                   }
                 },
               ),

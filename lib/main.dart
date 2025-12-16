@@ -2,7 +2,9 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/app_theme.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/services/routing_service.dart';
+import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/bookings/data/geocoding_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ final _router = GoRouter(
   navigatorKey: AppRoutes.rootNavigatorKey,
   initialLocation: AppRoutes.signup,
   routes: kappRoutes,
-  redirect: (context, state) {
+  redirect: (context, state) async{
     print("full location: ${state.uri.toString()}");
     print("matched location: ${state.matchedLocation}");
     final uri = state.uri.toString();
@@ -50,7 +52,12 @@ final _router = GoRouter(
 
     // Logged in → skip signup/login screens
     if (isLoggedIn && (loc == AppRoutes.signup || loc == AppRoutes.login)) {
-      return AppRoutes.home;
+      final role = await AuthService.getUserRole();
+      if(role == UserType.customer){
+        return AppRoutes.customerHome;
+      }else{
+        return AppRoutes.sellerHome;
+      }
     }
 
     return null;

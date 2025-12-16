@@ -6,9 +6,10 @@ import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_scr
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/book_rental_car_screen.dart';
-import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
-import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/screens/customer_home_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/map_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,8 @@ import 'package:flutter/widgets.dart';
 class AppRoutes {
   static const String signup = "/signup";
   static const String login = "/login";
-  static const String home = "/home";
+  static const String customerHome = "/customer-home";
+  static const String sellerHome = "/seller-home";
   static const String verified = "/verified";
   static const String phoneAuth = "/phone-auth";
   static const String verifyOtp = "/verify-otp";
@@ -34,8 +36,9 @@ class AppRoutes {
 final List<RouteBase> kappRoutes = [
   GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
   GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
-  GoRoute(path: AppRoutes.home, builder: (context, state) => HomeScreen()),
-  GoRoute(path: AppRoutes.verified, builder: (context, state) => HomeScreen()),
+  GoRoute(path: AppRoutes.customerHome, builder: (context, state) => CustomerHomeScreen()),
+  GoRoute(path: AppRoutes.verified, builder: (context, state) => CustomerHomeScreen()),
+  GoRoute(path: AppRoutes.sellerHome, builder: (context, state) => SellerHomeScreen(),),
   GoRoute(
     path: AppRoutes.phoneAuth,
     builder: (context, state) => PhoneAuthScreen(),

@@ -33,8 +33,11 @@ class DeepLinkHandler {
       }
       await AuthService.completeEmailVerification();
       final navCtx = AppRoutes.rootNavigatorKey.currentContext;
+      final user = Supabase.instance.client.auth.currentUser;
+      final roleName = user?.userMetadata?['role'] as String? ?? 'customer';
+      final target = roleName == 'seller' ? AppRoutes.sellerHome : AppRoutes.customerHome;
       if (navCtx != null) {
-        navCtx.go(AppRoutes.verified);
+        navCtx.go(target);
       }
     }
   }

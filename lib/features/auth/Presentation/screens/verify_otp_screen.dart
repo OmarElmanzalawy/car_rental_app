@@ -126,7 +126,7 @@ class VerifyOtpScreen extends StatelessWidget {
                     
                     final response = await AuthService.verifyPhoneOTP(phoneNumber, _otpController.text,context);
                     if(response.success){
-                      context.go(AppRoutes.home);
+                      context.go(AppRoutes.customerHome);
                     }
                   },
                   backgroundColor: AppColors.primary,

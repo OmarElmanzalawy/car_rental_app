@@ -1,6 +1,6 @@
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
-import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

@@ -4,12 +4,12 @@ import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/bookings/data/bookings_data_source.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/cars_bloc/cars_bloc.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
-import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_card.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/blocs/cars_bloc/cars_bloc.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/compact_car_card.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
-import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
-import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/glass_capsule.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/large_car_card.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.dart';
@@ -19,8 +19,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class CustomerHomeScreen extends StatelessWidget {
+  const CustomerHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

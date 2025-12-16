@@ -1,6 +1,6 @@
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:cupertino_native/cupertino_native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,18 +8,20 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 
 class PlatformNavBar extends StatelessWidget {
-  const PlatformNavBar({super.key});
+  const PlatformNavBar({super.key, this.isSeller = false});
+
+  final bool isSeller;
 
   @override
   Widget build(BuildContext context) {
     return PlatformWidget(
       material: (context, platform) {
-        return CustomBottomNavigationBar();
+        return CustomBottomNavigationBar(isSeller: isSeller);
       },
       cupertino: (context, platform) {
         final isLiquidGlass = AppUtils.isiOS26OrAbove();
 
-        return isLiquidGlass ? GlassNavBar() : CustomBottomNavigationBar();
+        return isLiquidGlass ? GlassNavBar(isSeller: isSeller) : CustomBottomNavigationBar(isSeller: isSeller);
       },
     );
   }
@@ -27,7 +29,9 @@ class PlatformNavBar extends StatelessWidget {
 
 
 class GlassNavBar extends StatelessWidget {
-  const GlassNavBar({super.key});
+  const GlassNavBar({super.key, this.isSeller = false});
+
+  final bool isSeller;
 
   @override
   Widget build(BuildContext context) {
@@ -36,34 +40,55 @@ class GlassNavBar extends StatelessWidget {
         return CNTabBar(
           tint: Colors.blue.shade700,
           split: true,
-          items: const [
-            CNTabBarItem(
-              icon: CNSymbol("car.fill"),
-              label: "Cars",
-            ),
-            CNTabBarItem(
-              icon: CNSymbol("calendar"),
-              label: "Bookings",
-            ),
-            CNTabBarItem(
-              icon: CNSymbol("ellipsis.message"),
-              label: "Chat",
-            ),
-            CNTabBarItem(
-              icon: CNSymbol("person"),
-              // label: "Profile",
-            ),
-          ],
+          items: isSeller
+              ? const [
+                  CNTabBarItem(
+                    icon: CNSymbol("square.grid.2x2"),
+                    label: "Dashboard",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("car.fill"),
+                    label: "My Cars",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("ellipsis.message"),
+                    label: "Inbox",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("person"),
+                    label: "Profile",
+                  ),
+                ]
+              : const [
+                  CNTabBarItem(
+                    icon: CNSymbol("car.fill"),
+                    label: "Cars",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("calendar"),
+                    label: "Bookings",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("ellipsis.message"),
+                    label: "Chat",
+                  ),
+                  CNTabBarItem(
+                    icon: CNSymbol("person"),
+                    label: "Profile",
+                  ),
+                ],
           currentIndex: state.index,
           onTap: (index) => context.read<NavigationBarCubit>().changeIndex(index),
-          );
+        );
       },
     );
   }
 }
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({super.key});
+  const CustomBottomNavigationBar({super.key, this.isSeller = false});
+
+  final bool isSeller;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +102,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -86,10 +111,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(context, 0, Icons.directions_car, "Cars", currentIndex),
-              _buildNavItem(context, 1, Icons.calendar_month_outlined, "Bookings", currentIndex),
-              _buildNavItem(context, 2, Icons.chat_bubble_outline, "Chat", currentIndex),
-              _buildNavItem(context, 3, Icons.person_outline, "Profile", currentIndex),
+              if (!isSeller) ...[
+                _buildNavItem(context, 0, Icons.directions_car, "Cars", currentIndex),
+                _buildNavItem(context, 1, Icons.calendar_month_outlined, "Bookings", currentIndex),
+                _buildNavItem(context, 2, Icons.chat_bubble_outline, "Chat", currentIndex),
+                _buildNavItem(context, 3, Icons.person_outline, "Profile", currentIndex),
+              ] else ...[
+                _buildNavItem(context, 0, Icons.dashboard_outlined, "Dashboard", currentIndex),
+                _buildNavItem(context, 1, Icons.directions_car, "My Cars", currentIndex),
+                _buildNavItem(context, 2, Icons.chat_bubble_outline, "Inbox", currentIndex),
+                _buildNavItem(context, 3, Icons.person_outline, "Profile", currentIndex),
+              ],
             ],
           ),
         );

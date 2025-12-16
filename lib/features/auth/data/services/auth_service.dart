@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/auth/domain/entities/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthResult {
@@ -196,5 +198,43 @@ class AuthService {
     } catch (_) {
       return AuthResult(success: false, message: "Something went wrong. Please try again.");
     }
+  }
+
+  //function that navigates to the appropriate home screen based on the user role
+  //invoked after successful login
+  static Future<void> navigateToAppropriateHomeScreen(BuildContext context)async{
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      print("No user found");
+      return;
+    }
+    final metadata = user.userMetadata ?? {};
+    final roleName = (metadata['role'] as String?) ?? 'customer';
+    final role = UserType.values.firstWhere(
+      (r) => r.name == roleName,
+      orElse: () => UserType.customer,
+    );
+    if(role == UserType.customer){
+      context.go(AppRoutes.customerHome);
+    }else{
+      context.go(AppRoutes.sellerHome);
+    }
+  }
+
+  static Future<UserType> getUserRole()async{
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      print("No user found");
+      return UserType.customer;
+    }
+    final metadata = user.userMetadata ?? {};
+    final roleName = (metadata['role'] as String?) ?? 'customer';
+    final role = UserType.values.firstWhere(
+      (r) => r.name == roleName,
+      orElse: () => UserType.customer,
+    );
+    return role;
   }
 }

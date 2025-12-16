@@ -1,8 +1,10 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/adaptive_custom_segment_control.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/features/bookings/presentation/widgets/rental_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
@@ -34,29 +36,58 @@ class BookingsScreen extends StatelessWidget {
                   onValueChanged: (value){}
                 ),
                 const SizedBox(height: 14),
-                RentalCard(
-                  title: 'Audi Q7',
-                  subtitle: 'Luxury',
-                  statusLabel: 'Upcoming',
-                  dateText: 'Oct 8, 2025',
-                  timeText: '2:00 PM',
-                  locationText: '123 Main St',
-                  statusBarText: '2d left until pickup',
-                  totalText: '\$245',
-                  imageUrl: 'assets/images/test_cars/supra.png',
+                BlocBuilder<BookingsCubit, BookingsState>(
+                  builder: (context, state) {
+                    return state.bookings.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "No Bookings",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      )
+                    : Column(
+                        children: state.bookings.map((booking) => 
+                        RentalCard(
+                          title: booking.carName,
+                          subtitle: "remove this",
+                          statusLabel: booking.status.name,
+                          // imageUrl: booking,
+                          dateText: AppUtils.toDayMonth(booking.pickupDate),
+                          timeText: AppUtils.toReadableTime(booking.pickupDate),
+                          locationText: booking.pickupAddress,
+                          statusBarText: "test",
+                          totalText: '\$${booking.totalPrice}',
+                        )).toList(),
+                      );
+                  },
                 ),
-                const SizedBox(height: 12),
-                RentalCard(
-                  title: 'Audi Q7',
-                  subtitle: 'Luxury',
-                  statusLabel: 'Upcoming',
-                  dateText: 'Oct 12, 2025',
-                  timeText: '10:00 AM',
-                  locationText: 'Downtown Garage',
-                  statusBarText: '5d left until pickup',
-                  totalText: '\$245',
-                  imageUrl: 'assets/images/test_cars/bmw.jpg',
-                ),
+                // RentalCard(
+                //   title: 'Audi Q7',
+                //   subtitle: 'Luxury',
+                //   statusLabel: 'Upcoming',
+                //   dateText: 'Oct 8, 2025',
+                //   timeText: '2:00 PM',
+                //   locationText: '123 Main St',
+                //   statusBarText: '2d left until pickup',
+                //   totalText: '\$245',
+                //   imageUrl: 'assets/images/test_cars/supra.png',
+                // ),
+                // const SizedBox(height: 12),
+                // RentalCard(
+                //   title: 'Audi Q7',
+                //   subtitle: 'Luxury',
+                //   statusLabel: 'Upcoming',
+                //   dateText: 'Oct 12, 2025',
+                //   timeText: '10:00 AM',
+                //   locationText: 'Downtown Garage',
+                //   statusBarText: '5d left until pickup',
+                //   totalText: '\$245',
+                //   imageUrl: 'assets/images/test_cars/bmw.jpg',
+                // ),
                 const SizedBox(height: 80,)
               ],
             ),

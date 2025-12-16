@@ -3,12 +3,12 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:car_rental_app/features/home/Presentation/widgets/date_picker_grid.dart';
+import 'package:car_rental_app/features/bookings/presentation/widgets/date_picker_grid.dart';
 
 class CarDetailScreen extends StatelessWidget {
   const CarDetailScreen({super.key,required this.model});

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
@@ -95,8 +96,9 @@ class AppUtils {
   return 'POINT(${latLng.longitude} ${latLng.latitude})';
   }
 
-  static LatLng latLngFromSupabase(Map<String, dynamic> geo) {
-  final coords = geo['coordinates'];
-  return LatLng(coords[1], coords[0]);
-  }
+static LatLng latLngFromSupabase(String geoJson) {
+  final decoded = jsonDecode(geoJson);
+  final coords = decoded['coordinates'];
+  return LatLng(coords[1], coords[0]); // lat, lng
+}
 }

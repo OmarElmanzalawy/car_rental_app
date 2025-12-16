@@ -1,6 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

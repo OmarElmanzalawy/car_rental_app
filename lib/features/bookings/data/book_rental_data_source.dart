@@ -1,4 +1,4 @@
-import 'package:car_rental_app/features/home/domain/entities/rental_model.dart';
+import 'package:car_rental_app/features/bookings/domain/entities/rental_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class BookRentalDataSource {

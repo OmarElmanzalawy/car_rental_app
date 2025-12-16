@@ -4,15 +4,15 @@ import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_scr
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
-import 'package:car_rental_app/features/home/Presentation/screens/book_rental_car_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/bookings/presentation/screens/book_rental_car_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/screens/home_screen.dart';
-import 'package:car_rental_app/features/home/Presentation/screens/map_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/screens/map_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:flutter/widgets.dart';
 
 class AppRoutes {

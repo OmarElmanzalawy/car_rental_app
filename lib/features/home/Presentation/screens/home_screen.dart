@@ -1,6 +1,8 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
+import 'package:car_rental_app/features/bookings/data/bookings_data_source.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
@@ -12,6 +14,7 @@ import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,6 +25,7 @@ class HomeScreen extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => NavigationBarCubit()),
         BlocProvider(create: (context) => CarsBloc()..add(LoadCarsEvent())),
+        BlocProvider(create: (context) => BookingsCubit(BookingsDatSourceImpl(client: Supabase.instance.client))..getBookings(Supabase.instance.client.auth.currentUser!.id))
       ],
       child: AdaptiveScaffold(
         body: Material(

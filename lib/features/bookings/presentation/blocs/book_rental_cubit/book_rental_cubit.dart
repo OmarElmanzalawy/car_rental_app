@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
-import 'package:car_rental_app/features/home/Presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
-import 'package:car_rental_app/features/home/data/book_rental_data_source.dart';
-import 'package:car_rental_app/features/home/data/geocoding_api.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/bookings/data/book_rental_data_source.dart';
+import 'package:car_rental_app/features/bookings/data/geocoding_api.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
-import 'package:car_rental_app/features/home/domain/entities/rental_model.dart';
+import 'package:car_rental_app/features/bookings/domain/entities/rental_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 

@@ -12,7 +12,7 @@ class RentalCard extends StatelessWidget {
     required this.locationText,
     required this.statusBarText,
     required this.totalText,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   final String title;
@@ -23,7 +23,7 @@ class RentalCard extends StatelessWidget {
   final String locationText;
   final String statusBarText;
   final String totalText;
-  final String imageUrl;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class RentalCard extends StatelessWidget {
               border: Border.all(color: AppColors.border),
             ),
             clipBehavior: Clip.antiAlias,
-            child: Image.asset(imageUrl, fit: BoxFit.cover),
+            child: Image.asset(imageUrl ?? 'assets/images/logo.png', fit: BoxFit.cover),
           ),
           const SizedBox(height: 12),
           Row(

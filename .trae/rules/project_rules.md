@@ -170,3 +170,53 @@ lib/
 - Use platform-native widgets  (if available)
 - Stick to the provided color palette  
 - Keep UI premium, modern, and minimal  
+
+## Supabase Database Schema
+### users
+id,uuid,Primary Key
+email,varchar,Unique email address
+password,varchar,Hashed password
+full_name,varchar,
+phone,varchar,
+profile_image,varchar,URL to storage
+created_at,timestamptz,
+role,role (enum),"likely 'admin', 'renter', 'customer'"
+
+### cars
+id,uuid,Primary Key
+owner_id,uuid,Foreign Key -> users.id
+title,varchar,
+brand,varchar,"e.g., ""Tesla"", ""BMW"""
+model,varchar,
+year,varchar,
+price_per_day,float8,
+seats,int4,
+gearbox,gearbox (enum),"e.g., 'Automatic', 'Manual'"
+fuel_type,fuel_type (enum),"e.g., 'Petrol', 'Electric'"
+images,_text (text[]),Array of image URLs
+available,bool,
+created_at,timestamptz,
+max_speed,float8,
+total_rating_count,int8,
+description,varchar,
+rating,float8,Average rating
+
+### rentals
+id,uuid,Primary Key
+car_id,uuid,Foreign Key -> cars.id
+customer_id,uuid,Foreign Key -> users.id
+created_at,timestamptz,
+start_date,timestamptz,
+end_date,timestamptz,
+status,rental_status,"Enum (e.g., 'pending', 'active', 'completed')"
+total_price,float8,
+pickup_loc,geography,PostGIS geography point
+pickup_address,varchar,Human readable address
+
+### reviews
+id,uuid,Primary Key
+reviewer_id,uuid,Foreign Key -> users.id
+car_id,uuid,Foreign Key -> cars.id
+rating,int8,
+comment,varchar,
+created_at,timestamptz,

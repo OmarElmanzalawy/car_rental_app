@@ -7,25 +7,14 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LargeCarCard extends StatelessWidget {
-  const LargeCarCard({super.key,required this.model,required this.isLoading});
+  const LargeCarCard({super.key,required this.model});
 
   // final String carImagePath;  
   final CarModel model;
-  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? 
-      Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
-        child: Container(
-          height: 200,
-          width: 260,
-          color: Colors.white,
-        ),
-      )
-     : GestureDetector(
+    return GestureDetector(
       onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

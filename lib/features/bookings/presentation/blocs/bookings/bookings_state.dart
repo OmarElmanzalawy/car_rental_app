@@ -2,12 +2,12 @@ part of 'bookings_cubit.dart';
 
 class BookingsState extends Equatable {
   const BookingsState({
-    this.bookings = const [], this.isLoading, this.hasError,
+    this.bookings = const [], this.isLoading = true, this.hasError,
     this.status
     });
 
   final List<Rentalwithcardto> bookings;
-  final bool? isLoading;
+  final bool isLoading;
   final bool? hasError;
   final RentalStatus? status;
 

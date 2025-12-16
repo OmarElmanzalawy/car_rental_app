@@ -14,7 +14,7 @@ class BookingsCubit extends Cubit<BookingsState> {
   BookingsCubit(this.repository) : super(BookingsState());
   
   
-  void getBookings(String customerId) async {
+  Future<void> getBookings(String customerId) async {
     emit(state.copyWith(isLoading: true));
     // try {
       final bookings = await repository.fetchBookings(customerId);

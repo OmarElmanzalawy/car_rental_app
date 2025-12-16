@@ -1,3 +1,4 @@
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 
@@ -5,7 +6,6 @@ class RentalCard extends StatelessWidget {
   const RentalCard({
     super.key,
     required this.title,
-    required this.subtitle,
     required this.statusLabel,
     required this.dateText,
     required this.timeText,
@@ -16,7 +16,6 @@ class RentalCard extends StatelessWidget {
   });
 
   final String title;
-  final String subtitle;
   final String statusLabel;
   final String dateText;
   final String timeText;
@@ -44,14 +43,7 @@ class RentalCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black)),
-                    const SizedBox(height: 2),
-                    Text(subtitle, style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
-                  ],
-                ),
+                child: Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.black)),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -59,7 +51,7 @@ class RentalCard extends StatelessWidget {
                   color: AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(statusLabel, style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w600)),
+                child: Text(AppUtils.capitalize(statusLabel), style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
             ],
           ),

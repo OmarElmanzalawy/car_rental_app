@@ -10,10 +10,13 @@ import 'package:car_rental_app/features/home/Presentation/widgets/compact_car_ca
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/large_car_card.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -231,10 +234,20 @@ class _HomeContent extends StatelessWidget {
                               height: compactListHeight,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: state.topDealCars.length,
+                                itemCount: state.status == CarsStatus.loading ? 3 : state.topDealCars.length,
                                 itemBuilder: (context, index) {
-                                  return CompactCarCard(
-                                    isLoading: state.status == CarsStatus.loading,
+                                  final isLoading = state.status == CarsStatus.loading;
+                                  return isLoading ? 
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(
+                                        height: 200,
+                                        width: 190,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : CompactCarCard(
                                     model: state.topDealCars[index],
                                   );
                                 },
@@ -270,10 +283,20 @@ class _HomeContent extends StatelessWidget {
                               height: largeListHeight,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: state.availableNearYouCars.length,
+                                itemCount: state.status == CarsStatus.loading ? 3 : state.availableNearYouCars.length,
                                 itemBuilder: (context, index) {
-                                  return LargeCarCard(
-                                    isLoading: state.status == CarsStatus.loading,
+                                  final isLoading = state.status == CarsStatus.loading;
+                                  return isLoading ? 
+                                    Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Container(
+          height: 200,
+          width: 260,
+          color: Colors.white,
+        ),
+      )
+                                   : LargeCarCard(
                                     model: state.availableNearYouCars[index],
                                   );
                                 },

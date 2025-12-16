@@ -101,4 +101,26 @@ static LatLng latLngFromSupabase(String geoJson) {
   final coords = decoded['coordinates'];
   return LatLng(coords[1], coords[0]); // lat, lng
 }
+
+  static String timeLeftForPickup(DateTime pickupDate) {
+    final now = DateTime.now();
+    final diff = pickupDate.difference(now);
+    if (diff.isNegative) {
+      return "0h left for pickup";
+    }
+    if (diff.inHours < 24) {
+      var hours = diff.inHours;
+      if (diff.inMinutes % 60 != 0) {
+        hours += 1;
+      }
+      if (hours == 0) {
+        hours = 1;
+      }
+      return "${hours}h left for pickup";
+    }
+    final days = diff.inDays;
+    return "${days}d left for pickup";
+  }
+
+
 }

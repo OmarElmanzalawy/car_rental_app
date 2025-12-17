@@ -6,13 +6,11 @@ import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/boo
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
+import 'package:car_rental_app/features/profile/presentation/customer/screens/customer_profile_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/widgets/compact_car_card.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/widgets/large_car_card.dart';
-import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
-import 'package:car_rental_app/core/constants/enums.dart';
-import 'package:car_rental_app/features/profile/presentation/ui/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +41,7 @@ class CustomerHomeScreen extends StatelessWidget {
                       _HomeContent(),
                       BookingsScreen(),
                       const Center(child: Text("Chat Screen")),
-                      ProfileScreen(),
+                      CustomerProfileScreen(),
                     ],
                   );
                 },

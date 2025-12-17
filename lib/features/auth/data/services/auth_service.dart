@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/auth/domain/entities/user.dart';

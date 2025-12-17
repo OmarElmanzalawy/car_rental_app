@@ -47,8 +47,8 @@ class GlassNavBar extends StatelessWidget {
                     label: "Dashboard",
                   ),
                   CNTabBarItem(
-                    icon: CNSymbol("car.fill"),
-                    label: "My Cars",
+                    icon: CNSymbol("calendar"),
+                    label: "Upcoming",
                   ),
                   CNTabBarItem(
                     icon: CNSymbol("ellipsis.message"),
@@ -73,7 +73,6 @@ class GlassNavBar extends StatelessWidget {
                   ),
                   CNTabBarItem(
                     icon: CNSymbol("person"),
-                    label: "Profile",
                   ),
                 ],
           currentIndex: state.index,

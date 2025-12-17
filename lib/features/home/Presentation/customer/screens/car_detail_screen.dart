@@ -242,8 +242,6 @@ class CarDetailScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      // height: 48,
-                      // width: 50,
                       child: AdaptiveButton(
                         textColor: Colors.white,
                         style: AdaptiveButtonStyle.filled,

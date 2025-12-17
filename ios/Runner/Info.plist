@@ -54,6 +54,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Meshwari needs access to your photo library to select your profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Meshwari needs access to location to show your current location on the map.</string>
 	<key>GMSApiKey</key>

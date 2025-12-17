@@ -62,11 +62,13 @@ class AddListingBloc extends Bloc<AddListingEvent, AddListingState> {
     });
 
     on<AddListingSubmit>((event,emit)async{
+      emit(state.copyWith(submissionStatus: ListingSubmissionStatus.loading));
       final success = await CarRemoteDataSourceImpl(Supabase.instance.client).addCarListing(event.carDto, event.images);
       if(success){
-        print("listing uploaded successfuly");
+        emit(state.copyWith(submissionStatus: ListingSubmissionStatus.success));
       }else{
         print("error while adding car listing");
+        emit(state.copyWith(submissionStatus: ListingSubmissionStatus.failure));
       }
     });
   }

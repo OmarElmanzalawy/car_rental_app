@@ -1,5 +1,12 @@
 part of 'add_listing_bloc.dart';
 
+enum ListingSubmissionStatus{
+  initial,
+  loading,
+  success,
+  failure,
+}
+
 
 class AddListingState extends Equatable {
   const AddListingState({
@@ -8,7 +15,7 @@ class AddListingState extends Equatable {
     this.selectedGearbox = GearBox.automatic,
     this.selectedFuelType = FuelType.petrol,
     this.pickedImages = const [],
-    this.submitSuccessful = false
+    this.submissionStatus = ListingSubmissionStatus.initial,
   });
 
   final int currentPage;
@@ -16,7 +23,7 @@ class AddListingState extends Equatable {
   final GearBox? selectedGearbox;
   final FuelType? selectedFuelType;
   final List<XFile> pickedImages;
-  final bool submitSuccessful;
+  final ListingSubmissionStatus submissionStatus;
 
   AddListingState copyWith({
     int? currentPage,
@@ -27,7 +34,7 @@ class AddListingState extends Equatable {
     FuelType? selectedFuelType,
     bool selectedFuelTypeChanged = false,
     List<XFile>? pickedImages,
-    bool? submitSuccessful,
+    ListingSubmissionStatus? submissionStatus,
   }) {
     return AddListingState(
       currentPage: currentPage ?? this.currentPage,
@@ -38,7 +45,7 @@ class AddListingState extends Equatable {
       selectedFuelType:
           selectedFuelTypeChanged ? selectedFuelType : this.selectedFuelType,
       pickedImages: pickedImages ?? this.pickedImages,
-      submitSuccessful: submitSuccessful ?? this.submitSuccessful,
+      submissionStatus: submissionStatus ?? this.submissionStatus,
     );
   }
 
@@ -49,6 +56,6 @@ class AddListingState extends Equatable {
         selectedGearbox,
         selectedFuelType,
         pickedImages,
-        submitSuccessful,
+        submissionStatus
       ];
 }

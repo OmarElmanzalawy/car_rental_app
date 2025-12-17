@@ -126,17 +126,6 @@ class AuthService {
           "role": userType.name,
         },
       );
-      //Insert user into users table
-      // final userModel = UserModel(
-      //   id: Uuid().v4(),
-      //   name: name,
-      //   email: email,
-      //   password: password,
-      //   role: userType,
-      //   createdAt: DateTime.now()
-      // );
-
-      // await supabase.from("users").insert(userModel.toMap());
 
       return AuthResult(success: true, message: "Verification email sent. Check your inbox.");
     } on AuthException catch (e) {
@@ -173,7 +162,7 @@ class AuthService {
     final roleName = (metadata['role'] as String?) ?? 'customer';
     final role = UserType.values.firstWhere(
       (r) => r.name == roleName,
-      orElse: () => UserType.customer,
+      // orElse: () => UserType.customer,
     );
     final model = UserModel(
       id: user.id,

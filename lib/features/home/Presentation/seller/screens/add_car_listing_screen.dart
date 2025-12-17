@@ -69,175 +69,194 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return BlocBuilder<AddListingBloc, AddListingState>(
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.background,
           body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            top: false,
+            child: Stack(
               children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Container(
-                    width: 45,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: AppColors.silverAccent,
-                      shape: BoxShape.circle,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 80),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Container(
+                        width: 45,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: AppColors.silverAccent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(onPressed: (){
+                          context.pop();
+                        }, icon: Icon(Icons.close,size: 30,)),
+                      ),
                     ),
-                    child: IconButton(onPressed: (){
-                      context.pop();
-                    }, icon: Icon(Icons.close,size: 30,)),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      _StepDot(
-                        isActive: state.currentPage == 0,
-                        label: "Details",
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        children: [
+                          _StepDot(
+                            isActive: state.currentPage == 0,
+                            label: "Details",
+                          ),
+                          const SizedBox(width: 8),
+                          _StepDot(
+                            isActive: state.currentPage == 1,
+                            label: "Images",
+                          ),
+                          const SizedBox(width: 8),
+                          _StepDot(
+                            isActive: state.currentPage == 2,
+                            label: "Contact",
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      _StepDot(
-                        isActive: state.currentPage == 1,
-                        label: "Images",
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          AddListingDetailsStep(
+                            titleController: _titleController,
+                            modelController: _modelController,
+                            yearController: _yearController,
+                            pricePerDayController: _pricePerDayController,
+                            seatsController: _seatsController,
+                            maxSpeedController: _maxSpeedController,
+                            descriptionController: _descriptionController,
+                            selectedBrand: state.selectedBrand,
+                            onBrandChanged: (v) =>
+                                context.read<AddListingBloc>().add(
+                                      AddListingBrandChanged(v),
+                                    ),
+                            selectedGearbox: state.selectedGearbox,
+                            onGearboxChanged: (v) =>
+                                context.read<AddListingBloc>().add(
+                                      AddListingGearboxChanged(v),
+                                    ),
+                            selectedFuelType: state.selectedFuelType,
+                            onFuelTypeChanged: (v) =>
+                                context.read<AddListingBloc>().add(
+                                      AddListingFuelTypeChanged(v),
+                                    ),
+                          ),
+                          AddListingImagesStep(
+                            pickedImages: state.pickedImages,
+                            onAddImages: () {
+                              unawaited(_pickMultipleImages());
+                            },
+                            onRemovePickedImage: (index) {
+                              context
+                                  .read<AddListingBloc>()
+                                  .add(AddListingPickedImageRemoved(index));
+                            },
+                          ),
+                          AddListingContactStep(
+                            phoneController: _phoneController,
+                            phoneNumber: _phoneNumber,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      _StepDot(
-                        isActive: state.currentPage == 2,
-                        label: "Contact",
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      AddListingDetailsStep(
-                        titleController: _titleController,
-                        modelController: _modelController,
-                        yearController: _yearController,
-                        pricePerDayController: _pricePerDayController,
-                        seatsController: _seatsController,
-                        maxSpeedController: _maxSpeedController,
-                        descriptionController: _descriptionController,
-                        selectedBrand: state.selectedBrand,
-                        onBrandChanged: (v) =>
-                            context.read<AddListingBloc>().add(
-                                  AddListingBrandChanged(v),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                      child: Row(
+                        children: [
+                          if (state.currentPage > 0)
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () =>
+                                    _goToPage(state.currentPage - 1),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  side: BorderSide(color: Colors.grey.shade300),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
                                 ),
-                        selectedGearbox: state.selectedGearbox,
-                        onGearboxChanged: (v) =>
-                            context.read<AddListingBloc>().add(
-                                  AddListingGearboxChanged(v),
-                                ),
-                        selectedFuelType: state.selectedFuelType,
-                        onFuelTypeChanged: (v) =>
-                            context.read<AddListingBloc>().add(
-                                  AddListingFuelTypeChanged(v),
-                                ),
-                      ),
-                      AddListingImagesStep(
-                        pickedImages: state.pickedImages,
-                        onAddImages: () {
-                          unawaited(_pickMultipleImages());
-                        },
-                        onRemovePickedImage: (index) {
-                          context
-                              .read<AddListingBloc>()
-                              .add(AddListingPickedImageRemoved(index));
-                        },
-                      ),
-                      AddListingContactStep(
-                        phoneController: _phoneController,
-                        phoneNumber: _phoneNumber,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-                  child: Row(
-                    children: [
-                      if (state.currentPage > 0)
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () =>
-                                _goToPage(state.currentPage - 1),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              side: BorderSide(color: Colors.grey.shade300),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                child: const Text("Back"),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14),
                             ),
-                            child: const Text("Back"),
-                          ),
-                        ),
-                      if (state.currentPage > 0) const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (state.currentPage < 2) {
-                              _goToPage(state.currentPage + 1);
-                            } else {
-                              print("submit");
-                              //validate form
-
-                              // submit the form
-                              final carDto = CarDto(
-                                id: Uuid().v4(),
-                                ownerId: Supabase.instance.client.auth.currentUser!.id,
-                                title: _titleController.text,
-                                brand: state.selectedBrand!, 
-                                model: _modelController.text, 
-                                year: int.parse(_yearController.text), 
-                                pricePerDay: double.parse(_pricePerDayController.text), 
-                                seats: int.parse(_seatsController.text), 
-                                gearbox: state.selectedGearbox!, 
-                                fuelType: state.selectedFuelType!, 
-                                images: [], 
-                                available: true, 
-                                createdAt: DateTime.now(), 
-                                maxSpeed: double.parse(_maxSpeedController.text), 
-                                rating: 0.0, 
-                                totalRatingCount: 0, 
-                                description: _descriptionController.text,
-                                );
-                              context.read<AddListingBloc>().add(
-                                AddListingSubmit(
-                                  carDto: carDto,
-                                  images: state.pickedImages,
-                                )
-                                );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                          if (state.currentPage > 0) const SizedBox(width: 12),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (state.currentPage < 2) {
+                                  _goToPage(state.currentPage + 1);
+                                } else {
+                                  print("submit");
+                                  //validate form
+                
+                                  // submit the form
+                                  final carDto = CarDto(
+                                    id: Uuid().v4(),
+                                    ownerId: Supabase.instance.client.auth.currentUser!.id,
+                                    title: _titleController.text,
+                                    brand: state.selectedBrand!, 
+                                    model: _modelController.text, 
+                                    year: int.parse(_yearController.text), 
+                                    pricePerDay: double.parse(_pricePerDayController.text), 
+                                    seats: int.parse(_seatsController.text), 
+                                    gearbox: state.selectedGearbox!, 
+                                    fuelType: state.selectedFuelType!, 
+                                    images: [], 
+                                    available: true, 
+                                    createdAt: DateTime.now(), 
+                                    maxSpeed: double.parse(_maxSpeedController.text), 
+                                    rating: 0.0, 
+                                    totalRatingCount: 0, 
+                                    description: _descriptionController.text,
+                                    );
+                                  context.read<AddListingBloc>().add(
+                                    AddListingSubmit(
+                                      carDto: carDto,
+                                      images: state.pickedImages,
+                                    )
+                                    );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                              ),
+                              child: Text(
+                                state.currentPage < 2 ? "Next" : "Submit",
+                              ),
                             ),
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 14),
                           ),
-                          child: Text(
-                            state.currentPage < 2 ? "Next" : "Submit",
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+                //loading overlay
+                state.submissionStatus == ListingSubmissionStatus.loading ? 
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: CircularProgressIndicator.adaptive(
+                        
+                      ),
+                    ),
+                  ),
+                )
+                : const SizedBox.shrink()
               ],
             ),
           ),

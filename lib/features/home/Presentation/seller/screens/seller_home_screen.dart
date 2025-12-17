@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
+import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_stat_tile.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_vehicle_card.dart';
@@ -264,6 +265,19 @@ class _ProfileContent extends StatelessWidget {
   const _ProfileContent();
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("Profile"));
+    final size = MediaQuery.sizeOf(context);
+    return Center(child: AdaptiveButton(
+                    style: AdaptiveButtonStyle.prominentGlass,
+                    textColor: Colors.white,
+                    minSize: Size(size.width * 0.5, 44),
+                    color: AppColors.primary,
+                    onPressed: () async {
+                      final response = await AuthService.signOut();
+                      if (response.success) {
+                        context.go(AppRoutes.login);
+                      }
+                    },
+                    label: "Log out",
+                  ),);
   }
 }

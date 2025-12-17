@@ -1,4 +1,5 @@
 import 'package:car_rental_app/features/home/data/models/car_dto.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -33,9 +34,18 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
 
   Future<String> _uploadImage(XFile image) async {
     final bytes = await image.readAsBytes();
+
+    //compress image
+    final compressedBytes = await FlutterImageCompress.compressWithList(
+      bytes,
+      quality: 80,
+      minHeight: 500,
+      minWidth: 500,
+      );
+
     final fileName = "${client.auth.currentUser?.id}_${image.name}";
     final filePath = 'cars/$fileName';
-    await client.storage.from('app_uploads').uploadBinary(filePath, bytes);
+    await client.storage.from('app_uploads').uploadBinary(filePath, compressedBytes);
     return client.storage.from('app_uploads').getPublicUrl(filePath);
   }
 

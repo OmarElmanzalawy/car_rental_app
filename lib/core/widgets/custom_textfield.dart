@@ -10,7 +10,8 @@ class CustomTextfield extends StatefulWidget {
     this.validator,
     this.keyboardType,
     this.prefixIcon, this.cursorColor, this.borderColor, this.textColor, this.hintColor, this.fillColor, this.isFilled, this.borderRadius, this.focusColor, this.errorStyle, this.errorBorder, this.focusedErrorBorder,
-    this.isEnabled = true
+    this.isEnabled = true,
+    this.isMultiline = false,
   });
 
   final String hintText;
@@ -31,6 +32,7 @@ class CustomTextfield extends StatefulWidget {
   final TextStyle? errorStyle;
   final InputBorder? errorBorder;
   final InputBorder? focusedErrorBorder;
+  final bool isMultiline;
 
   @override
   State<CustomTextfield> createState() => _CustomTextfieldState();
@@ -49,6 +51,10 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      maxLines: widget.isMultiline ? null : null,
+      minLines: widget.isMultiline ? null : null,
+      textAlignVertical: widget.isMultiline ? TextAlignVertical.top : null,
+      expands: widget.isMultiline,
       controller: widget.controller,
       cursorColor: widget.cursorColor,
       obscureText: widget.obscureText,

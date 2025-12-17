@@ -1,13 +1,14 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
-import 'package:car_rental_app/features/profile/presentation/customer/screens/customer_profile_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_stat_tile.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_vehicle_card.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/earnings_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SellerHomeScreen extends StatelessWidget {
   const SellerHomeScreen({super.key});
@@ -29,7 +30,7 @@ class SellerHomeScreen extends StatelessWidget {
                       const _DashboardContent(),
                       const _MyCarsContent(),
                       const _InboxContent(),
-                      CustomerProfileScreen(),
+                      const _ProfileContent(),
                     ],
                   );
                 },
@@ -58,6 +59,7 @@ class _DashboardContent extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          //Header Section
           Stack(
               children: [
                 Column(
@@ -184,6 +186,39 @@ class _DashboardContent extends StatelessWidget {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 12),
+                  SizedBox(
+                    width: size.width,
+                    height: 45,
+                    child: GestureDetector(
+                      onTap: () {
+                        context.push(AppRoutes.addCarListing);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add,color: AppColors.primary),
+                            const SizedBox(width: 4),
+                            Text("Add new vehicle", style: TextStyle(color: AppColors.primary,fontSize: 16, fontWeight: FontWeight.w600),),
+                          ],
+                        )
+                        ),
+                    )
+                  ),
+                  const SizedBox(height: 12),
+                  //TODO REPLACE WITH LISTVIEW OF VEHICLE CARDS
                   SellerVehicleCard(
                     imagePath: "assets/images/test_cars/tesla.png",
                     pricePerDay: 120,
@@ -209,36 +244,6 @@ class _DashboardContent extends StatelessWidget {
   }
 }
 
-
-// class _BookingRow extends StatelessWidget {
-//   const _BookingRow({required this.title, required this.status});
-//   final String title;
-//   final Widget status;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       padding: const EdgeInsets.all(12),
-//       decoration: BoxDecoration(
-//         color: Colors.white,
-//         borderRadius: BorderRadius.circular(12),
-//         boxShadow: [
-//           BoxShadow(
-//             color: Colors.black.withValues(alpha: 0.05),
-//             blurRadius: 12,
-//             offset: const Offset(0, 6),
-//           ),
-//         ],
-//       ),
-//       child: Row(
-//         children: [
-//           Expanded(child: Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
-//           status,
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 class _MyCarsContent extends StatelessWidget {
   const _MyCarsContent();
   @override
@@ -252,5 +257,13 @@ class _InboxContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("Inbox"));
+  }
+}
+
+class _ProfileContent extends StatelessWidget {
+  const _ProfileContent();
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text("Profile"));
   }
 }

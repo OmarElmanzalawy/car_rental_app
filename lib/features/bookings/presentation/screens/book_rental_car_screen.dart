@@ -4,7 +4,7 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/bookings/presentation/widgets/labeled_value_card.dart';
 import 'package:car_rental_app/core/widgets/phone_textfield.dart';
-import 'package:car_rental_app/features/auth/Presentation/widgets/custom_textfield.dart';
+import 'package:car_rental_app/core/widgets/custom_textfield.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';

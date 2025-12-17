@@ -9,6 +9,8 @@ import 'package:car_rental_app/features/bookings/presentation/screens/book_renta
 import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/customer_home_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/map_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listing_bloc/add_listing_bloc.dart';
+import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +30,7 @@ class AppRoutes {
   static const String bookRentalCar = "/book-rental-car";
   static const String map = "/map";
   static const String bookings = "/bookings";
+  static const String addCarListing = "/add-car-listing";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -36,9 +39,18 @@ class AppRoutes {
 final List<RouteBase> kappRoutes = [
   GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
   GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
-  GoRoute(path: AppRoutes.customerHome, builder: (context, state) => CustomerHomeScreen()),
-  GoRoute(path: AppRoutes.verified, builder: (context, state) => CustomerHomeScreen()),
-  GoRoute(path: AppRoutes.sellerHome, builder: (context, state) => SellerHomeScreen(),),
+  GoRoute(
+    path: AppRoutes.customerHome,
+    builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.verified,
+    builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.sellerHome,
+    builder: (context, state) => SellerHomeScreen(),
+  ),
   GoRoute(
     path: AppRoutes.phoneAuth,
     builder: (context, state) => PhoneAuthScreen(),
@@ -54,10 +66,13 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.bookRentalCar,
     builder: (context, state) {
-     final extra = state.extra as Map<String,dynamic>;
+      final extra = state.extra as Map<String, dynamic>;
       return BlocProvider(
         create: (context) => BookRentalCubit(context)..getUserCurrentPosition(),
-        child: BookRentalCarScreen(datePickerBloc: extra["datePickerBloc"] as DatePickerBloc, carModel: extra["model"] as CarModel),
+        child: BookRentalCarScreen(
+          datePickerBloc: extra["datePickerBloc"] as DatePickerBloc,
+          carModel: extra["model"] as CarModel,
+        ),
       );
     },
   ),
@@ -66,7 +81,9 @@ final List<RouteBase> kappRoutes = [
     builder: (context, state) {
       final model = state.extra as CarModel;
       return BlocProvider(
-        create: (context) => DatePickerBloc()..add(SelectDateEvent(selectedDate: AppUtils.currentDate())),
+        create: (context) =>
+            DatePickerBloc()
+              ..add(SelectDateEvent(selectedDate: AppUtils.currentDate())),
         child: CarDetailScreen(model: model),
       );
     },
@@ -81,5 +98,12 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.bookings,
     builder: (context, state) => BookingsScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.addCarListing,
+    builder: (context, state) => BlocProvider(
+      create: (context) => AddListingBloc(),
+      child: AddCarListingScreen(),
+    ),
   ),
 ];

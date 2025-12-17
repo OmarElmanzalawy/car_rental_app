@@ -87,4 +87,69 @@ class CarDto {
       description: description,
     );
   }
+
+  //copy with
+  CarDto copyWith({
+    String? id,
+    String? ownerId,
+    String? title,
+    String? brand,
+    String? model,
+    int? year,
+    double? pricePerDay,
+    int? seats,
+    GearBox? gearbox,
+    FuelType? fuelType,
+    List<String>? images,
+    bool? available,
+    DateTime? createdAt,
+    double? maxSpeed,
+    double? rating,
+    int? totalRatingCount,
+    String? description,
+  }) {
+    return CarDto(
+      id: id ?? this.id,
+      ownerId: ownerId ?? this.ownerId,
+      title: title ?? this.title,
+      brand: brand ?? this.brand,
+      model: model ?? this.model,
+      year: year ?? this.year,
+      pricePerDay: pricePerDay ?? this.pricePerDay,
+      seats: seats ?? this.seats,
+      gearbox: gearbox ?? this.gearbox,
+      fuelType: fuelType ?? this.fuelType,
+      images: images ?? this.images,
+      available: available ?? this.available,
+      createdAt: createdAt ?? this.createdAt,
+      maxSpeed: maxSpeed ?? this.maxSpeed,
+      rating: rating ?? this.rating,
+      totalRatingCount: totalRatingCount ?? this.totalRatingCount,
+      description: description ?? this.description,
+      
+    );
+  }
+
+  //to map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'owner_id': ownerId,
+      'title': title,
+      'brand': brand,
+      'model': model,
+      'year': year,
+      'price_per_day': pricePerDay,
+      'seats': seats,
+      'gearbox': gearbox.name,
+      'fuel_type': fuelType.name,
+      'images': images,
+      'available': available,
+      'created_at': createdAt.toIso8601String(),
+      'max_speed': maxSpeed,
+      'rating': rating,
+      'total_rating_count': totalRatingCount,
+      'description': description,
+    };
+  }
 }

@@ -22,6 +22,9 @@ class CarDto {
   final double rating;
   final int totalRatingCount;
   final String description;
+  final bool isTopDeal;
+
+
 
   CarDto({
     required this.id,
@@ -41,6 +44,7 @@ class CarDto {
     required this.rating,
     required this.totalRatingCount,
     required this.description,
+    required this.isTopDeal,
   });
 
   factory CarDto.fromMap(Map<String, dynamic> map) {
@@ -62,6 +66,7 @@ class CarDto {
       rating: (map['rating'] as num).toDouble(),
       totalRatingCount: (map['total_rating_count'] as num).toInt(),
       description: map['description'] as String,
+      isTopDeal: map['is_top_deal'] as bool,
     );
   }
 
@@ -85,6 +90,7 @@ class CarDto {
       rating: rating,
       totalRatingCount: totalRatingCount,
       description: description,
+      isTopDeal: isTopDeal,
     );
   }
 
@@ -107,6 +113,7 @@ class CarDto {
     double? rating,
     int? totalRatingCount,
     String? description,
+    bool? isTopDeal,
   }) {
     return CarDto(
       id: id ?? this.id,
@@ -126,7 +133,7 @@ class CarDto {
       rating: rating ?? this.rating,
       totalRatingCount: totalRatingCount ?? this.totalRatingCount,
       description: description ?? this.description,
-      
+      isTopDeal: isTopDeal ?? this.isTopDeal,
     );
   }
 
@@ -150,6 +157,7 @@ class CarDto {
       'rating': rating,
       'total_rating_count': totalRatingCount,
       'description': description,
+      'is_top_deal': isTopDeal,
     };
   }
 }

@@ -68,6 +68,7 @@ class AddListingDetailsStep extends StatelessWidget {
               AdaptiveDropDownItem(value: "BMW", label: "BMW"),
               AdaptiveDropDownItem(value: "Toyota", label: "Toyota"),
               AdaptiveDropDownItem(value: "Ford", label: "Ford"),
+              AdaptiveDropDownItem(value: "Lamborghini", label: "Lamborghini"),
             ],
           ),
           const SizedBox(height: 12),

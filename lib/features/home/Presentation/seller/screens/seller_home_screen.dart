@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
+import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_stat_tile.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_vehicle_card.dart';
 import 'package:car_rental_app/features/home/Presentation/widgets/earnings_card.dart';
@@ -16,8 +17,13 @@ class SellerHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NavigationBarCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => NavigationBarCubit()),
+        BlocProvider(
+          create: (_) => SellerBlocBloc()..add(const SellerListingsStarted()),
+        ),
+      ],
       child: AdaptiveScaffold(
         body: Material(
           color: Colors.transparent,
@@ -219,19 +225,70 @@ class _DashboardContent extends StatelessWidget {
                     )
                   ),
                   const SizedBox(height: 12),
-                  //TODO REPLACE WITH LISTVIEW OF VEHICLE CARDS
-                  SellerVehicleCard(
-                    imagePath: "assets/images/test_cars/tesla.png",
-                    pricePerDay: 120,
-                    statusChipColor: Colors.green.shade400,
-                    statusChipLabel: "Available",
-                  ),
-                  const SizedBox(height: 10),
-                  SellerVehicleCard(
-                    imagePath: "assets/images/test_cars/sclass.png",
-                    pricePerDay: 160,
-                    statusChipColor: Colors.blue.shade400,
-                    statusChipLabel: "Rented",
+                  BlocBuilder<SellerBlocBloc, SellerState>(
+                    builder: (context, state) {
+                      if (state.status == SellerListingsStatus.loading) {
+                        return const Padding(
+                          padding: EdgeInsets.only(top: 18),
+                          child: Center(
+                            child: CircularProgressIndicator.adaptive(),
+                          ),
+                        );
+                      }
+
+                      if (state.status == SellerListingsStatus.failure) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(
+                            state.errorMessage ?? "Failed to load your listings.",
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      }
+
+                      if (state.listings.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(
+                            "No vehicles yet. Add your first listing.",
+                            style: TextStyle(
+                              color: Colors.grey.shade700,
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: state.listings.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final car = state.listings[index];
+                          final imagePath = (car.images?.isNotEmpty ?? false)
+                              ? car.images!.first
+                              : "assets/images/test_cars/tesla.png";
+                          final statusLabel =
+                              car.available ? "Available" : "Unavailable";
+                          final statusColor = car.available
+                              ? Colors.green.shade400
+                              : Colors.grey.shade500;
+
+                          return SellerVehicleCard(
+                            imagePath: imagePath,
+                            pricePerDay: car.pricePerDay,
+                            statusChipColor: statusColor,
+                            statusChipLabel: statusLabel,
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(height: 16),
                   const SizedBox(height: 100),

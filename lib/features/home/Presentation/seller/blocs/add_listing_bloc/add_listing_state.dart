@@ -14,6 +14,7 @@ class AddListingState extends Equatable {
     this.selectedBrand,
     this.selectedGearbox = GearBox.automatic,
     this.selectedFuelType = FuelType.petrol,
+    this.thumbnailImage,
     this.pickedImages = const [],
     this.submissionStatus = ListingSubmissionStatus.initial,
   });
@@ -22,6 +23,7 @@ class AddListingState extends Equatable {
   final String? selectedBrand;
   final GearBox? selectedGearbox;
   final FuelType? selectedFuelType;
+  final XFile? thumbnailImage;
   final List<XFile> pickedImages;
   final ListingSubmissionStatus submissionStatus;
 
@@ -33,6 +35,8 @@ class AddListingState extends Equatable {
     bool selectedGearboxChanged = false,
     FuelType? selectedFuelType,
     bool selectedFuelTypeChanged = false,
+    XFile? thumbnailImage,
+    bool thumbnailImageChanged = false,
     List<XFile>? pickedImages,
     ListingSubmissionStatus? submissionStatus,
   }) {
@@ -44,6 +48,8 @@ class AddListingState extends Equatable {
           selectedGearboxChanged ? selectedGearbox : this.selectedGearbox,
       selectedFuelType:
           selectedFuelTypeChanged ? selectedFuelType : this.selectedFuelType,
+      thumbnailImage:
+          thumbnailImageChanged ? thumbnailImage : this.thumbnailImage,
       pickedImages: pickedImages ?? this.pickedImages,
       submissionStatus: submissionStatus ?? this.submissionStatus,
     );
@@ -55,6 +61,7 @@ class AddListingState extends Equatable {
         selectedBrand,
         selectedGearbox,
         selectedFuelType,
+        thumbnailImage,
         pickedImages,
         submissionStatus
       ];

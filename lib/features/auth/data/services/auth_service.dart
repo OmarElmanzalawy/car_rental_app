@@ -143,37 +143,50 @@ class AuthService {
 
     print("complete email verification function triggered");
 
-    final supabase = Supabase.instance.client;
-    final user = supabase.auth.currentUser;
-    if (user == null) {
-      print("No user found");
-      return;
+    try{
+      final supabase = Supabase.instance.client;
+      final user = supabase.auth.currentUser;
+      if (user == null) {
+        print("No user found");
+        return;
+      }
+      if (user.email != null) {
+        final confirmedAt = user.emailConfirmedAt;
+        if (confirmedAt == null) {
+          return;
+        }
+        print("user is verified at: $confirmedAt");
+      }
+      final existing = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', user.id)
+          .maybeSingle();
+      if (existing != null) {
+        return;
+      }
+      final metadata = user.userMetadata ?? {};
+      print(metadata.isEmpty ? "user has no metadata: $metadata": "user has valid metadata $metadata");
+      final name = (metadata['full_name'] as String?) ?? '';
+      final roleName = (metadata['role'] as String?) ?? 'customer';
+      final role = UserType.values.firstWhere(
+        (r) => r.name == roleName,
+        orElse: () => UserType.customer,
+      );
+      final model = UserModel(
+        id: user.id,
+        name: name,
+        email: user.email,
+        password: '',
+        role: role,
+        createdAt: DateTime.now(),
+        phoneNumber: user.phone,
+      );
+      await supabase.from('users').insert(model.toMap());
+    }catch(e){
+      print("error completing email verification");
+      print(e.toString());
     }
-    final existing = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', user.id)
-        .maybeSingle();
-    if (existing != null) {
-      return;
-    }
-    final metadata = user.userMetadata ?? {};
-    final name = (metadata['full_name'] as String?) ?? '';
-    final roleName = (metadata['role'] as String?) ?? 'customer';
-    final role = UserType.values.firstWhere(
-      (r) => r.name == roleName,
-      // orElse: () => UserType.customer,
-    );
-    final model = UserModel(
-      id: user.id,
-      name: name,
-      email: user.email,
-      password: '',
-      role: role,
-      createdAt: DateTime.now(),
-      phoneNumber: user.phone,
-    );
-    await supabase.from('users').insert(model.toMap());
   }
 
   static Future<AuthResult> signInWithEmail({required String email, required String password}) async{
@@ -197,6 +210,7 @@ class AuthService {
       print("No user found");
       return;
     }
+    await completeEmailVerification();
     final metadata = user.userMetadata ?? {};
     final roleName = (metadata['role'] as String?) ?? 'customer';
     final role = UserType.values.firstWhere(

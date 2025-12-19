@@ -200,6 +200,7 @@ max_speed,float8,
 total_rating_count,int8,
 description,varchar,
 rating,float8,Average rating
+is_top_deal, bool // True if the images has a thumbnail image picked
 
 ### rentals
 id,uuid,Primary Key

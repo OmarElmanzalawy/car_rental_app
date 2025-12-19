@@ -61,6 +61,19 @@ final class AddListingPickedImageRemoved extends AddListingEvent {
   List<Object> get props => [index];
 }
 
+final class AddListingThumbnailPicked extends AddListingEvent {
+  const AddListingThumbnailPicked(this.image);
+
+  final XFile image;
+
+  @override
+  List<Object> get props => [image];
+}
+
+final class AddListingThumbnailRemoved extends AddListingEvent {
+  const AddListingThumbnailRemoved();
+}
+
 final class AddListingSubmit extends AddListingEvent {
   const AddListingSubmit({required this.carDto,required this.images});
 

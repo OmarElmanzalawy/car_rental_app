@@ -19,6 +19,7 @@ class CarModel {
   final double rating;
   final int totalRatingCount;
   final String description;
+  final bool isTopDeal;
 
   CarModel({
     required this.id,
@@ -39,6 +40,7 @@ class CarModel {
     required this.rating,
     required this.totalRatingCount,
     required this.description,
+    required this.isTopDeal,
   });
 
   factory CarModel.fromMap(Map<String,dynamic> map){
@@ -61,6 +63,7 @@ class CarModel {
       rating: map['rating'],
       totalRatingCount: map['total_rating_count'],
       description: map['description'],
+      isTopDeal: map['is_top_deal'],
     );
   }
 
@@ -84,6 +87,7 @@ class CarModel {
       'total_rating_count': this.totalRatingCount,
       'description': this.description,
       'rating': this.rating,
+      'is_top_deal': this.isTopDeal,
     };
   }
 

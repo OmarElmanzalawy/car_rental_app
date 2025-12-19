@@ -12,12 +12,41 @@ class SellerVehicleCard extends StatelessWidget {
   });
 
   final String imagePath;
-  final int pricePerDay;
+  final num pricePerDay;
   final Color statusChipColor;
   final String statusChipLabel;
 
   @override
   Widget build(BuildContext context) {
+    final imageWidget = imagePath.startsWith('http')
+        ? Image.network(
+            imagePath,
+            width: 140,
+            height: 90,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 140,
+                height: 90,
+                color: Colors.grey.shade200,
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.image_not_supported_outlined,
+                  color: Colors.grey.shade600,
+                ),
+              );
+            },
+          )
+        : Image.asset(
+            imagePath,
+            width: 140,
+            height: 90,
+            fit: BoxFit.cover,
+          );
+    final formattedPrice = pricePerDay % 1 == 0
+        ? pricePerDay.toInt().toString()
+        : pricePerDay.toStringAsFixed(2);
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -35,12 +64,7 @@ class SellerVehicleCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              imagePath,
-              width: 140,
-              height: 90,
-              fit: BoxFit.cover,
-            ),
+            child: imageWidget,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -50,7 +74,7 @@ class SellerVehicleCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "\$$pricePerDay/day",
+                      "\$$formattedPrice/day",
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,

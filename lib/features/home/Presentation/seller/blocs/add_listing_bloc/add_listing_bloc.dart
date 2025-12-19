@@ -61,9 +61,27 @@ class AddListingBloc extends Bloc<AddListingEvent, AddListingState> {
       emit(state.copyWith(pickedImages: next));
     });
 
+    on<AddListingThumbnailPicked>((event, emit) {
+      emit(
+        state.copyWith(
+          thumbnailImage: event.image,
+          thumbnailImageChanged: true,
+        ),
+      );
+    });
+
+    on<AddListingThumbnailRemoved>((event, emit) {
+      emit(
+        state.copyWith(
+          thumbnailImage: null,
+          thumbnailImageChanged: true,
+        ),
+      );
+    });
+
     on<AddListingSubmit>((event,emit)async{
       emit(state.copyWith(submissionStatus: ListingSubmissionStatus.loading));
-      final success = await CarRemoteDataSourceImpl(Supabase.instance.client).addCarListing(event.carDto, event.images);
+      final success = await CarRemoteDataSourceImpl(Supabase.instance.client).addCarListing(event.carDto, state.thumbnailImage != null ? [state.thumbnailImage!,...event.images] : event.images);
       if(success){
         emit(state.copyWith(submissionStatus: ListingSubmissionStatus.success));
       }else{

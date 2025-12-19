@@ -7,7 +7,8 @@ abstract class CarRemoteDataSource {
   Future<List<CarDto>> fetchAll();
   Future<List<CarDto>> fetchFeatured();
   Future<List<CarDto>> fetchByBrand(String brand);
-  Future<void> addCarListing(CarDto carDto, List<XFile> images);
+  Stream<List<CarDto>> fetchSellerListings();
+  Future<bool> addCarListing(CarDto carDto, List<XFile> images);
 }
 
 class CarRemoteDataSourceImpl implements CarRemoteDataSource {
@@ -68,5 +69,19 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       print(e.toString());
       return false;
     }
+  }
+
+  @override
+  Stream<List<CarDto>> fetchSellerListings() {
+    return client
+        .from('cars')
+        .stream(primaryKey: ['id'])
+        .eq('owner_id', client.auth.currentUser!.id)
+        .order('created_at')
+        .map((maps) {
+          return (maps as List)
+              .map((e) => CarDto.fromMap(e as Map<String, dynamic>))
+              .toList();
+        });
   }
 }

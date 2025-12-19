@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listing_bloc/add_listing_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/add_listing_contact_step.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/add_listing_details_step.dart';
@@ -67,10 +69,36 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
     context.read<AddListingBloc>().add(AddListingImagesAdded(images));
   }
 
+  Future<void> _pickThumbnailImage() async {
+    final image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (!mounted) return;
+    if (image == null) return;
+
+    context.read<AddListingBloc>().add(AddListingThumbnailPicked(image));
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return BlocBuilder<AddListingBloc, AddListingState>(
+    return BlocConsumer<AddListingBloc, AddListingState>(
+      listener: (context, state) {
+        if (state.submissionStatus == ListingSubmissionStatus.success) {
+          DialogueService.showAdaptiveAlertDialog(
+            context,
+            title: "Success",
+            content: "Your car listing has been added successfully",
+            actions: [
+              AlertAction(
+                title: "OK",
+                style: AlertActionStyle.primary,
+                onPressed: (){
+                  context.pop();
+                },
+              )
+            ]
+            );
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -149,6 +177,7 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
                                     ),
                           ),
                           AddListingImagesStep(
+                            thumbnailImage: state.thumbnailImage,
                             pickedImages: state.pickedImages,
                             onAddImages: () {
                               unawaited(_pickMultipleImages());
@@ -157,6 +186,14 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
                               context
                                   .read<AddListingBloc>()
                                   .add(AddListingPickedImageRemoved(index));
+                            },
+                            onPickThumbnail: () {
+                              unawaited(_pickThumbnailImage());
+                            },
+                            onRemoveThumbnail: () {
+                              context
+                                  .read<AddListingBloc>()
+                                  .add(const AddListingThumbnailRemoved());
                             },
                           ),
                           AddListingContactStep(
@@ -216,6 +253,7 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
                                     rating: 0.0, 
                                     totalRatingCount: 0, 
                                     description: _descriptionController.text,
+                                    isTopDeal: state.thumbnailImage != null,
                                     );
                                   context.read<AddListingBloc>().add(
                                     AddListingSubmit(

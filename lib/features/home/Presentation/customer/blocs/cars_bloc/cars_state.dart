@@ -8,6 +8,7 @@ class CarsState {
   final List<CarModel> availableNearYouCars;
   final List<CarModel> allCars;
   final String? message;
+  final String? selectedBrand;
 
   const CarsState({
     this.status = CarsStatus.loading,
@@ -15,6 +16,7 @@ class CarsState {
     this.availableNearYouCars = const [],
     this.allCars = const [],
     this.message,
+    this.selectedBrand,
   });
 
   CarsState copyWith({
@@ -23,6 +25,8 @@ class CarsState {
     List<CarModel>? availableNearYouCars,
     List<CarModel>? allCars,  
     String? message,
+    String? selectedBrand,
+    bool selectedBrandChanged = false,
   }) {
     return CarsState(
       status: status ?? this.status,
@@ -30,6 +34,8 @@ class CarsState {
       availableNearYouCars: availableNearYouCars ?? this.availableNearYouCars,
       message: message ?? this.message,
       allCars: allCars ?? this.allCars,
+      selectedBrand:
+          selectedBrandChanged ? selectedBrand : this.selectedBrand,
     );
   }
 }

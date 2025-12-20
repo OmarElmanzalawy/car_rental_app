@@ -66,7 +66,7 @@ class CarDto {
       rating: (map['rating'] as num).toDouble(),
       totalRatingCount: (map['total_rating_count'] as num).toInt(),
       description: map['description'] as String,
-      isTopDeal: map['is_top_deal'] as bool,
+      isTopDeal: map['is_top_deal'] == true,
     );
   }
 

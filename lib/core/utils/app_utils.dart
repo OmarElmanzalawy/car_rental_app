@@ -102,6 +102,17 @@ static LatLng latLngFromSupabase(String geoJson) {
   return LatLng(coords[1], coords[0]); // lat, lng
 }
 
+  static List<String> fetchUniqueBrands(List<String> values){
+    final seen = <String>{};
+      final unique = <String>[];
+      for (final value in values) {
+        if (seen.add(value.toLowerCase())) {
+          unique.add(value);
+        }
+      }
+      return unique;
+  }
+
   static String timeLeftForPickup(DateTime pickupDate) {
     final now = DateTime.now();
     final diff = pickupDate.difference(now);

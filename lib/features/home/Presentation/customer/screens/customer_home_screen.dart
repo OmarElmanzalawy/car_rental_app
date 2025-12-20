@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/oval_top_clipper.dart';
 import 'package:car_rental_app/features/bookings/data/bookings_data_source.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
@@ -65,6 +66,8 @@ class CustomerHomeScreen extends StatelessWidget {
 class _HomeContent extends StatelessWidget {
   const _HomeContent();
 
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.sizeOf(context);
@@ -80,6 +83,7 @@ class _HomeContent extends StatelessWidget {
         child: BlocBuilder<CarsBloc, CarsState>(
           builder: (context, state) {
             print(state.status);
+            final brands = AppUtils.fetchUniqueBrands(state.allCars.map((e) => e.brand).toList());
             return Stack(
               // clipBehavior: Clip.none,
               children: [
@@ -177,14 +181,21 @@ class _HomeContent extends StatelessWidget {
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
+                              final brand = brands[index];
                               return Capsule(
-                                text: state.allCars[index].brand,
+                                isSelected: state.selectedBrand == brand,
+                                text: brand,
                                 includeCarLogo: true,
+                                onTap: () {
+                                  context
+                                      .read<CarsBloc>()
+                                      .add(FilterCarsByBrandEvent(brand));
+                                },
                               );
                             },
                             separatorBuilder: (context, index) =>
                                 const SizedBox(width: 8),
-                            itemCount: state.allCars.length,
+                            itemCount: brands.length,
                           ),
                         ),
                       ],

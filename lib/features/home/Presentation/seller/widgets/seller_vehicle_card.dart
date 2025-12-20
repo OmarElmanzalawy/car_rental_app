@@ -1,4 +1,5 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +20,19 @@ class SellerVehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final imageWidget = imagePath.startsWith('http')
-        ? Image.network(
-            imagePath,
+        ? CachedNetworkImage(
+            imageUrl: imagePath,
             width: 140,
             height: 90,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
+            progressIndicatorBuilder: (context, url, progress) {
+              return Center(
+                child: CircularProgressIndicator.adaptive(
+                  value: progress.progress,
+                ),
+              );
+            },
+            errorWidget: (context, error, stackTrace) {
               return Container(
                 width: 140,
                 height: 90,

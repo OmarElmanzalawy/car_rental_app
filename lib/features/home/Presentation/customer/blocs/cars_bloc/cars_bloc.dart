@@ -12,23 +12,53 @@ class CarsBloc extends Bloc<CarsEvent, CarsState> {
     final remoteClient = CarRemoteDataSourceImpl(Supabase.instance.client);
     on<LoadCarsEvent>((event, emit) async {
       try {
-      final dtos = await remoteClient.fetchAll();
-      final cars = dtos.map((e) => e.toEntity()).toList();
+        emit(state.copyWith(status: CarsStatus.loading, message: null));
 
-      //separate topdeals from normal cars (top deals are cars that end with .png  (for testing only))
-      final topDeals = cars.where((element) => element.images!.first.endsWith(".png")).toList();
-      final normalCars = cars.where((element) => !element.images!.first.endsWith(".png")).toList();
+        final dtos = await remoteClient.fetchAll();
+        final cars = dtos.map((e) => e.toEntity()).toList();
 
-      print(topDeals);
+        final topDeals = cars.where((element) => element.isTopDeal).toList();
+        final availableNearYou =
+            cars.where((element) => !element.isTopDeal).toList();
 
-      print("topdeals car length: ${topDeals.length}");
-      print("normal cars length: ${normalCars.length}");
+        emit(
+          state.copyWith(
+            status: CarsStatus.loaded,
+            availableNearYouCars: availableNearYou,
+            topDealCars: topDeals,
+            allCars: cars,
+          ),
+        );
+      } catch (e) {
+        emit(state.copyWith(status: CarsStatus.error, message: e.toString()));
+      }
+    });
 
-      print("Loaded cars: $cars");
-      emit(state.copyWith(status: CarsStatus.loaded, availableNearYouCars: normalCars, topDealCars: topDeals,allCars: cars));
-    } catch (e) {
-      emit(state.copyWith(status: CarsStatus.error, message: e.toString()));
-    }
+    on<FilterCarsByBrandEvent>((event, emit) async {
+      final nextSelectedBrand = (state.selectedBrand != null &&
+              state.selectedBrand!.toLowerCase() == event.brand.toLowerCase())
+          ? null
+          : event.brand;
+
+      final filtered = nextSelectedBrand == null
+          ? state.allCars
+          : state.allCars
+              .where(
+                (car) => car.brand.toLowerCase() == nextSelectedBrand.toLowerCase(),
+              )
+              .toList();
+
+      final topDeals = filtered.where((car) => car.isTopDeal).toList();
+      final availableNearYou = filtered.where((car) => !car.isTopDeal).toList();
+
+      emit(
+        state.copyWith(
+          selectedBrand: nextSelectedBrand,
+          selectedBrandChanged: true,
+          topDealCars: topDeals,
+          availableNearYouCars: availableNearYou,
+        ),
+      );
     });
   }
 }

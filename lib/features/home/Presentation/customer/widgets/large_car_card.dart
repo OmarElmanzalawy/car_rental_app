@@ -1,10 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/widgets/glass_capsule.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
 
 class LargeCarCard extends StatelessWidget {
   const LargeCarCard({super.key,required this.model});
@@ -14,6 +14,8 @@ class LargeCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rawImage =
+        (model.images?.isNotEmpty ?? false) ? model.images!.first : null;
     return GestureDetector(
       onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: Column(
@@ -21,22 +23,25 @@ class LargeCarCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Container(
+            child: SizedBox(
               width: 260,
               height: 190,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 10,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-                image: DecorationImage(
-                  image: AssetImage("assets/images/test_cars/${model.images!.first}"),
-                  fit: BoxFit.cover
-                  ),
-              ),
+              child: (rawImage != null && rawImage.startsWith('http'))
+                  ? CachedNetworkImage(
+                      imageUrl: rawImage,
+                      fit: BoxFit.cover,
+                      progressIndicatorBuilder: (context, url, progress) {
+                        return Center(
+                          child: CircularProgressIndicator.adaptive(
+                            value: progress.progress,
+                          ),
+                        );
+                      },
+                      errorWidget: (context, error, stackTrace) {
+                        return Image.asset("assets/icons/car_placeholder.png", fit: BoxFit.cover);
+                      },
+                    )
+                  : Image.asset("assets/icons/car_placeholder.png", fit: BoxFit.cover),
             ),
           ),
           const SizedBox(height: 10,),

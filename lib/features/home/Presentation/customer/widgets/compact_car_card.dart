@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
 
 class CompactCarCard extends StatelessWidget {
   const CompactCarCard({
@@ -15,6 +15,9 @@ class CompactCarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logoPath = "assets/logos/${model.brand.toLowerCase()}.png";
+    final rawImage =
+        (model.images?.isNotEmpty ?? false) ? model.images!.first : null;
     return GestureDetector(
       onTap: () => context.push(AppRoutes.carDetail,extra: model),
       child: ClipRRect(
@@ -45,9 +48,15 @@ class CompactCarCard extends StatelessWidget {
                         top: 15,
                         left: 15,
                         child: Image.asset(
-                          "assets/logos/${model.brand.toLowerCase()}.png",
+                          logoPath,
                           width: 40,
                           height: 40,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const SizedBox(
+                              width: 40,
+                              height: 40,
+                            );
+                          },
                         ),
                         ),
                         Positioned(
@@ -79,12 +88,34 @@ class CompactCarCard extends StatelessWidget {
                         left: 0,
                         child: Container(
                           // color: Colors.orange,
-                          child: Image.asset(
-                            width: 200,
-                            height: 200,
-                            "assets/images/test_cars/${model.images!.first}",
-                            fit: BoxFit.cover,
-                          ),
+                          child: (rawImage != null && rawImage.startsWith('http'))
+                              ? CachedNetworkImage(
+                                  imageUrl: rawImage,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder: (context, url, progress) {
+                                    return Center(
+                                      child: CircularProgressIndicator.adaptive(
+                                        value: progress.progress,
+                                      ),
+                                    );
+                                  },
+                                  errorWidget: (context, error, stackTrace) {
+                                    return Image.asset(
+                                      "assets/icons/car_placeholder.png",
+                                      width: 200,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  "assets/icons/car_placeholder.png",
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                       

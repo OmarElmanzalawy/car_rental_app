@@ -1,4 +1,5 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
@@ -9,11 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:car_rental_app/features/bookings/presentation/widgets/date_picker_grid.dart';
+import 'package:readmore/readmore.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CarDetailScreen extends StatelessWidget {
-  const CarDetailScreen({super.key,required this.model});
+  CarDetailScreen({super.key,required this.model});
 
   final CarModel model;
+  final PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -50,31 +54,56 @@ class CarDetailScreen extends StatelessWidget {
                 children: [
                   SizedBox(height:  isImageTransparent ? 40 : 0),
                   SizedBox(
-                    // height: size.height * 0.27,
+                    height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
                     child: Center(
-                      child: Image.asset(
-                        "assets/images/test_cars/${model.images!.first}",
-                        fit: isImageTransparent ? BoxFit.cover : BoxFit.cover,
-                        width: isImageTransparent ? size.width * 0.9 : size.width,
-                        height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
-                      ),
+                      child: Stack(
+                        children: [
+                          PageView.builder(
+                            itemCount: model.images!.length,
+                            controller: pageController,
+                            itemBuilder: (context, index) => CachedNetworkImage(
+                              imageUrl:  model.images![index],
+                              width: isImageTransparent ? size.width * 0.9 : size.width,
+                              height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder: (context, url, progress) {
+                                return Center(
+                                  child: CircularProgressIndicator.adaptive(
+                                    value: progress.progress,
+                                  ),
+                                );
+                              },
+                              errorWidget: (context, error, stackTrace) {
+                                return Image.asset(
+                                  "assets/icons/car_placeholder.png",
+                                  fit: isImageTransparent ? BoxFit.cover : BoxFit.cover,
+                                  width: isImageTransparent ? size.width * 0.9 : size.width,
+                                  height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
+                                );
+                              },
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: SmoothPageIndicator(
+                                controller: pageController,
+                                count: model.images!.length,
+                                effect: const ExpandingDotsEffect(
+                                  dotWidth: 10,
+                                  dotHeight: 10,
+                                  activeDotColor: AppColors.primary,
+                                  dotColor: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ),
                   ),
-                  // const SizedBox(height: 8),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Container(
-                  //       width: 6,
-                  //       height: 6,
-                  //       decoration: const BoxDecoration(
-                  //         color: Colors.blueAccent,
-                  //         shape: BoxShape.circle,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  // const SizedBox(height: 12),
                   Container(
                     width: size.width,
                     decoration: BoxDecoration(
@@ -132,13 +161,26 @@ class CarDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            "${model.description}........ Read More",
+                          // Text(
+                          //   "${model.description}........ Read More",
+                          //   style: TextStyle(
+                          //     fontSize: 14,
+                          //     height: 1.5,
+                          //     color: AppColors.textSecondary,
+                          //   ),
+                          // ),
+                          ReadMoreText(
+                            model.description,
                             style: TextStyle(
                               fontSize: 14,
                               height: 1.5,
                               color: AppColors.textSecondary,
                             ),
+                            trimLines: 3,
+                            trimMode: TrimMode.Line,
+                            trimCollapsedText: "Read More",
+                            trimExpandedText: "Show Less",
+                            colorClickableText: AppColors.primary,
                           ),
                           const SizedBox(height: 20),
                           const Text(

@@ -23,7 +23,7 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
 
   @override
   Future<List<CarDto>> fetchFeatured() async {
-    final res = await client.from('cars').select().gte('rating', 4.3);
+    final res = await client.from('cars').select().eq('is_top_deal', true);
     return (res as List).map((e) => CarDto.fromMap(e as Map<String, dynamic>)).toList();
   }
 
@@ -33,7 +33,7 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
     return (res as List).map((e) => CarDto.fromMap(e as Map<String, dynamic>)).toList();
   }
 
-  Future<String> _uploadImage(XFile image) async {
+  Future<String> _uploadImage(XFile image,bool isTransparent) async {
     final bytes = await image.readAsBytes();
 
     //compress image
@@ -42,6 +42,7 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
       quality: 80,
       minHeight: 500,
       minWidth: 500,
+      format: isTransparent? CompressFormat.png : CompressFormat.jpeg,
       );
 
     final fileName = "${client.auth.currentUser?.id}_${image.name}";
@@ -55,7 +56,7 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
     try{
     //upload cars to supabase storage
     //get public urls to add later to database
-    final imageUrls = await Future.wait(images.map(_uploadImage));
+    final imageUrls = await Future.wait(images.map( (e) => _uploadImage(e, e.name.endsWith('.png'))));
 
     // modify cardto to include image urls
     CarDto model = carDto.copyWith(images: imageUrls);

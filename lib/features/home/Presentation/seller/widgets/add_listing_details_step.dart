@@ -65,10 +65,13 @@ class AddListingDetailsStep extends StatelessWidget {
             onChanged: onBrandChanged,
             items: const [
               AdaptiveDropDownItem(value: "Tesla", label: "Tesla"),
+              AdaptiveDropDownItem(value: "Audi", label: "Audi"),
               AdaptiveDropDownItem(value: "BMW", label: "BMW"),
               AdaptiveDropDownItem(value: "Toyota", label: "Toyota"),
               AdaptiveDropDownItem(value: "Ford", label: "Ford"),
+              AdaptiveDropDownItem(value: "Porsche", label: "Porsche"),
               AdaptiveDropDownItem(value: "Lamborghini", label: "Lamborghini"),
+              AdaptiveDropDownItem(value: "Range Rover", label: "Range Rover"),
             ],
           ),
           const SizedBox(height: 12),

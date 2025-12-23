@@ -3,6 +3,9 @@ import 'package:car_rental_app/core/constants/enums.dart';
 class CarModel {
   final String id;
   final String ownerId;
+  final String? ownerName;
+  final String? ownerPhone;
+  final String? ownerProfileImage;
   final String title;
   final String brand;
   final String model;
@@ -41,6 +44,9 @@ class CarModel {
     required this.totalRatingCount,
     required this.description,
     required this.isTopDeal,
+    this.ownerName,
+    this.ownerPhone,
+    this.ownerProfileImage,
   });
 
   factory CarModel.fromMap(Map<String,dynamic> map){
@@ -64,6 +70,9 @@ class CarModel {
       totalRatingCount: map['total_rating_count'],
       description: map['description'],
       isTopDeal: map['is_top_deal'],
+      ownerName: map['owner_name'],
+      ownerPhone: map['owner_phone'],
+      ownerProfileImage: map['owner_profile_image'],
     );
   }
 

@@ -15,21 +15,30 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
   final SupabaseClient client;
   CarRemoteDataSourceImpl(this.client);
 
+  static const _carWithOwnerSelect =
+      '*, owner:users!cars_owner_id_fkey(full_name, phone, profile_image)';
+
   @override
   Future<List<CarDto>> fetchAll() async {
-    final res = await client.from('cars').select();
+    final res = await client.from('cars').select(_carWithOwnerSelect);
     return (res as List).map((e) => CarDto.fromMap(e as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<CarDto>> fetchFeatured() async {
-    final res = await client.from('cars').select().eq('is_top_deal', true);
+    final res = await client
+        .from('cars')
+        .select(_carWithOwnerSelect)
+        .eq('is_top_deal', true);
     return (res as List).map((e) => CarDto.fromMap(e as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<CarDto>> fetchByBrand(String brand) async {
-    final res = await client.from('cars').select().eq('brand', brand);
+    final res = await client
+        .from('cars')
+        .select(_carWithOwnerSelect)
+        .eq('brand', brand);
     return (res as List).map((e) => CarDto.fromMap(e as Map<String, dynamic>)).toList();
   }
 
@@ -63,6 +72,11 @@ class CarRemoteDataSourceImpl implements CarRemoteDataSource {
 
     //insert car to database
     await client.from('cars').insert(model.toMap());
+
+    //insert phone number into users table
+    await client.from("users").update({
+      "phone": carDto.ownerPhone,
+    }).eq("id", client.auth.currentUser!.id);
 
     return true;
     }catch(e){

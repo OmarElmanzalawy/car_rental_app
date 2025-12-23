@@ -233,7 +233,7 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
                                 } else {
                                   print("submit");
                                   //validate form
-                
+                                  
                                   // submit the form
                                   final carDto = CarDto(
                                     id: Uuid().v4(),
@@ -254,6 +254,7 @@ class _AddCarListingScreenState extends State<AddCarListingScreen> {
                                     totalRatingCount: 0, 
                                     description: _descriptionController.text,
                                     isTopDeal: state.thumbnailImage != null,
+                                    ownerPhone: _phoneController.text,
                                     );
                                   context.read<AddListingBloc>().add(
                                     AddListingSubmit(

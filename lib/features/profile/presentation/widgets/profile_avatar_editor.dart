@@ -26,7 +26,9 @@ class ProfileAvatarEditor extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 70,
-          backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : const AssetImage("assets/images/profile.jpg") as ImageProvider,
+          backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
+          backgroundColor: imageUrl == null ? AppColors.silverAccent : null,
+          child: imageUrl == null ? Icon(Icons.person,size: 60,) : null,
         ),
         Positioned(
           right: 8,

@@ -38,6 +38,9 @@ class CustomerProfileCubit extends Cubit<CustomerProfileState> {
     if(profilePictureUrl != null){
       emit(state.copyWith(profilePictureUrl: profilePictureUrl,isFetchingProfilePicture: false));
     }
+    else{
+      emit(state.copyWith(isFetchingProfilePicture: false));
+    }
   }
  
  Future<void> getProfileInfo()async{

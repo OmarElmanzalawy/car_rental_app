@@ -231,6 +231,74 @@ class CarDetailScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 20),
+                          //  const SizedBox(height: 12),
+                           const Text(
+                            "Seller",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.grey.shade200,
+                                  backgroundImage: (model.ownerProfileImage != null &&
+                                          model.ownerProfileImage!.isNotEmpty)
+                                      ? NetworkImage(model.ownerProfileImage!)
+                                      : null,
+                                  child: (model.ownerProfileImage == null ||
+                                          model.ownerProfileImage!.isEmpty)
+                                      ? Icon(
+                                          Icons.person,
+                                          color: Colors.grey.shade700,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 12),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      model.ownerName ?? "Seller",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                     model.ownerPhone != null ? Text(
+                                      model.ownerPhone!,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ) : const SizedBox.shrink()
+                                  ],
+                                ),
+                                Spacer(),
+                                SizedBox(
+                                  width: 100,
+                                  height: 35,
+                                  child: AdaptiveButton(
+                                    label: "Chat",
+                                    color: Colors.black,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20,),
                           const DatePickerGrid(),
       
                           const SizedBox(height: 100),

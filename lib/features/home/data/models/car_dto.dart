@@ -7,6 +7,9 @@ import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 class CarDto {
   final String id;
   final String ownerId;
+  final String? ownerName;
+  final String? ownerPhone;
+  final String? ownerProfileImage;
   final String title;
   final String brand;
   final String model;
@@ -45,9 +48,14 @@ class CarDto {
     required this.totalRatingCount,
     required this.description,
     required this.isTopDeal,
+    this.ownerName,
+    this.ownerPhone,
+    this.ownerProfileImage,
   });
 
   factory CarDto.fromMap(Map<String, dynamic> map) {
+    final owner = map['owner'] ?? map['users'];
+    final ownerMap = owner is Map<String, dynamic> ? owner : null;
     return CarDto(
       id: map['id'] as String,
       ownerId: map['owner_id'] as String,
@@ -67,6 +75,9 @@ class CarDto {
       totalRatingCount: (map['total_rating_count'] as num).toInt(),
       description: map['description'] as String,
       isTopDeal: map['is_top_deal'] == true,
+      ownerName: ownerMap?['full_name'] as String?,
+      ownerPhone: ownerMap?['phone'] as String?,
+      ownerProfileImage: ownerMap?['profile_image'] as String?,
     );
   }
 
@@ -91,6 +102,9 @@ class CarDto {
       totalRatingCount: totalRatingCount,
       description: description,
       isTopDeal: isTopDeal,
+      ownerName: ownerName,
+      ownerPhone: ownerPhone,
+      ownerProfileImage: ownerProfileImage,
     );
   }
 
@@ -114,6 +128,9 @@ class CarDto {
     int? totalRatingCount,
     String? description,
     bool? isTopDeal,
+    String? ownerName,
+    String? ownerPhone,
+    String? ownerProfileImage,
   }) {
     return CarDto(
       id: id ?? this.id,
@@ -134,6 +151,9 @@ class CarDto {
       totalRatingCount: totalRatingCount ?? this.totalRatingCount,
       description: description ?? this.description,
       isTopDeal: isTopDeal ?? this.isTopDeal,
+      ownerName: ownerName ?? this.ownerName,
+      ownerPhone: ownerPhone ?? this.ownerPhone,
+      ownerProfileImage: ownerProfileImage ?? this.ownerProfileImage,
     );
   }
 

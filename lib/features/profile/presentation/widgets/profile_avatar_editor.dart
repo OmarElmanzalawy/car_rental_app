@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:car_rental_app/features/profile/presentation/customer/blocs/cubit/customer_profile_cubit.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:car_rental_app/features/profile/presentation/cubit/customer_profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class ProfileAvatarEditor extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 70,
-          backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
+          backgroundImage: imageUrl != null ? CachedNetworkImageProvider(imageUrl!) : null,
           backgroundColor: imageUrl == null ? AppColors.silverAccent : null,
           child: imageUrl == null ? Icon(Icons.person,size: 60,) : null,
         ),

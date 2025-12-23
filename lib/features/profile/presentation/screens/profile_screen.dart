@@ -2,7 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
-import 'package:car_rental_app/features/profile/presentation/customer/blocs/cubit/customer_profile_cubit.dart';
+import 'package:car_rental_app/features/profile/presentation/cubit/customer_profile_cubit.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_avatar_editor.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_info_row.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_section_card.dart';
@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomerProfileScreen extends StatefulWidget {
-  CustomerProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   bool isDarkMode = false;
 
   @override
@@ -122,6 +122,7 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
                     color: AppColors.primary,
                     onPressed: () async {
                       final response = await AuthService.signOut();
+                      if (!mounted) return;
                       if (response.success) {
                         context.go(AppRoutes.login);
                       }

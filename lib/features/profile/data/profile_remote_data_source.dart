@@ -33,6 +33,12 @@ class ProfileRemoteDataSourceImpl extends ProfileRemoteDataSource {
        );
 
     final imageUrl = client.storage.from("app_uploads").getPublicUrl(filePath);
+
+    await client.from("users").update(
+      {
+        "profile_image": imageUrl,
+      }
+    ).eq("id", client.auth.currentUser!.id);
     
     //update user metadata
     await client.auth.updateUser(

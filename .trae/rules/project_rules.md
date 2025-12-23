@@ -221,3 +221,22 @@ car_id,uuid,Foreign Key -> cars.id
 rating,int8,
 comment,varchar,
 created_at,timestamptz,
+
+  
+### conversations
+| Column | Type | Description |
+|--------|------|-------------|
+| id | uuid | Primary Key |
+| user_1 | uuid | Foreign Key → users.id |
+| user_2 | uuid | Foreign Key → users.id |
+| updated_at | timestamptz | Updates whenever a new message is sent so the chat 
+
+### messages
+id (uuid, PK)
+conversation_id (uuid, FK)
+sender_id (uuid, FK, nullable) — Null means the "System" sent it.
+type (enum: 'text', 'booking_request', 'info')
+content (text) — The actual message or a summary like "Booking request for Tesla Model 3".
+car_id (uuid, FK, nullable) — Optional: link to the car being discussed.
+rental_id (uuid, FK, nullable) — Optional: link to the specific booking to accept/reject.
+created_at (timestamptz)

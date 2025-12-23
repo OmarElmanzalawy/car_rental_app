@@ -27,7 +27,24 @@ enum FuelType{
         return 'natural gas';
     }
   }
+}
 
+
+enum MessageType{
+  text,
+  bookingRequest,
+  info;
+
+  String get value{
+    switch (this) {
+      case text:
+        return 'text';
+      case bookingRequest:
+        return 'booking_request';
+      case info:
+        return 'info';
+    }
+  }
 }
 
 enum RentalStatus{

@@ -6,6 +6,7 @@ import 'package:car_rental_app/features/bookings/data/bookings_data_source.dart'
 import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
+import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/profile/presentation/cubit/customer_profile_cubit.dart';
@@ -44,7 +45,7 @@ class CustomerHomeScreen extends StatelessWidget {
                     children: [
                       _HomeContent(),
                       BookingsScreen(),
-                      ChatScreen(),
+                      UsersListScreen(),
                       ProfileScreen(),
                     ],
                   );

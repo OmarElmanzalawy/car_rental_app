@@ -6,6 +6,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_scr
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/book_rental_car_screen.dart';
+import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/customer_home_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/map_screen.dart';
@@ -31,6 +32,7 @@ class AppRoutes {
   static const String map = "/map";
   static const String bookings = "/bookings";
   static const String addCarListing = "/add-car-listing";
+  static const String chat = "/chat";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -47,6 +49,10 @@ final List<RouteBase> kappRoutes = [
     path: AppRoutes.verified,
     builder: (context, state) => CustomerHomeScreen(),
   ),
+  GoRoute(
+    path: AppRoutes.chat,
+    builder: (context, state) => ChatScreen(),
+    ),
   GoRoute(
     path: AppRoutes.sellerHome,
     builder: (context, state) => SellerHomeScreen(),

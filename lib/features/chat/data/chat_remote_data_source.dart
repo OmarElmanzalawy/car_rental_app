@@ -1,14 +1,18 @@
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
+import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class ChatRemoteDataSource {
-  // Future<void> sendMessage({
-  //   required String receiverId,
-  //   required String message,
-  // });
+  Future<void> sendMessage({
+    required MessageModel messageModel,
+  });
 
   Future<List<ConversationModel>> getConversations();
+
+  Stream<List<MessageModel>> getMessages({
+    required String conversationId
+  });
 
   Future<String?> checkIfChatExists({
     required String user1,
@@ -26,6 +30,22 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
   ChatRemoteDataSourceImpl(this.client);
 
+  @override
+  Future<void> sendMessage({
+    required MessageModel messageModel,
+  }) async {
+    await client.from("messages").insert(messageModel.toMap());
+  }
+
+//fetch messages of a conversation
+@override
+  Stream<List<MessageModel>> getMessages({required String conversationId}) {
+    
+   final res = client.from("messages").stream(primaryKey: ["id"]).eq("conversation_id", conversationId);
+
+    return res.map((rows) => rows.map(MessageModel.fromMap).toList());
+  }
+
 @override
 Future<List<ConversationModel>> getConversations() async {
   final currentUserId = client.auth.currentUser!.id;
@@ -37,9 +57,11 @@ Future<List<ConversationModel>> getConversations() async {
       .order('updated_at', ascending: false);
 
   return res
-      .map((e) => ConversationModel.fromMap(e as Map<String, dynamic>))
+      .map(ConversationModel.fromMap)
       .toList();
 }
+
+
 
   @override
   Future<String?> checkIfChatExists({

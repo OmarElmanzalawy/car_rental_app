@@ -1,46 +1,26 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
+import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_input_bar.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_message_bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key, this.conversationId});
+  ChatScreen({super.key, this.conversationId});
 
   final String? conversationId;
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final items = <Widget>[
-      const SizedBox(height: 10),
-      // const ChatDayDivider(label: "Today"),
-      const SizedBox(height: 16),
-      const ChatMessageBubble(
-        message: "Hi Karen, Ciara here!",
-        timeText: "9:25 am",
-        isMe: false,
-      ),
-      const SizedBox(height: 14),
-      const ChatMessageBubble(
-        message: "Hey Jana, nice to meet you!",
-        timeText: "10:15 am",
-        isMe: true,
-      ),
-      const SizedBox(height: 14),
-      const ChatMessageBubble(
-        message: "Nice to meet you too! How are you doing?",
-        timeText: "10:25 am",
-        isMe: false,
-      ),
-      const SizedBox(height: 14),
-      const ChatMessageBubble(
-        message: "All good. I’m browsing cars for the weekend.",
-        timeText: "10:45 am",
-        isMe: true,
-      ),
-      const SizedBox(height: 18),
-    ];
+    final currentUserId = Supabase.instance.client.auth.currentUser?.id;
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
@@ -119,12 +99,104 @@ class ChatScreen extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.only(top: 120),
-                    children: items,
+                  child: Builder(
+                    builder: (context) {
+                      if (conversationId == null) {
+                        return const Center(
+                          child: Text(
+                            'No conversation selected',
+                            style: TextStyle(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return BlocBuilder<ChatBloc, ChatState>(
+                        builder: (context, state) {
+                          if (state is ChatMessagesLoading ||
+                              state is ChatInitial ||
+                              state is ChatInitiationLoading) {
+                            return const Center(
+                              child: CircularProgressIndicator.adaptive(),
+                            );
+                          }
+
+                          if (state is ChatMessagesFailure) {
+                            return Center(
+                              child: Text(
+                                state.message,
+                                style: const TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          }
+
+                          if (state is! ChatMessagesLoaded) {
+                            return const SizedBox.shrink();
+                          }
+
+                          final messages = state.messages;
+
+                          if (messages.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'No messages yet',
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            padding: const EdgeInsets.only(top: 120),
+                            itemCount: messages.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 14),
+                            itemBuilder: (context, index) {
+                              final m = messages[index];
+                              final isMe =
+                                  currentUserId != null && m.senderId == currentUserId;
+                              return ChatMessageBubble(
+                                message: m.content,
+                                timeText: AppUtils.toReadableTime(m.createdAt),
+                                isMe: isMe,
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
-                const ChatInputBar(),
+                ChatInputBar(
+                  controller: controller,
+                  onSubmit: () {
+                    if (controller.text.isEmpty) {
+                      return;
+                    }
+
+                    final messageModel = MessageModel(
+                      id: Uuid().v4(),
+                      conversationId: conversationId!,
+                      senderId: Supabase.instance.client.auth.currentUser!.id,
+                      messageType: MessageType.text,
+                      content: controller.text,
+                      createdAt: DateTime.now()
+                    );
+
+                    context.read<ChatBloc>().add(
+                          SendMessageEvent(
+                           messageModel: messageModel,
+                          ),
+                        );
+                    controller.clear();
+                  },
+                ),
               ],
             ),
           ),

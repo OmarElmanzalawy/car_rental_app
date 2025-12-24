@@ -1,4 +1,6 @@
 import 'package:car_rental_app/features/chat/data/chat_remote_data_source.dart';
+import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
+import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,15 +14,42 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             chatRemoteDataSource ?? ChatRemoteDataSourceImpl(Supabase.instance.client),
         super(const ChatInitial()) {
     on<InitiateChatRequested>(_onInitiateChatRequested);
+    on<ChatMessagesSubscribed>(_onChatMessagesSubscribed);
+    on<LoadConversationsRequested>(_onLoadConversationsRequested);
+    on<SendMessageEvent>(_onSendMessageEvent);
   }
 
   final ChatRemoteDataSource _chatRemoteDataSource;
+
+  Future<void> _onSendMessageEvent(
+    SendMessageEvent event,
+    Emitter<ChatState> emit,
+  ) async {
+    try {
+      await _chatRemoteDataSource.sendMessage(messageModel: event.messageModel);
+    } catch (e) {
+      emit(ChatMessagesFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadConversationsRequested(
+    LoadConversationsRequested event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(const ChatConversationsLoading());
+    try {
+      final List<ConversationModel> conversations =
+          await _chatRemoteDataSource.getConversations();
+      emit(ChatConversationsLoaded(conversations));
+    } catch (e) {
+      emit(ChatConversationsFailure(e.toString()));
+    }
+  }
 
   Future<void> _onInitiateChatRequested(
     InitiateChatRequested event,
     Emitter<ChatState> emit,
   ) async {
-    print("chat initiation started");
     emit(const ChatInitiationLoading());
     try {
       final currentUserId = Supabase.instance.client.auth.currentUser?.id;
@@ -62,5 +91,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     } catch (e) {
       emit(ChatInitiationFailure(e.toString()));
     }
+  }
+
+  Future<void> _onChatMessagesSubscribed(
+    ChatMessagesSubscribed event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(const ChatMessagesLoading());
+
+    await emit.forEach<List<MessageModel>>(
+      _chatRemoteDataSource.getMessages(conversationId: event.conversationId),
+      onData: (messages) {
+        final sorted = [...messages]
+          ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        return ChatMessagesLoaded(sorted);
+      },
+      onError: (error, _) => ChatMessagesFailure(error.toString()),
+    );
   }
 }

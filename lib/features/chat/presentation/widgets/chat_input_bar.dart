@@ -2,7 +2,10 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ChatInputBar extends StatelessWidget {
-  const ChatInputBar({super.key});
+  const ChatInputBar({super.key, required this.controller, this.onSubmit});
+
+  final TextEditingController controller;
+  final VoidCallback? onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,7 @@ class ChatInputBar extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: TextField(
+                  controller: controller,
                   minLines: 1,
                   maxLines: 4,
                   decoration: const InputDecoration(
@@ -52,7 +56,7 @@ class ChatInputBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              _SendButton(onPressed: () {}),
+              _SendButton(onPressed: onSubmit ?? () {}),
             ],
           ),
         ),

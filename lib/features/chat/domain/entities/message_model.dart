@@ -1,10 +1,9 @@
 import 'package:car_rental_app/core/constants/enums.dart';
 
 class MessageModel {
-
   final String id;
-  final String messageId;
-  final String senderId;
+  final String conversationId;
+  final String? senderId;
   final MessageType messageType;
   final String content;
   final String? carId;
@@ -13,7 +12,7 @@ class MessageModel {
 
   MessageModel({
     required this.id,
-    required this.messageId,
+    required this.conversationId,
     required this.senderId,
     required this.messageType,
     required this.content,
@@ -22,13 +21,35 @@ class MessageModel {
     required this.createdAt,
   });
 
+  static MessageType _parseMessageType(dynamic raw) {
+    if (raw is int) {
+      return MessageType.values[raw];
+    }
+    if (raw is String) {
+      return MessageType.values.firstWhere(
+        (t) => t.value == raw,
+        orElse: () => MessageType.text,
+      );
+    }
+    return MessageType.text;
+  }
+
+  static DateTime _parseCreatedAt(dynamic raw) {
+    if (raw is DateTime) return raw;
+    if (raw is String) return DateTime.parse(raw);
+    if (raw is int) {
+      return DateTime.fromMillisecondsSinceEpoch(raw);
+    }
+    return DateTime.now();
+  }
+
   //to map to database
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'message_id': messageId,
+      'conversation_id': conversationId,
       'sender_id': senderId,
-      'message_type': messageType.index,
+      'type': messageType.value,
       'content': content,
       'car_id': carId,
       'rental_id': rentalId,
@@ -38,15 +59,16 @@ class MessageModel {
 
   //from map
   factory MessageModel.fromMap(Map<String, dynamic> map) {
+    final rawType = map['type'] ?? map['message_type'];
     return MessageModel(
       id: map['id'] as String,
-      messageId: map['message_id'] as String,
-      senderId: map['sender_id'] as String,
-      messageType: MessageType.values[map['message_type'] as int],
+      conversationId: (map['conversation_id'] ?? map['conversationId']) as String,
+      senderId: map['sender_id'] as String?,
+      messageType: _parseMessageType(rawType),
       content: map['content'] as String,
       carId: map['car_id'] as String?,
       rentalId: map['rental_id'] as String?,
-      createdAt: DateTime.parse(map['created_at'] as String),
+      createdAt: _parseCreatedAt(map['created_at']),
     );
   }
 

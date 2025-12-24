@@ -51,7 +51,13 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.chat,
-    builder: (context, state) => ChatScreen(),
+    builder: (context, state) {
+      final extra = state.extra;
+      if (extra is Map<String, dynamic>) {
+        return ChatScreen(conversationId: extra['conversationId'] as String?);
+      }
+      return const ChatScreen();
+    },
     ),
   GoRoute(
     path: AppRoutes.sellerHome,

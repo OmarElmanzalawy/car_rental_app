@@ -1,16 +1,17 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
-import 'package:car_rental_app/features/chat/presentation/widgets/chat_day_divider.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_input_bar.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_message_bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, this.conversationId});
+
+  final String? conversationId;
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.sizeOf(context);
     final items = <Widget>[
       const SizedBox(height: 10),
       // const ChatDayDivider(label: "Today"),
@@ -45,7 +46,18 @@ class ChatScreen extends StatelessWidget {
       appBar: AdaptiveAppBar(
        leading: IntrinsicWidth(
          child: Row(
+
                children: [
+          AdaptiveButton.icon(
+            onPressed: (){context.pop();},
+             icon: Icons.arrow_back_ios_new,
+              color: AppColors.silverAccent,
+              iconColor: Colors.black,
+              style: AdaptiveButtonStyle.glass,
+              minSize: Size(35, 35),
+              size: AdaptiveButtonSize.small,
+             ),
+             const SizedBox(width: 8,),
           CircleAvatar(radius: 25, backgroundImage: AssetImage("assets/images/profile.jpg")),
           const SizedBox(width: 10),
           Expanded(
@@ -99,20 +111,22 @@ class ChatScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        color: AppColors.background,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.only(top: 120),
-                  children: items,
+      body: Material(
+        child: Container(
+          color: AppColors.background,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.only(top: 120),
+                    children: items,
+                  ),
                 ),
-              ),
-              const ChatInputBar(),
-            ],
+                const ChatInputBar(),
+              ],
+            ),
           ),
         ),
       ),

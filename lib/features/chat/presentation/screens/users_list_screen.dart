@@ -55,7 +55,7 @@ class UsersListScreen extends StatelessWidget {
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
-        title: "Messages",
+        title: "  Messages  ",
         actions: [
           AdaptiveAppBarAction(
             onPressed: () {},

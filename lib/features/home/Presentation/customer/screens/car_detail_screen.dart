@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:flutter/material.dart';
@@ -286,13 +287,40 @@ class CarDetailScreen extends StatelessWidget {
                                   ],
                                 ),
                                 Spacer(),
-                                SizedBox(
-                                  width: 100,
-                                  height: 35,
-                                  child: AdaptiveButton(
-                                    label: "Chat",
-                                    color: Colors.black,
-                                    onPressed: () {},
+                                BlocProvider(
+                                  create: (context) => ChatBloc(),
+                                  child: BlocListener<ChatBloc, ChatState>(
+                                    listener: (context, state) {
+                                      if (state is ChatInitiated) {
+                                        context.push(
+                                          AppRoutes.chat,
+                                          extra: {'conversationId': state.conversationId},
+                                        );
+                                      } else if (state is ChatInitiationFailure) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text(state.message)),
+                                        );
+                                      }
+                                    },
+                                    child: Builder(
+                                      builder: (context) {
+                                        return SizedBox(
+                                          width: 100,
+                                          height: 35,
+                                          child: AdaptiveButton(
+                                            label: "Chat",
+                                            color: Colors.black,
+                                            onPressed: () {
+                                              context.read<ChatBloc>().add(
+                                                    InitiateChatRequested(
+                                                      ownerId: model.ownerId,
+                                                    ),
+                                                  );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],

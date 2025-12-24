@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
+import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_stat_tile.dart';
@@ -38,7 +39,7 @@ class SellerHomeScreen extends StatelessWidget {
                     children: [
                       const _DashboardContent(),
                       const _MyCarsContent(),
-                      const _InboxContent(),
+                      const UsersListScreen(),
                       const ProfileScreen(),
                     ],
                   );
@@ -309,13 +310,5 @@ class _MyCarsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("My Cars"));
-  }
-}
-
-class _InboxContent extends StatelessWidget {
-  const _InboxContent();
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text("Inbox"));
   }
 }

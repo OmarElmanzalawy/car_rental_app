@@ -6,6 +6,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_scr
 import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/screens/book_rental_car_screen.dart';
+import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
@@ -53,21 +54,20 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.chat,
     builder: (context, state) {
-      final extra = state.extra;
-      if (extra is Map<String, dynamic>) {
-        final conversationId = extra['conversationId'] as String?;
+      
+      final extra = state.extra as Map<String,dynamic>;
+
+        final conversationModel = extra['conversationModel'] as ConversationModel?;
         return BlocProvider(
           create: (context) {
             final bloc = ChatBloc();
-            if (conversationId != null) {
-              bloc.add(ChatMessagesSubscribed(conversationId: conversationId));
+            if (conversationModel != null) {
+              bloc.add(ChatMessagesSubscribed(conversationId: conversationModel.id!));
             }
             return bloc;
           },
-          child: ChatScreen(conversationId: conversationId),
+          child: ChatScreen(conversationModel: conversationModel!),
         );
-      }
-      return ChatScreen();
     },
     ),
   GoRoute(

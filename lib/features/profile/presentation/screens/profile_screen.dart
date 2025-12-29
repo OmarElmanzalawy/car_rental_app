@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     label: "Log out",
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 50),
               ],
             ),
           ),

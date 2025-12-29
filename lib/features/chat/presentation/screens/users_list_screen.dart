@@ -137,10 +137,10 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                     : c.user1;
                             final timeText = AppUtils.toDayMonth(c.updatedAt);
                             return ChatUserCard(
-                              name: otherUserId,
+                              name: c.otherUserName ?? otherUserId,
                               lastMessage: "Tap to open chat",
                               timeText: timeText,
-                              avatarImage: const AssetImage(
+                              avatarImage: c.otherUserProfileImage != null ? NetworkImage(c.otherUserProfileImage!) : const AssetImage(
                                 "assets/images/profile.jpg",
                               ),
                               isOnline: false,
@@ -148,7 +148,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                               onTap: () {
                                 context.push(
                                   AppRoutes.chat,
-                                  extra: {"conversationId": c.id},
+                                  extra: {"conversationModel": c},
                                 );
                               },
                             );

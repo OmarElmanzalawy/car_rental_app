@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_input_bar.dart';
@@ -13,20 +14,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatScreen extends StatelessWidget {
-  ChatScreen({super.key, this.conversationId});
+  ChatScreen({super.key, required this.conversationModel});
 
-  final String? conversationId;
+  final ConversationModel conversationModel;
   final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+    print(conversationModel.otherUserName ?? "not found");
 
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
        leading: IntrinsicWidth(
          child: Row(
-
                children: [
           AdaptiveButton.icon(
             onPressed: (){context.pop();},
@@ -38,7 +39,7 @@ class ChatScreen extends StatelessWidget {
               size: AdaptiveButtonSize.small,
              ),
              const SizedBox(width: 8,),
-          CircleAvatar(radius: 25, backgroundImage: AssetImage("assets/images/profile.jpg")),
+          CircleAvatar(radius: 25, backgroundImage: conversationModel.otherUserProfileImage != null ? NetworkImage(conversationModel.otherUserProfileImage!) : AssetImage("assets/images/profile.jpg")),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -46,7 +47,7 @@ class ChatScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "John Doe",
+                  conversationModel.otherUserName ?? "receiver name",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -101,7 +102,7 @@ class ChatScreen extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      if (conversationId == null) {
+                      if (conversationModel.id == null) {
                         return const Center(
                           child: Text(
                             'No conversation selected',
@@ -182,7 +183,7 @@ class ChatScreen extends StatelessWidget {
 
                     final messageModel = MessageModel(
                       id: Uuid().v4(),
-                      conversationId: conversationId!,
+                      conversationId: conversationModel.id!,
                       senderId: Supabase.instance.client.auth.currentUser!.id,
                       messageType: MessageType.text,
                       content: controller.text,

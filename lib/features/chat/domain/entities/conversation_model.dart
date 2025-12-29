@@ -4,11 +4,19 @@ class ConversationModel {
   final String user2;
   final DateTime updatedAt;
 
+  final String? otherUserId;
+  final String? otherUserName;
+  final String? otherUserProfileImage;
+
   ConversationModel({
     required this.id,
     required this.user1,
     required this.user2,
     required this.updatedAt,
+
+    this.otherUserId,
+    this.otherUserName,
+    this.otherUserProfileImage,
   });
 
   //to map to database

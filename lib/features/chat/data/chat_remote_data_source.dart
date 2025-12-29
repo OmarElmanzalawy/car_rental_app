@@ -56,9 +56,35 @@ Future<List<ConversationModel>> getConversations() async {
       .or('user_1.eq.$currentUserId,user_2.eq.$currentUserId')
       .order('updated_at', ascending: false);
 
-  return res
+  final conversations =  res
       .map(ConversationModel.fromMap)
       .toList();
+
+  final otherUsersIds = conversations.map((conv) => conv.user1 == currentUserId ? conv.user2 : conv.user1).toSet().toList();
+
+  final usersRes = await client
+      .from('users')
+      .select('id, full_name, profile_image')
+      .inFilter('id', otherUsersIds);
+
+  final Map<String, Map<String, dynamic>> usersById = {
+    for (final row in usersRes)
+      (row['id'] as String): row as Map<String, dynamic>,
+  };
+
+  return conversations.map((c) {
+    final otherUserId = c.user1 == currentUserId ? c.user2 : c.user1;
+    final u = usersById[otherUserId];
+    return ConversationModel(
+      id: c.id,
+      user1: c.user1,
+      user2: c.user2,
+      updatedAt: c.updatedAt,
+      otherUserId: otherUserId,
+      otherUserName: u?['full_name'] as String?,
+      otherUserProfileImage: u?['profile_image'] as String?,
+    );
+  }).toList();
 }
 
 

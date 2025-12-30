@@ -8,6 +8,8 @@ class ConversationModel {
   final String? otherUserName;
   final String? otherUserProfileImage;
 
+  final String? lastMessage;
+
   ConversationModel({
     required this.id,
     required this.user1,
@@ -17,6 +19,7 @@ class ConversationModel {
     this.otherUserId,
     this.otherUserName,
     this.otherUserProfileImage,
+    this.lastMessage
   });
 
   //to map to database

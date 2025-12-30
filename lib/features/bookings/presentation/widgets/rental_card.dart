@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
@@ -65,7 +66,13 @@ class RentalCard extends StatelessWidget {
               border: Border.all(color: AppColors.border),
             ),
             clipBehavior: Clip.antiAlias,
-            child: Image.asset(imageUrl ?? 'assets/images/logo.png', fit: BoxFit.cover),
+            child:  CachedNetworkImage(
+              imageUrl:  imageUrl ?? 'assets/images/logo.png',
+              errorWidget: (context, error, stackTrace) {
+                return Image.asset('assets/images/logo.png', fit: BoxFit.cover);
+              },
+              fit: BoxFit.cover,
+              ),
           ),
           const SizedBox(height: 12),
           Row(

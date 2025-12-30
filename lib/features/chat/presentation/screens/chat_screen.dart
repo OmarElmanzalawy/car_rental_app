@@ -1,10 +1,12 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
+import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
+import 'package:car_rental_app/features/chat/presentation/widgets/booking_request_card.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_input_bar.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_message_bubble.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +25,6 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentUserId = Supabase.instance.client.auth.currentUser?.id;
     print(conversationModel.otherUserName ?? "not found");
-
     return AdaptiveScaffold(
       appBar: AdaptiveAppBar(
        leading: IntrinsicWidth(
@@ -102,19 +103,33 @@ class ChatScreen extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      if (conversationModel.id == null) {
-                        return const Center(
-                          child: Text(
-                            'No conversation selected',
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        );
-                      }
-
-                      return BlocBuilder<ChatBloc, ChatState>(
+                      return BlocConsumer<ChatBloc, ChatState>(
+                        listenWhen: (previous, current) =>
+                            current is ChatBookingActionSuccess ||
+                            current is ChatBookingActionFailure,
+                        listener: (context, state) {
+                          if (state is ChatBookingActionSuccess) {
+                            final label = state.status == RentalStatus.approved
+                                ? 'Booking approved'
+                                : 'Booking rejected';
+                            AdaptiveSnackBar.show(
+                              context,
+                              message: label,
+                              type: AdaptiveSnackBarType.info,
+                              );
+                          }
+                          if (state is ChatBookingActionFailure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.message)),
+                            );
+                          }
+                        },
+                        buildWhen: (previous, current) =>
+                            current is ChatMessagesLoading ||
+                            current is ChatMessagesLoaded ||
+                            current is ChatMessagesFailure ||
+                            current is ChatInitial ||
+                            current is ChatInitiationLoading,
                         builder: (context, state) {
                           if (state is ChatMessagesLoading ||
                               state is ChatInitial ||
@@ -160,13 +175,15 @@ class ChatScreen extends StatelessWidget {
                             separatorBuilder: (_, __) => const SizedBox(height: 14),
                             itemBuilder: (context, index) {
                               final m = messages[index];
-                              final isMe =
-                                  currentUserId != null && m.senderId == currentUserId;
-                              return ChatMessageBubble(
-                                message: m.content,
-                                timeText: AppUtils.toReadableTime(m.createdAt),
-                                isMe: isMe,
-                              );
+                              final isMe = currentUserId != null &&
+                                  m.senderId == currentUserId;
+                              return m.messageType == MessageType.bookingRequest
+                                  ? BookingRequestCard(messageModel: m)
+                                  : ChatMessageBubble(
+                                      message: m.content,
+                                      timeText: AppUtils.toReadableTime(m.createdAt),
+                                      isMe: isMe,
+                                    );
                             },
                           );
                         },
@@ -183,7 +200,7 @@ class ChatScreen extends StatelessWidget {
 
                     final messageModel = MessageModel(
                       id: Uuid().v4(),
-                      conversationId: conversationModel.id!,
+                      conversationId: conversationModel.id,
                       senderId: Supabase.instance.client.auth.currentUser!.id,
                       messageType: MessageType.text,
                       content: controller.text,

@@ -138,7 +138,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                             final timeText = AppUtils.toDayMonth(c.updatedAt);
                             return ChatUserCard(
                               name: c.otherUserName ?? otherUserId,
-                              lastMessage: "Tap to open chat",
+                              lastMessage: c.lastMessage ?? "Tap to open chat",
                               timeText: timeText,
                               avatarImage: c.otherUserProfileImage != null ? NetworkImage(c.otherUserProfileImage!) : const AssetImage(
                                 "assets/images/profile.jpg",

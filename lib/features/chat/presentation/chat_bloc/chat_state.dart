@@ -77,3 +77,32 @@ final class ChatConversationsFailure extends ChatState {
   @override
   List<Object> get props => [message];
 }
+
+final class ChatBookingActionInProgress extends ChatState {
+  const ChatBookingActionInProgress({required this.rentalId});
+
+  final String rentalId;
+
+  @override
+  List<Object?> get props => [rentalId];
+}
+
+final class ChatBookingActionSuccess extends ChatState {
+  const ChatBookingActionSuccess({required this.rentalId, required this.status});
+
+  final String rentalId;
+  final RentalStatus status;
+
+  @override
+  List<Object?> get props => [rentalId, status];
+}
+
+final class ChatBookingActionFailure extends ChatState {
+  const ChatBookingActionFailure({required this.rentalId, required this.message});
+
+  final String rentalId;
+  final String message;
+
+  @override
+  List<Object?> get props => [rentalId, message];
+}

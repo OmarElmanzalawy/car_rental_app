@@ -81,7 +81,7 @@ class BookingsScreen extends StatelessWidget {
                       : Column(
                           children: state.bookings.map((booking) => 
                           RentalCard(
-                            imageUrl: "assets/images/test_cars/${booking.carImageUrl.first}",
+                            imageUrl: booking.carImageUrl.first,
                             title: booking.carName,
                             statusLabel: booking.status.name,
                             dateText: AppUtils.toDayMonth(booking.pickupDate),

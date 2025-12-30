@@ -223,7 +223,7 @@ class BookRentalCubit extends Cubit<BookRentalState> {
       createdAt: DateTime.now()
       );
 
-      await BookRentalDataSourceImpl(Supabase.instance.client).bookRentalCar(rentalModel);
+      await BookRentalDataSourceImpl(Supabase.instance.client).bookRentalCar(rentalModel,carModel , carModel.ownerId,state.name!);
   }
 
   Future<void> saveUserInfo({String? name, String? phoneNumber})async{

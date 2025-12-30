@@ -1,9 +1,12 @@
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/bookings/domain/entities/rental_model.dart';
+import 'package:car_rental_app/features/chat/data/chat_remote_data_source.dart';
+import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class BookRentalDataSource {
   Future<void> fetchUserInfo();
-  Future<void> bookRentalCar(RentalModel rental);
+  Future<void> bookRentalCar(RentalModel rentalModel, CarModel carModel, String carOwnerId, String customerName);
   Future<void> saveUserInfo({String? name, String? phoneNumber});
 }
 
@@ -36,9 +39,56 @@ class BookRentalDataSourceImpl implements BookRentalDataSource {
   }
 
   @override
-  Future<void> bookRentalCar(RentalModel rentalModel) async {
+  Future<void> bookRentalCar(RentalModel rentalModel, CarModel carModel, String carOwnerId, String customerName) async {
     try{
+
       await client.from('rentals').insert(rentalModel.toMap());
+
+      //add system message to chat for the owner to either 
+      //confirm or rejct the booking request
+
+       //check if car owner has a chat room with the customer
+      //if yes, add system message to the chat room
+      //if not, create a new chat room
+      //add system message to the chat room
+      
+      final currentUserId = client.auth.currentUser!.id;
+
+      String user1;
+      String user2;
+      if (currentUserId.compareTo(carOwnerId) > 0) {
+        user1 = carOwnerId;
+        user2 = currentUserId;
+      } else {
+        user1 = currentUserId;
+        user2 = carOwnerId;
+      }
+      
+      final chatDataSource = ChatRemoteDataSourceImpl(client);
+
+      String? existingConversationId = await chatDataSource.checkIfChatExists(user1: user1, user2: user2);
+     
+
+      if(existingConversationId == null){
+        //create a new chat room
+        await chatDataSource.createChat(receiverId: carOwnerId);
+        existingConversationId = await chatDataSource.checkIfChatExists(user1: user1, user2: user2);
+      }
+
+      //add system message (booking_request) to chat room
+      await chatDataSource.sendSystemMessage(
+        conversationId: existingConversationId!,
+        message: '''You have a new booking request from $customerName for your ${carModel.title}. 
+        Pickup location: ${rentalModel.pickupAddress}
+        Pickup time: ${rentalModel.pickupDate}
+        Dropoff time: ${rentalModel.dropOffDate}
+        Total price: ${rentalModel.totalPrice}
+        ''',
+        messageType: MessageType.bookingRequest,
+        rentalId: rentalModel.id,
+      );
+
+
     }catch(e){
       print("error while booking rental car");
       print(e.toString());
@@ -46,7 +96,6 @@ class BookRentalDataSourceImpl implements BookRentalDataSource {
     
   }
 
-  //TODO COMPLETE THIS FUNCTION
   @override
   Future<void> saveUserInfo({String? name, String? phoneNumber}) async {
     try{

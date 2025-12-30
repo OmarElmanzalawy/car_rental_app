@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:car_rental_app/features/bookings/presentation/widgets/date_picker_grid.dart';
 import 'package:readmore/readmore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CarDetailScreen extends StatelessWidget {
@@ -292,9 +294,40 @@ class CarDetailScreen extends StatelessWidget {
                                   child: BlocListener<ChatBloc, ChatState>(
                                     listener: (context, state) {
                                       if (state is ChatInitiated) {
+                                        final currentUserId =
+                                            Supabase.instance.client.auth.currentUser?.id;
+                                        if (currentUserId == null) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('User not authenticated'),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        final String user1;
+                                        final String user2;
+                                        if (currentUserId.compareTo(model.ownerId) < 0) {
+                                          user1 = currentUserId;
+                                          user2 = model.ownerId;
+                                        } else {
+                                          user1 = model.ownerId;
+                                          user2 = currentUserId;
+                                        }
+
+                                        final conversationModel = ConversationModel(
+                                          id: state.conversationId,
+                                          user1: user1,
+                                          user2: user2,
+                                          updatedAt: DateTime.now(),
+                                          otherUserId: model.ownerId,
+                                          otherUserName: model.ownerName,
+                                          otherUserProfileImage: model.ownerProfileImage,
+                                        );
+
                                         context.push(
                                           AppRoutes.chat,
-                                          extra: {'conversationId': state.conversationId},
+                                          extra: {'conversationModel': conversationModel},
                                         );
                                       } else if (state is ChatInitiationFailure) {
                                         ScaffoldMessenger.of(context).showSnackBar(

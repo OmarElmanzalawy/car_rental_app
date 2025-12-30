@@ -1,3 +1,4 @@
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -6,6 +7,13 @@ import 'package:uuid/uuid.dart';
 abstract class ChatRemoteDataSource {
   Future<void> sendMessage({
     required MessageModel messageModel,
+  });
+
+  Future<void> sendSystemMessage({
+    required String conversationId,
+    required String message,
+    required MessageType messageType,
+    String? rentalId,
   });
 
   Future<List<ConversationModel>> getConversations();
@@ -23,6 +31,11 @@ abstract class ChatRemoteDataSource {
     required String receiverId,
   });
 
+  Future<void> updateRentalStatus({
+    required String rentalId,
+    required RentalStatus status,
+  });
+
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -35,7 +48,41 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required MessageModel messageModel,
   }) async {
     await client.from("messages").insert(messageModel.toMap());
+    //update conversation updated_at column
+    await client.from("conversations").update({
+      "updated_at": DateTime.now().toIso8601String(),
+    }).eq("id", messageModel.conversationId);
   }
+
+  @override
+  Future<void> sendSystemMessage({
+    required String conversationId,
+    required String message,
+    required MessageType messageType,
+    String? rentalId
+  }) async {
+    final messageModel = MessageModel(
+      id: const Uuid().v4(),
+      conversationId: conversationId,
+      content: message,
+      //system message sender id is null
+      senderId: null,
+      messageType: messageType,
+      createdAt: DateTime.now(),
+      rentalId: rentalId
+    );
+    await sendMessage(messageModel: messageModel);
+  }
+
+  @override
+  Future<void> updateRentalStatus({
+    required String rentalId,
+    required RentalStatus status,
+  }) async {
+    await client.from('rentals').update({'status': status.name}).eq('id', rentalId);
+  }
+
+
 
 //fetch messages of a conversation
 @override
@@ -56,11 +103,16 @@ Future<List<ConversationModel>> getConversations() async {
       .or('user_1.eq.$currentUserId,user_2.eq.$currentUserId')
       .order('updated_at', ascending: false);
 
-  final conversations =  res
-      .map(ConversationModel.fromMap)
-      .toList();
+  final conversations = res.map(ConversationModel.fromMap).toList();
 
-  final otherUsersIds = conversations.map((conv) => conv.user1 == currentUserId ? conv.user2 : conv.user1).toSet().toList();
+  if (conversations.isEmpty) {
+    return const [];
+  }
+
+  final otherUsersIds = conversations
+      .map((conv) => conv.user1 == currentUserId ? conv.user2 : conv.user1)
+      .toSet()
+      .toList();
 
   final usersRes = await client
       .from('users')
@@ -72,9 +124,32 @@ Future<List<ConversationModel>> getConversations() async {
       (row['id'] as String): row as Map<String, dynamic>,
   };
 
+  final lastMessageEntries = await Future.wait(
+    conversations.map((c) async {
+      final row = await client
+          .from('messages')
+          .select('content, created_at')
+          .eq('conversation_id', c.id)
+          .order('created_at', ascending: false)
+          .limit(1)
+          .maybeSingle();
+      return MapEntry(c.id, row);
+    }),
+  );
+
+  final Map<String, Map<String, dynamic>?> lastMessageByConversationId = {
+    for (final entry in lastMessageEntries)
+      entry.key: entry.value as Map<String, dynamic>?,
+  };
+
   return conversations.map((c) {
     final otherUserId = c.user1 == currentUserId ? c.user2 : c.user1;
     final u = usersById[otherUserId];
+
+    final last = lastMessageByConversationId[c.id];
+    final lastMessage = last?['content'] as String?;
+
+
     return ConversationModel(
       id: c.id,
       user1: c.user1,
@@ -83,6 +158,7 @@ Future<List<ConversationModel>> getConversations() async {
       otherUserId: otherUserId,
       otherUserName: u?['full_name'] as String?,
       otherUserProfileImage: u?['profile_image'] as String?,
+      lastMessage: lastMessage,
     );
   }).toList();
 }

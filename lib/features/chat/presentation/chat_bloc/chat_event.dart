@@ -37,3 +37,16 @@ final class SendMessageEvent extends ChatEvent {
   @override
   List<Object?> get props => [messageModel];
 }
+
+final class BookingRequestResponded extends ChatEvent {
+  const BookingRequestResponded({
+    required this.rentalId,
+    required this.status,
+  });
+
+  final String rentalId;
+  final RentalStatus status;
+
+  @override
+  List<Object?> get props => [rentalId, status];
+}

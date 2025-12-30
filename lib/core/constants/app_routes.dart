@@ -54,20 +54,22 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.chat,
     builder: (context, state) {
-      
-      final extra = state.extra as Map<String,dynamic>;
+      final extra = state.extra;
+      final map = extra is Map<String, dynamic> ? extra : null;
+      final conversationModel = map?['conversationModel'] as ConversationModel?;
 
-        final conversationModel = extra['conversationModel'] as ConversationModel?;
-        return BlocProvider(
-          create: (context) {
-            final bloc = ChatBloc();
-            if (conversationModel != null) {
-              bloc.add(ChatMessagesSubscribed(conversationId: conversationModel.id!));
-            }
-            return bloc;
-          },
-          child: ChatScreen(conversationModel: conversationModel!),
-        );
+      if (conversationModel == null) {
+        return const SizedBox.shrink();
+      }
+
+      return BlocProvider(
+        create: (context) {
+          final bloc = ChatBloc()
+            ..add(ChatMessagesSubscribed(conversationId: conversationModel.id));
+          return bloc;
+        },
+        child: ChatScreen(conversationModel: conversationModel),
+      );
     },
     ),
   GoRoute(

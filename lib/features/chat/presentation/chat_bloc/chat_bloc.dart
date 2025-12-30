@@ -1,3 +1,4 @@
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/chat/data/chat_remote_data_source.dart';
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
@@ -17,6 +18,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatMessagesSubscribed>(_onChatMessagesSubscribed);
     on<LoadConversationsRequested>(_onLoadConversationsRequested);
     on<SendMessageEvent>(_onSendMessageEvent);
+    on<BookingRequestResponded>(_onBookingRequestResponded);
   }
 
   final ChatRemoteDataSource _chatRemoteDataSource;
@@ -108,5 +110,26 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       },
       onError: (error, _) => ChatMessagesFailure(error.toString()),
     );
+  }
+
+  Future<void> _onBookingRequestResponded(
+    BookingRequestResponded event,
+    Emitter<ChatState> emit,
+  ) async {
+    emit(ChatBookingActionInProgress(rentalId: event.rentalId));
+    try {
+      await _chatRemoteDataSource.updateRentalStatus(
+        rentalId: event.rentalId,
+        status: event.status,
+      );
+      emit(
+        ChatBookingActionSuccess(
+          rentalId: event.rentalId,
+          status: event.status,
+        ),
+      );
+    } catch (e) {
+      emit(ChatBookingActionFailure(rentalId: event.rentalId, message: e.toString()));
+    }
   }
 }

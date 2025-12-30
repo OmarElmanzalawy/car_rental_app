@@ -106,9 +106,7 @@ final List<RouteBase> kappRoutes = [
     builder: (context, state) {
       final model = state.extra as CarModel;
       return BlocProvider(
-        create: (context) =>
-            DatePickerBloc()
-              ..add(SelectDateEvent(selectedDate: AppUtils.currentDate())),
+        create: (context) => DatePickerBloc(),
         child: CarDetailScreen(model: model),
       );
     },

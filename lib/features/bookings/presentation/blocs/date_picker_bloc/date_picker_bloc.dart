@@ -24,24 +24,16 @@ class DatePickerBloc extends Bloc<DatePickerEvent, DatePickerState> {
       final tapped = DateTime(event.selectedDate.year, event.selectedDate.month, event.selectedDate.day);
       final s = state;
       //Start or restart the selection
-      if (s.startDate == null) {
-        print("clause 1");
-        emit(s.copyWith(startDate: tapped, endDate: null));
-      }else if(s.startDate != null && s.endDate != null){
-        print("clause 5");
-        emit(s.copyWith(startDate: null, endDate: tapped));
-      }
-       else {
+      if (s.startDate == null || (s.startDate != null && s.endDate != null)) {
+        emit(s.copyWith(startDate: tapped, clearEndDate: true));
+      } else {
         final start = s.startDate!;
         if (tapped.isBefore(start)) {
-          print("clause 2");
-          emit(s.copyWith(startDate: tapped, endDate: null));
+          emit(s.copyWith(startDate: tapped, clearEndDate: true));
         } else if (tapped.isAfter(start)) {
-          print("clause 3");
           emit(s.copyWith(endDate: tapped));
         } else {
-          print("clause 4");
-          emit(s.copyWith(endDate: null));
+          emit(s.copyWith(clearEndDate: true));
         }
       }
     });

@@ -88,6 +88,11 @@ class BookRentalDataSourceImpl implements BookRentalDataSource {
         rentalId: rentalModel.id,
       );
 
+      //mark car as not available
+      await client.from("cars").update(
+        {"available": false}
+      ).eq("id", carModel.id);
+
 
     }catch(e){
       print("error while booking rental car");

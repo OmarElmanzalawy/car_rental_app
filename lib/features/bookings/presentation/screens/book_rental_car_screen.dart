@@ -309,7 +309,9 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                               state.pickupDate!,
                                             ),
                                       icon: Icons.access_time,
-                                      onTap: () {
+                                      onTap: state.pickupDate == null
+                                          ? null
+                                          : () {
                                         AdaptiveTimePicker.show(
                                           context: context,
                                           initialTime: TimeOfDay(
@@ -335,7 +337,9 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                               state.dropOffDate!,
                                             ),
                                       icon: Icons.access_time,
-                                      onTap: () {
+                                      onTap: state.dropOffDate == null
+                                          ? null
+                                          : () {
                                         AdaptiveTimePicker.show(
                                           context: context,
                                           initialTime: TimeOfDay(

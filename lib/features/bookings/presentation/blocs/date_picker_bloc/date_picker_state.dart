@@ -14,13 +14,15 @@ class DatePickerState extends Equatable{
   DatePickerState copyWith({
     int? monthIndex,
     DateTime? startDate,
+    bool clearStartDate = false,
     DateTime? endDate,
+    bool clearEndDate = false,
     int? slideDirection,
   }){
     return DatePickerState(
       monthIndex: monthIndex ?? this.monthIndex,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      startDate: clearStartDate ? null : (startDate ?? this.startDate),
+      endDate: clearEndDate ? null : (endDate ?? this.endDate),
       slideDirection: slideDirection ?? this.slideDirection,
     );
   }

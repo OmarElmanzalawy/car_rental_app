@@ -9,6 +9,7 @@ import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.da
 import 'package:car_rental_app/features/chat/presentation/widgets/booking_request_card.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_input_bar.dart';
 import 'package:car_rental_app/features/chat/presentation/widgets/chat_message_bubble.dart';
+import 'package:car_rental_app/features/chat/presentation/widgets/info_message_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -103,7 +104,7 @@ class ChatScreen extends StatelessWidget {
                 Expanded(
                   child: Builder(
                     builder: (context) {
-                      return BlocConsumer<ChatBloc, ChatState>(
+                      return BlocConsumer<ChatBloc, ChatState>( 
                         listenWhen: (previous, current) =>
                             current is ChatBookingActionSuccess ||
                             current is ChatBookingActionFailure,
@@ -119,9 +120,6 @@ class ChatScreen extends StatelessWidget {
                               );
                           }
                           if (state is ChatBookingActionFailure) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(state.message)),
-                            );
                           }
                         },
                         buildWhen: (previous, current) =>
@@ -178,7 +176,9 @@ class ChatScreen extends StatelessWidget {
                               final isMe = currentUserId != null &&
                                   m.senderId == currentUserId;
                               return m.messageType == MessageType.bookingRequest
-                                  ? BookingRequestCard(messageModel: m)
+                                  ?  BookingRequestCard(messageModel: m)
+                                  : m.messageType == MessageType.info ? 
+                                  InfoMessageCard(label: m.content)
                                   : ChatMessageBubble(
                                       message: m.content,
                                       timeText: AppUtils.toReadableTime(m.createdAt),

@@ -52,5 +52,5 @@ enum RentalStatus{
   approved,
   active,
   completed,
-  cancelled,
+  canceled,
 }

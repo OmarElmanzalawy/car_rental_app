@@ -1,10 +1,14 @@
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
 import 'package:car_rental_app/features/bookings/domain/entities/rental_model.dart';
+import 'package:car_rental_app/features/chat/data/chat_remote_data_source.dart';
+import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class BookingsDataSource {
   Future<List<Rentalwithcardto>> fetchBookings(String customerId);
-  Future<void> cancelBookings(String bookingId);
+  Future<void> cancelBookings({required String rentalId,required String carId});
 }
 
 class BookingsDatSourceImpl extends BookingsDataSource{
@@ -25,11 +29,73 @@ class BookingsDatSourceImpl extends BookingsDataSource{
       .map<Rentalwithcardto>((e) => Rentalwithcardto.fromMap(e))
       .toList();
 }
+
   
 
-  @override
-  Future<void> cancelBookings(String bookingId) async {
+ @override
+Future<void> cancelBookings({required String rentalId,required String carId}) async {
 
-  }
+  try{
+
+    final chatService = ChatRemoteDataSourceImpl(client);
+
+  // 1. Fetch car_id FIRST
+  final rental = await client
+      .from("rentals")
+      .select("car_id")
+      .eq("id", rentalId)
+      .single();
+
+  final String carId = rental["car_id"];
+
+  // 2. change rental status to cancelled
+  await client.from("rentals").update({"status": RentalStatus.canceled.name}).eq("id", rentalId);
+
+  // 3. Mark car as available
+  await client
+      .from("cars")
+      .update({"available": true})
+      .eq("id", carId);
+
+  // 4. get car owner id
+  final String carOwnerId = (await client
+      .from("cars")
+      .select("owner_id")
+      .eq("id", carId)
+      .single())["owner_id"];
+
+  // 5. fetch conversation id 
+      final String currentUserId = client.auth.currentUser!.id;
+      final String user1;
+      final String user2;
+
+      if (currentUserId.compareTo(carOwnerId) < 0) {
+        user1 = currentUserId;
+        user2 = carOwnerId;
+      } else {
+        user1 = carOwnerId;
+        user2 = currentUserId;
+      }
+
+    final chatId = await chatService.checkIfChatExists(user1: user1, user2: user2);
+
+      if(chatId == null){
+        return;
+      }
+
+    print("chat found, sending system message...");
+
+  // 6. send an info system message to the customer
+  chatService.sendSystemMessage(
+    conversationId: chatId,
+    messageType: MessageType.info,
+    message: "Booking has been cancelled by customer",
+  );
+
+}catch(e){
+  print("something went wrong while canceling the booking");
+  print(e.toString());
+}
+}
 
 }

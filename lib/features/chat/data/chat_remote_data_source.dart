@@ -78,8 +78,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<void> updateRentalStatus({
     required String rentalId,
     required RentalStatus status,
+
   }) async {
     await client.from('rentals').update({'status': status.name}).eq('id', rentalId);
+
+    final String? carId = (await client.from('rentals').select('car_id').eq('id', rentalId).maybeSingle())?['car_id'];
+
+    print("fetched carId from rentals table: $carId");
+
+    if (status == RentalStatus.approved && carId != null){
+      //mark car as not available
+      await client.from("cars").update(
+        {"available": false}
+      ).eq("id", carId as String);
+    }
   }
 
 

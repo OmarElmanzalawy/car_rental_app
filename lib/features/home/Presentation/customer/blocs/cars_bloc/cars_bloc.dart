@@ -17,9 +17,9 @@ class CarsBloc extends Bloc<CarsEvent, CarsState> {
         final dtos = await remoteClient.fetchAll();
         final cars = dtos.map((e) => e.toEntity()).toList();
 
-        final topDeals = cars.where((element) => element.isTopDeal).toList();
+        final topDeals = cars.where((element) => element.isTopDeal && element.available).toList();
         final availableNearYou =
-            cars.where((element) => !element.isTopDeal).toList();
+            cars.where((element) => !element.isTopDeal && element.available).toList();
 
         emit(
           state.copyWith(

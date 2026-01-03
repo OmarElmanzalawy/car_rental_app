@@ -24,6 +24,17 @@ class BookingsCubit extends Cubit<BookingsState> {
       // emit(state.copyWith(hasError: true, isLoading: false));
     // }
   }
+
+  Future<void> cancelBooking({required String rentalId,required String carId}) async {
+    emit(state.copyWith(isLoading: true));
+    // try {
+      await repository.cancelBookings(rentalId: rentalId,carId: carId);
+      emit(state.copyWith(isLoading: false));
+    // } catch (e) {
+      // print("Error canceling booking: ${e.toString()}");
+      // emit(state.copyWith(hasError: true, isLoading: false));
+    // }
+  }
   @override
   Future<void> close() {
     return super.close();

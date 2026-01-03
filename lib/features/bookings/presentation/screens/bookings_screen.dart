@@ -81,41 +81,11 @@ class BookingsScreen extends StatelessWidget {
                       : Column(
                           children: state.bookings.map((booking) => 
                           RentalCard(
-                            imageUrl: booking.carImageUrl.first,
-                            title: booking.carName,
-                            statusLabel: booking.status.name,
-                            dateText: AppUtils.toDayMonth(booking.pickupDate),
-                            timeText: AppUtils.toReadableTime(booking.pickupDate),
-                            locationText: booking.pickupAddress,
-                            statusBarText: AppUtils.timeLeftForPickup(booking.pickupDate),
-                            totalText: '\$${booking.totalPrice.toStringAsFixed(1)}',
+                            rental: booking,
                           )).toList(),
                         );
                     },
                   ),
-                  // RentalCard(
-                  //   title: 'Audi Q7',
-                  //   subtitle: 'Luxury',
-                  //   statusLabel: 'Upcoming',
-                  //   dateText: 'Oct 8, 2025',
-                  //   timeText: '2:00 PM',
-                  //   locationText: '123 Main St',
-                  //   statusBarText: '2d left until pickup',
-                  //   totalText: '\$245',
-                  //   imageUrl: 'assets/images/test_cars/supra.png',
-                  // ),
-                  // const SizedBox(height: 12),
-                  // RentalCard(
-                  //   title: 'Audi Q7',
-                  //   subtitle: 'Luxury',
-                  //   statusLabel: 'Upcoming',
-                  //   dateText: 'Oct 12, 2025',
-                  //   timeText: '10:00 AM',
-                  //   locationText: 'Downtown Garage',
-                  //   statusBarText: '5d left until pickup',
-                  //   totalText: '\$245',
-                  //   imageUrl: 'assets/images/test_cars/bmw.jpg',
-                  // ),
                   const SizedBox(height: 80,)
                 ],
               ),

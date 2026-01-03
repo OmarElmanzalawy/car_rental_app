@@ -129,6 +129,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         ),
       );
     } catch (e) {
+      print("something went wrong while responding to booking request\nerror: ${e.toString()}");
       emit(ChatBookingActionFailure(rentalId: event.rentalId, message: e.toString()));
     }
   }

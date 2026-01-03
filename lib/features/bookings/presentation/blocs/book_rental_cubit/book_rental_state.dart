@@ -16,6 +16,7 @@ final class BookRentalState {
     this.subtotoal,
     this.isCalculatingPrice = true,
     this.isHourly = false,
+    this.didSubmit = false,
   }) : markers = markers ?? const {};
 
   //Map related fields
@@ -37,6 +38,9 @@ final class BookRentalState {
   final bool isHourly;
   final double taxRate = 0.1; //10%
   final double serviceFeeRate = 0.05; //5%
+  // Whether the user has submitted the booking request
+  // used to show loading indicator while submitting the booking request
+  final bool didSubmit;
 
   BookRentalState copyWith({
     LatLng? currentPosition,
@@ -53,6 +57,7 @@ final class BookRentalState {
     double? subtotoal,
     bool? isCalculatingPrice,
     bool? isHourly,
+    bool? didSubmit,
     
   }) {
     return BookRentalState(
@@ -70,6 +75,7 @@ final class BookRentalState {
       subtotoal: subtotoal ?? this.subtotoal,
       isCalculatingPrice: isCalculatingPrice ?? this.isCalculatingPrice,
       isHourly: isHourly ?? this.isHourly,
+      didSubmit: didSubmit ?? this.didSubmit,
     );
   }
 }

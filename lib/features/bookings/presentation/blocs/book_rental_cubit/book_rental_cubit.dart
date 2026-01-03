@@ -210,6 +210,7 @@ class BookRentalCubit extends Cubit<BookRentalState> {
     if(state.isCalculatingPrice){
       return;
     }
+    emit(state.copyWith(didSubmit: true));
     final rentalModel = RentalModel(
       id: Uuid().v4(),
       customerId: Supabase.instance.client.auth.currentUser!.id,
@@ -224,6 +225,9 @@ class BookRentalCubit extends Cubit<BookRentalState> {
       );
 
       await BookRentalDataSourceImpl(Supabase.instance.client).bookRentalCar(rentalModel,carModel , carModel.ownerId,state.name!);
+      if (!isClosed) {
+        emit(state.copyWith(didSubmit: false));
+      }
   }
 
   Future<void> saveUserInfo({String? name, String? phoneNumber})async{

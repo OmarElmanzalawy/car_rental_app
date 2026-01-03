@@ -325,7 +325,7 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                                       context.read<ChatBloc>().add(
                                             BookingRequestResponded(
                                               rentalId: data.rentalId,
-                                              status: RentalStatus.cancelled,
+                                              status: RentalStatus.canceled,
                                             ),
                                           );
                                     },
@@ -410,7 +410,7 @@ class _StatusPill extends StatelessWidget {
         bg = Colors.green.withValues(alpha: 0.12);
         fg = Colors.green.shade700;
         break;
-      case RentalStatus.cancelled:
+      case RentalStatus.canceled:
         bg = Colors.red.withValues(alpha: 0.12);
         fg = Colors.red.shade700;
         break;

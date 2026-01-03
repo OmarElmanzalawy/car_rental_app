@@ -29,14 +29,18 @@ class AdaptiveCustomSegmentControl extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AppColors.border),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: labels.map((label) => _SegmentChip(
-                      labels: labels,
-                      onValueChanged: onValueChanged,
-                      label: label,
-                      selected: selectedIndex == labels.indexOf(label),
-                    )).toList(),
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceAround,
+                    runSpacing: 12,
+                    children: List.generate(
+                      labels.length,
+                      (index) => _SegmentChip(
+                        index: index,
+                        onValueChanged: onValueChanged,
+                        label: labels[index],
+                        selected: selectedIndex == index,
+                      ),
+                    ),
                   ),
                 );
       },
@@ -53,16 +57,21 @@ class AdaptiveCustomSegmentControl extends StatelessWidget {
 
 
 class _SegmentChip extends StatelessWidget {
-  const _SegmentChip({required this.label, this.selected = false,required this.onValueChanged,required this.labels});
+  const _SegmentChip({
+    required this.index,
+    required this.label,
+    this.selected = false,
+    required this.onValueChanged,
+  });
+  final int index;
   final String label;
   final bool selected;
-  final List<String> labels;
   final Function(int) onValueChanged;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onValueChanged(labels.indexOf(label)),
+      onTap: () => onValueChanged(index),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         margin: const EdgeInsets.symmetric(horizontal: 4),

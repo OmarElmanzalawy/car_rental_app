@@ -1,9 +1,12 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:car_rental_app/core/constants/app_routes.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
-import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/bookings_cubit/bookings_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/widgets/rental_status_time_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +32,7 @@ class RentalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
@@ -50,10 +54,12 @@ class RentalCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
+                  color: rental.status == RentalStatus.pending ? AppColors.primaryLight : 
+                  rental.status == RentalStatus.canceled ? Colors.redAccent.withOpacity(0.2) : Colors.greenAccent.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(AppUtils.capitalize(rental.status.name), style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.w600)),
+                child: Text(AppUtils.capitalize(rental.status.name), style: TextStyle(color: rental.status == RentalStatus.pending ? AppColors.primary : 
+                rental.status == RentalStatus.canceled ? Colors.redAccent : Colors.green.shade700, fontSize: 12, fontWeight: FontWeight.w600)),
               ),
             ],
           ),
@@ -92,20 +98,10 @@ class RentalCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.primaryLight,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.access_time, size: 16, color: AppColors.textPrimary),
-                const SizedBox(width: 8),
-                Text(AppUtils.timeLeftForPickup(rental.pickupDate), style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
-              ],
-            ),
+          RentalStatusTimeBar(
+            status: rental.status,
+            pickupDate: rental.pickupDate,
+            dropOffDate: rental.dropOffDate,
           ),
           const SizedBox(height: 12),
           Row(
@@ -119,9 +115,7 @@ class RentalCard extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              _OutlinedPill(label: 'Reschedule'),
-              const SizedBox(width: 8),
-              _OutlinedPill(
+             rental.status != RentalStatus.canceled ?  _OutlinedPill(
                 label: 'Cancel',
                 borderColor: Colors.redAccent,
                 textColor: Colors.redAccent,
@@ -148,9 +142,20 @@ class RentalCard extends StatelessWidget {
 
                   //if user confirms then cancel booking
                 },
-                ),
+                ) : const SizedBox.shrink(),
               const SizedBox(width: 8),
-              _FilledPill(label: 'Detail'),
+              _FilledPill(
+                label: 'Car details',
+                onPressed: () async{
+                  //fetch car model details using carId from database
+                  //TODO navigate to car detail screen
+                  final carModel = await context.read<BookingsCubit>().fetchCarModel(rental.carId);
+                  if(carModel == null){
+                    return;
+                  }
+                  context.push(AppRoutes.carDetail,extra: carModel);
+                },
+                ),
             ],
           ),
         ],
@@ -183,15 +188,16 @@ class _OutlinedPill extends StatelessWidget {
 }
 
 class _FilledPill extends StatelessWidget {
-  const _FilledPill({required this.label});
+  const _FilledPill({required this.label,this.onPressed});
   final String label;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed ?? () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
+        backgroundColor:  AppColors.primary,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

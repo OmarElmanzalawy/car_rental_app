@@ -54,3 +54,22 @@ enum RentalStatus{
   completed,
   canceled,
 }
+
+const bookingStatusFilterLabels = <String>[
+  'All',
+  'Pending',
+  'Approved',
+  'Active',
+  'Complete',
+  'Cancelled',
+];
+
+const bookingStatusFilterValues = <RentalStatus?>[
+  null,
+  RentalStatus.pending,
+  RentalStatus.approved,
+  RentalStatus.active,
+  RentalStatus.completed,
+  RentalStatus.canceled,
+];
+

@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 abstract class BookingsDataSource {
   Future<List<Rentalwithcardto>> fetchBookings(String customerId);
   Future<void> cancelBookings({required String rentalId,required String carId});
+  Future<Map<String,dynamic>> fetchCarModel(String carId);
 }
 
 class BookingsDatSourceImpl extends BookingsDataSource{
@@ -30,7 +31,17 @@ class BookingsDatSourceImpl extends BookingsDataSource{
       .toList();
 }
 
-  
+Future<Map<String,dynamic>> fetchCarModel(String carId)async{
+  final response = await client
+      .from('cars')
+      .select('*')
+      .eq('id', carId)
+      .single();
+
+  return response;
+}
+
+
 
  @override
 Future<void> cancelBookings({required String rentalId,required String carId}) async {

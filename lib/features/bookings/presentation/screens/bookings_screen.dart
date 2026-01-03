@@ -1,8 +1,9 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/adaptive_custom_segment_control.dart';
-import 'package:car_rental_app/features/bookings/presentation/blocs/bookings/bookings_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/blocs/bookings_cubit/bookings_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/features/bookings/presentation/widgets/rental_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,13 +41,14 @@ class BookingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   AdaptiveCustomSegmentControl(
-                    labels: ['Upcoming', 'Complete', 'Cancelled'],
-                    selectedIndex: 0,
-                    onValueChanged: (value){}
+                    labels: bookingStatusFilterLabels,
+                    selectedIndex: context.select((BookingsCubit c) => c.state.selectedFilterIndex),
+                    onValueChanged: (value) => context.read<BookingsCubit>().setStatusFilterIndex(value),
                   ),
                   const SizedBox(height: 14),
                   BlocBuilder<BookingsCubit, BookingsState>(
                     builder: (context, state) {
+                      final bookings = state.visibleBookings;
                       return state.isLoading ? 
                         Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
@@ -65,9 +67,9 @@ class BookingsScreen extends StatelessWidget {
                                 ),
                               )
                             ),
-                          ),
+                          )
                         )
-                      : state.bookings.isEmpty
+                      : bookings.isEmpty
                       ? const Center(
                           child: Text(
                             "No Bookings",
@@ -79,7 +81,7 @@ class BookingsScreen extends StatelessWidget {
                           ),
                         )
                       : Column(
-                          children: state.bookings.map((booking) => 
+                          children: bookings.map((booking) => 
                           RentalCard(
                             rental: booking,
                           )).toList(),
@@ -96,5 +98,3 @@ class BookingsScreen extends StatelessWidget {
     );
   }
 }
-
-

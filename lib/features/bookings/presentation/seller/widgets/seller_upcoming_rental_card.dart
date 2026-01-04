@@ -3,40 +3,32 @@ import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/action_button.dart';
 import 'package:car_rental_app/core/widgets/status_chip.dart';
+import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and_user_dto.dart';
 import 'package:car_rental_app/features/bookings/seller/widgets/seller_rental_progress_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class SellerUpcomingRentalCard extends StatelessWidget {
   const SellerUpcomingRentalCard({
     super.key,
-    required this.avatarImagePath,
-    required this.relativeDayLabel,
-    required this.renterName,
-    required this.totalAmountLabel,
-    required this.carTitle,
-    required this.dateRangeLabel,
-    required this.status,
-    this.startDate,
-    this.endDate,
+    required this.rental,
     this.actionLabel,
     this.onActionPressed,
   });
 
-  final String avatarImagePath;
-  final String relativeDayLabel;
-  final String renterName;
-  final String totalAmountLabel;
-  final String carTitle;
-  final String dateRangeLabel;
-  final RentalStatus status;
-  final DateTime? startDate;
-  final DateTime? endDate;
+  final RentalWithCarAndUserDto rental;
   final String? actionLabel;
   final VoidCallback? onActionPressed;
 
   @override
   Widget build(BuildContext context) {
     final hasAction = actionLabel != null && onActionPressed != null;
+    final totalAmountLabel = '\$${rental.totalPrice.toStringAsFixed(0)}';
+    final dateRangeLabel =
+        '${AppUtils.toDayMonth(rental.pickupDate)} - ${AppUtils.toDayMonth(rental.dropOffDate)}';
+    final relativeDayLabel = _relativeDayLabel(rental: rental);
+    // final avatarUrl = rental.customerProfileImage.trim();
+    final carImageUrl = rental.carImages.isNotEmpty ? rental.carImages.first.trim() : '';
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -59,7 +51,16 @@ class SellerUpcomingRentalCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: AssetImage(avatarImagePath),
+                backgroundImage:
+                    rental.customerProfileImage != null ? CachedNetworkImageProvider(rental.customerProfileImage!) : null,
+                backgroundColor: rental.customerProfileImage == null ? AppColors.silverAccent : null,
+                child: rental.customerProfileImage == null
+                    ? const Icon(
+                        Icons.person,
+                        size: 22,
+                        color: Colors.black54,
+                      )
+                    : null,
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -76,7 +77,7 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      renterName,
+                      rental.customerFullName,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
@@ -115,12 +116,34 @@ class SellerUpcomingRentalCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'assets/icons/car_placeholder.png',
-                  width: 74,
-                  height: 56,
-                  fit: BoxFit.cover,
-                ),
+                child: carImageUrl.startsWith('http')
+                    ? CachedNetworkImage(
+                        imageUrl: carImageUrl,
+                        width: 74,
+                        height: 56,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, url, progress) {
+                          return Center(
+                            child: CircularProgressIndicator.adaptive(
+                              value: progress.progress,
+                            ),
+                          );
+                        },
+                        errorWidget: (context, error, stackTrace) {
+                          return Image.asset(
+                            'assets/icons/car_placeholder.png',
+                            width: 74,
+                            height: 56,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        'assets/icons/car_placeholder.png',
+                        width: 74,
+                        height: 56,
+                        fit: BoxFit.cover,
+                      ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -142,7 +165,7 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                         Icon(Icons.location_on_outlined, size: 16, color: AppColors.textPrimary,),
                         const SizedBox(width: 4),
                         Text(
-                          'Location',
+                          rental.pickupAddress,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -154,7 +177,7 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                      ),
                     const SizedBox(height: 2),
                     Text(
-                      carTitle,
+                      rental.carTitle,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -171,12 +194,11 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                       ),
                     ),
                     if (status == RentalStatus.active &&
-                        startDate != null &&
-                        endDate != null) ...[
+                        rental.pickupDate.isBefore(rental.dropOffDate)) ...[
                       const SizedBox(height: 10),
                       SellerRentalProgressBar(
-                        start: startDate!,
-                        end: endDate!,
+                        start: rental.pickupDate,
+                        end: rental.dropOffDate,
                         now: DateTime.now(),
                       ),
                     ],
@@ -206,6 +228,21 @@ class SellerUpcomingRentalCard extends StatelessWidget {
       ),
     );
   }
-  
-}
 
+  RentalStatus get status => rental.status;
+
+  String _relativeDayLabel({required RentalWithCarAndUserDto rental}) {
+    if (rental.status == RentalStatus.active) return 'Ongoing';
+
+    final today = _dateOnly(DateTime.now());
+    final pickup = _dateOnly(rental.pickupDate);
+    final diffDays = pickup.difference(today).inDays;
+
+    if (diffDays == 0) return 'Today';
+    if (diffDays == 1) return 'Tomorrow';
+    if (diffDays == -1) return 'Yesterday';
+    return '${pickup.day}/${pickup.month}';
+  }
+
+  DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+}

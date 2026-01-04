@@ -1,5 +1,6 @@
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
+import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and_user_dto.dart';
 import 'package:car_rental_app/features/bookings/domain/entities/rental_model.dart';
 import 'package:car_rental_app/features/chat/data/chat_remote_data_source.dart';
 import 'package:car_rental_app/features/chat/domain/entities/message_model.dart';
@@ -10,6 +11,7 @@ abstract class BookingsDataSource {
   Future<List<Rentalwithcardto>> fetchBookings(String customerId);
   Future<void> cancelBookings({required String rentalId,required String carId});
   Future<Map<String,dynamic>> fetchCarModel(String carId);
+  Future<List<RentalWithCarAndUserDto>> fetchSellerUpcomingRentals();
 }
 
 class BookingsDatSourceImpl extends BookingsDataSource{
@@ -17,6 +19,17 @@ class BookingsDatSourceImpl extends BookingsDataSource{
 
   BookingsDatSourceImpl({required this.client});
 
+  @override
+  Future<List<RentalWithCarAndUserDto>> fetchSellerUpcomingRentals() async {
+    final response = await client
+      .from('rentals_with_car_and_user')
+      .select('*')
+      .eq('seller_id', client.auth.currentUser!.id);
+
+    return response
+      .map<RentalWithCarAndUserDto>((e) => RentalWithCarAndUserDto.fromJson(e))
+      .toList();
+  }
 
   //fetch booked cars from supabase
   @override

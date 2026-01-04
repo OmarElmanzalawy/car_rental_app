@@ -1,190 +1,194 @@
-import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
-import 'package:car_rental_app/core/constants/enums.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/features/bookings/presentation/seller/seller_upcoming_rentals_bloc/seller_upcoming_rentals_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/seller/widgets/seller_calendar_strip.dart';
 import 'package:car_rental_app/features/bookings/presentation/seller/widgets/seller_upcoming_rental_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpcomingRentalsScreen extends StatelessWidget {
   const UpcomingRentalsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final headerHeight = size.height * 0.24;
-
-    final days = <SellerCalendarDay>[
-      const SellerCalendarDay(weekday: 'Mon', day: 26),
-      const SellerCalendarDay(weekday: 'Tue', day: 27),
-      const SellerCalendarDay(weekday: 'Wed', day: 28),
-      const SellerCalendarDay(weekday: 'Thu', day: 29),
-      const SellerCalendarDay(weekday: 'Fri', day: 30),
-      const SellerCalendarDay(weekday: 'Sat', day: 31),
-      const SellerCalendarDay(weekday: 'Sun', day: 1),
-    ];
-
-    final bookings = <_UpcomingRentalUiModel>[
-      const _UpcomingRentalUiModel(
-        relativeDayLabel: 'Today',
-        renterName: 'Alice Green',
-        totalAmountLabel: '\$240',
-        carTitle: 'Land Rover LR3',
-        dateRangeLabel: 'Oct 28 - Oct 30',
-        status: RentalStatus.approved,
-        actionLabel: 'Confirm Pickup (Oct 28, 10:00 AM)',
-      ),
-      _UpcomingRentalUiModel(
-        relativeDayLabel: 'Ongoing',
-        renterName: 'Bob Johnson',
-        totalAmountLabel: '\$360',
-        carTitle: 'Audi R8',
-        dateRangeLabel: 'Oct 27 - Oct 29',
-        status: RentalStatus.active,
-        actionLabel: 'Confirm Return (Oct 29, 04:00 PM)',
-        startDate: DateTime.now().subtract(const Duration(hours: 8)),
-        endDate: DateTime.now().add(const Duration(hours: 28)),
-      ),
-      const _UpcomingRentalUiModel(
-        relativeDayLabel: 'Yesterday',
-        renterName: 'Charlie Brown',
-        totalAmountLabel: '\$200',
-        carTitle: 'Tesla Model 3',
-        dateRangeLabel: 'Oct 26 - Oct 28',
-        status: RentalStatus.completed,
-      ),
-    ];
-
-    return Container(
-      color: AppColors.background,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: headerHeight,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.blue.shade600,
-                            Colors.grey.shade900,
-                            // Colors.blue.shade600,
-                          ],
-                        ),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 40),
-                    Center(
-                      child: Column(
-                        children: [
-                          const Text(
-                            'Calendar',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                        'Oct 26 - Nov 1, 2025',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.85),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                        ],
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 12),
-                    SellerCalendarStrip(
-                      days: days,
-                      selectedIndex: 2,
-                      onChanged: (_) {},
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              color: AppColors.background,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Upcoming bookings',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    ListView.separated(
-                      itemCount: bookings.length,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final booking = bookings[index];
-                        return SellerUpcomingRentalCard(
-                          avatarImagePath: 'assets/images/profile.jpg',
-                          relativeDayLabel: booking.relativeDayLabel,
-                          renterName: booking.renterName,
-                          totalAmountLabel: booking.totalAmountLabel,
-                          carTitle: booking.carTitle,
-                          dateRangeLabel: booking.dateRangeLabel,
-                          status: booking.status,
-                          startDate: booking.startDate,
-                          endDate: booking.endDate,
-                          actionLabel: booking.actionLabel,
-                          onActionPressed: booking.actionLabel == null ? null : () {},
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 100),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return BlocProvider(
+      create: (_) => SellerUpcomingRentalsBloc()..add(const SellerUpcomingCalendarStarted())..add(SellerUpcomingRentalsFetched()),
+      child: const _UpcomingRentalsView(),
     );
   }
 }
 
-class _UpcomingRentalUiModel {
-  const _UpcomingRentalUiModel({
-    required this.relativeDayLabel,
-    required this.renterName,
-    required this.totalAmountLabel,
-    required this.carTitle,
-    required this.dateRangeLabel,
-    required this.status,
-    this.startDate,
-    this.endDate,
-    this.actionLabel,
-  });
+class _UpcomingRentalsView extends StatelessWidget {
+  const _UpcomingRentalsView();
 
-  final String relativeDayLabel;
-  final String renterName;
-  final String totalAmountLabel;
-  final String carTitle;
-  final String dateRangeLabel;
-  final RentalStatus status;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final String? actionLabel;
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final headerHeight = size.height * 0.25;
+
+    const tileWidth = 54.0;
+    const spacing = 10.0;
+    const horizontalPadding = 16.0;
+    final availableWidth = size.width - (horizontalPadding * 2);
+    final pageSize = ((availableWidth + spacing) / (tileWidth + spacing)).floor().clamp(1, 20);
+
+    return BlocBuilder<SellerUpcomingRentalsBloc, SellerUpcomingRentalsState>(
+      builder: (context, state) {
+        final start = state.calendarStartIndex.clamp(0, state.dateRange.isEmpty ? 0 : state.dateRange.length - 1);
+        final end = (start + pageSize).clamp(0, state.dateRange.length);
+        final visibleDates =
+            state.dateRange.isEmpty ? const <DateTime>[] : state.dateRange.sublist(start, end);
+
+        final canGoPrev = start > 0;
+        final canGoNext = end < state.dateRange.length;
+        final calendarRangeLabel = visibleDates.isEmpty
+            ? ''
+            : '${AppUtils.toDayMonth(visibleDates.first)} - ${AppUtils.toDayMonth(visibleDates.last)}, ${visibleDates.last.year}';
+
+        return Container(
+          color: AppColors.background,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: headerHeight,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.blue.shade600,
+                        Colors.grey.shade900,
+                      ],
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 40),
+                        Center(
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: canGoPrev
+                                        ? () => context
+                                            .read<SellerUpcomingRentalsBloc>()
+                                            .add(SellerUpcomingCalendarPrevPage(pageSize: pageSize))
+                                        : null,
+                                    icon: const Icon(Icons.chevron_left, color: Colors.white),
+                                  ),
+                                  const Spacer(),
+                                  const Text(
+                                    'Calendar',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  IconButton(
+                                    onPressed: canGoNext
+                                        ? () => context
+                                            .read<SellerUpcomingRentalsBloc>()
+                                            .add(SellerUpcomingCalendarNextPage(pageSize: pageSize))
+                                        : null,
+                                    icon: const Icon(Icons.chevron_right, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                calendarRangeLabel,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.85),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SellerCalendarStrip(
+                          dates: visibleDates,
+                          selectedDate: state.selectedDate,
+                          onChanged: (date) => context
+                              .read<SellerUpcomingRentalsBloc>()
+                              .add(SellerUpcomingCalendarDateSelected(date: date)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  color: AppColors.background,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Upcoming bookings',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        if (state.isLoading)
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 32),
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          )
+                        else if (state.rentals.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 24),
+                            child: Text(
+                              'No upcoming bookings',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          )
+                        else
+                          ListView.separated(
+                            itemCount: state.rentals.length,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.zero,
+                            physics: const NeverScrollableScrollPhysics(),
+                            separatorBuilder: (_, __) => const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final rental = state.rentals[index];
+                              return SellerUpcomingRentalCard(
+                                rental: rental,
+                              );
+                            },
+                          ),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

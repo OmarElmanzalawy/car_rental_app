@@ -3,6 +3,7 @@ import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/action_button.dart';
 import 'package:car_rental_app/core/widgets/status_chip.dart';
+import 'package:car_rental_app/features/bookings/seller/widgets/seller_rental_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class SellerUpcomingRentalCard extends StatelessWidget {
@@ -15,6 +16,8 @@ class SellerUpcomingRentalCard extends StatelessWidget {
     required this.carTitle,
     required this.dateRangeLabel,
     required this.status,
+    this.startDate,
+    this.endDate,
     this.actionLabel,
     this.onActionPressed,
   });
@@ -26,6 +29,8 @@ class SellerUpcomingRentalCard extends StatelessWidget {
   final String carTitle;
   final String dateRangeLabel;
   final RentalStatus status;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String? actionLabel;
   final VoidCallback? onActionPressed;
 
@@ -122,6 +127,32 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                     TextButton(
+                    onPressed: (){
+                      //Todo open google maps to the pickup address location
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: Colors.transparent,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.location_on_outlined, size: 16, color: AppColors.textPrimary,),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Location',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    )
+                     ),
+                    const SizedBox(height: 2),
                     Text(
                       carTitle,
                       style: const TextStyle(
@@ -131,14 +162,24 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      dateRangeLabel,
+                     Text(
+                    dateRangeLabel,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                         color: Colors.grey.shade700,
                       ),
                     ),
+                    if (status == RentalStatus.active &&
+                        startDate != null &&
+                        endDate != null) ...[
+                      const SizedBox(height: 10),
+                      SellerRentalProgressBar(
+                        start: startDate!,
+                        end: endDate!,
+                        now: DateTime.now(),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -167,5 +208,4 @@ class SellerUpcomingRentalCard extends StatelessWidget {
   }
   
 }
-
 

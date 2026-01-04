@@ -33,7 +33,7 @@ class UpcomingRentalsScreen extends StatelessWidget {
         status: RentalStatus.approved,
         actionLabel: 'Confirm Pickup (Oct 28, 10:00 AM)',
       ),
-      const _UpcomingRentalUiModel(
+      _UpcomingRentalUiModel(
         relativeDayLabel: 'Ongoing',
         renterName: 'Bob Johnson',
         totalAmountLabel: '\$360',
@@ -41,6 +41,8 @@ class UpcomingRentalsScreen extends StatelessWidget {
         dateRangeLabel: 'Oct 27 - Oct 29',
         status: RentalStatus.active,
         actionLabel: 'Confirm Return (Oct 29, 04:00 PM)',
+        startDate: DateTime.now().subtract(const Duration(hours: 8)),
+        endDate: DateTime.now().add(const Duration(hours: 28)),
       ),
       const _UpcomingRentalUiModel(
         relativeDayLabel: 'Yesterday',
@@ -144,6 +146,8 @@ class UpcomingRentalsScreen extends StatelessWidget {
                           carTitle: booking.carTitle,
                           dateRangeLabel: booking.dateRangeLabel,
                           status: booking.status,
+                          startDate: booking.startDate,
+                          endDate: booking.endDate,
                           actionLabel: booking.actionLabel,
                           onActionPressed: booking.actionLabel == null ? null : () {},
                         );
@@ -169,6 +173,8 @@ class _UpcomingRentalUiModel {
     required this.carTitle,
     required this.dateRangeLabel,
     required this.status,
+    this.startDate,
+    this.endDate,
     this.actionLabel,
   });
 
@@ -178,5 +184,7 @@ class _UpcomingRentalUiModel {
   final String carTitle;
   final String dateRangeLabel;
   final RentalStatus status;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final String? actionLabel;
 }

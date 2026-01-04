@@ -52,7 +52,22 @@ enum RentalStatus{
   approved,
   active,
   completed,
-  canceled,
+  canceled;
+
+  String get label {
+    switch (this) {
+      case RentalStatus.pending:
+        return 'Pending';
+      case RentalStatus.approved:
+        return 'Approved';
+      case RentalStatus.active:
+        return 'Active';
+      case RentalStatus.completed:
+        return 'Completed';
+      case RentalStatus.canceled:
+        return 'Cancelled';
+    }
+  }
 }
 
 const bookingStatusFilterLabels = <String>[
@@ -72,34 +87,3 @@ const bookingStatusFilterValues = <RentalStatus?>[
   RentalStatus.completed,
   RentalStatus.canceled,
 ];
-
-const sellerUpcomingStatusFilterLabels = <String>[
-  'All',
-  'Approved',
-  'Active',
-  'Completed',
-];
-
-const sellerUpcomingStatusFilterValues = <RentalStatus?>[
-  null,
-  RentalStatus.approved,
-  RentalStatus.active,
-  RentalStatus.completed,
-];
-
-extension RentalStatusX on RentalStatus {
-  String get label {
-    switch (this) {
-      case RentalStatus.pending:
-        return 'Pending';
-      case RentalStatus.approved:
-        return 'Approved';
-      case RentalStatus.active:
-        return 'Active';
-      case RentalStatus.completed:
-        return 'Completed';
-      case RentalStatus.canceled:
-        return 'Cancelled';
-    }
-  }
-}

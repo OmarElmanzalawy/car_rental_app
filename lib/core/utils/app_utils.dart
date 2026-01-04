@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AppUtils {
@@ -131,6 +133,21 @@ static LatLng latLngFromSupabase(String geoJson) {
     }
     final days = diff.inDays;
     return "${days}d left for pickup";
+  }
+
+  static Color getStatusChipColor(RentalStatus status) {
+    switch (status) {
+      case RentalStatus.pending:
+        return Colors.lightBlue;
+      case RentalStatus.active || RentalStatus.approved:
+        return Colors.green;
+      case RentalStatus.canceled:
+        return Colors.red;
+      case RentalStatus.completed:
+        return Colors.blue;
+      default:
+        return Colors.black;
+    }
   }
 
 

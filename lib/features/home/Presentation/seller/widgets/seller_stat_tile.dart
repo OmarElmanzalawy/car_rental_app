@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class SellerStatTile extends StatelessWidget {
-  const SellerStatTile({
+class SellerEarningsStatTile extends StatelessWidget {
+  const SellerEarningsStatTile({
     super.key,
     required this.label,
     required this.value,

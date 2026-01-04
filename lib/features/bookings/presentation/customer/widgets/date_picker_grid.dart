@@ -2,7 +2,7 @@ import 'dart:math' as math;
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
-import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

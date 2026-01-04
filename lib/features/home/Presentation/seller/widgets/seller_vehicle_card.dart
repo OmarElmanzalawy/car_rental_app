@@ -1,6 +1,7 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/widgets/status_chip.dart';
 import 'package:flutter/material.dart';
 
 class SellerVehicleCard extends StatelessWidget {
@@ -89,24 +90,9 @@ class SellerVehicleCard extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: statusChipColor.withValues(alpha: 0.16),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: statusChipColor),
-                      ),
-                      child: Text(
-                        statusChipLabel,
-                        style: TextStyle(
-                          color: statusChipColor,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                    StatusChip(
+                      statusChipColor: statusChipColor,
+                      statusChipLabel: statusChipLabel,
                     ),
                   ],
                 ),

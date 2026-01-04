@@ -3,22 +3,22 @@ import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.d
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
-import 'package:car_rental_app/features/bookings/presentation/screens/bookings_screen.dart';
-import 'package:car_rental_app/features/bookings/presentation/blocs/date_picker_bloc/date_picker_bloc.dart';
-import 'package:car_rental_app/features/bookings/presentation/screens/book_rental_car_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/screens/bookings_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/blocs/date_picker_bloc/date_picker_bloc.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/screens/book_rental_car_screen.dart';
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/customer_home_screen.dart';
-import 'package:car_rental_app/features/bookings/presentation/screens/map_screen.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/screens/map_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listing_bloc/add_listing_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:car_rental_app/features/bookings/presentation/blocs/book_rental_cubit/book_rental_cubit.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/blocs/book_rental_cubit/book_rental_cubit.dart';
 import 'package:flutter/widgets.dart';
 
 class AppRoutes {

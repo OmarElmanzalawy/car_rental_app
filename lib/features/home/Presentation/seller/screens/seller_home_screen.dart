@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
+import 'package:car_rental_app/features/bookings/presentation/seller/screens/upcoming_rentals_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
@@ -38,7 +39,7 @@ class SellerHomeScreen extends StatelessWidget {
                     index: state.index,
                     children: [
                       const _DashboardContent(),
-                      const _MyCarsContent(),
+                      const UpcomingRentalsScreen(),
                       const UsersListScreen(),
                       const ProfileScreen(),
                     ],
@@ -142,10 +143,10 @@ class _DashboardContent extends StatelessWidget {
                                     crossAxisSpacing: 8,
                                     childAspectRatio: 1.5,
                                     children: const [
-                                      SellerStatTile(label: "This Month", value: "\$1,450", delta: "+5.3%", isPositive: true),
-                                      SellerStatTile(label: "This Week", value: "\$380", delta: "+2.1%", isPositive: true),
-                                      SellerStatTile(label: "Today", value: "\$120", delta: "-0.4%", isPositive: false),
-                                      SellerStatTile(label: "Pending", value: "\$300", delta: "+0.0%", isPositive: true),
+                                      SellerEarningsStatTile(label: "This Month", value: "\$1,450", delta: "+5.3%", isPositive: true),
+                                      SellerEarningsStatTile(label: "This Week", value: "\$380", delta: "+2.1%", isPositive: true),
+                                      SellerEarningsStatTile(label: "Today", value: "\$120", delta: "-0.4%", isPositive: false),
+                                      SellerEarningsStatTile(label: "Pending", value: "\$300", delta: "+0.0%", isPositive: true),
                                     ],
                                   ),
                                 ),

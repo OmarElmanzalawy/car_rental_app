@@ -15,6 +15,23 @@ class SellerUpcomingRentalsState extends Equatable {
   final int calendarStartIndex;
   final DateTime? selectedDate;
 
+  //getter for selected rentals
+  List<RentalWithCarAndUserDto> get selectedRentals {
+    if (selectedDate == null) return [];
+    final dayStart = DateTime(
+      selectedDate!.year,
+      selectedDate!.month,
+      selectedDate!.day,
+    );
+    final dayEnd = dayStart.add(const Duration(days: 1));
+
+    return rentals.where((rental) {
+      final start = rental.pickupDate;
+      final end = rental.dropOffDate;
+      return start.isBefore(dayEnd) && end.isAfter(dayStart);
+    }).toList();
+  } 
+
   //copy with method
   SellerUpcomingRentalsState copyWith({
     List<RentalWithCarAndUserDto>? rentals,
@@ -36,4 +53,3 @@ class SellerUpcomingRentalsState extends Equatable {
   @override
   List<Object?> get props => [rentals, isLoading, dateRange, calendarStartIndex, selectedDate];
 }
-

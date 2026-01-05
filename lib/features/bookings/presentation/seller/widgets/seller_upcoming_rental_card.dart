@@ -7,6 +7,7 @@ import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and
 import 'package:car_rental_app/features/bookings/seller/widgets/seller_rental_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SellerUpcomingRentalCard extends StatelessWidget {
   const SellerUpcomingRentalCard({
@@ -27,7 +28,7 @@ class SellerUpcomingRentalCard extends StatelessWidget {
     final dateRangeLabel =
         '${AppUtils.toDayMonth(rental.pickupDate)} - ${AppUtils.toDayMonth(rental.dropOffDate)}';
     final relativeDayLabel = _relativeDayLabel(rental: rental);
-    // final avatarUrl = rental.customerProfileImage.trim();
+    final avatarUrl = (rental.customerProfileImage ?? '').trim();
     final carImageUrl = rental.carImages.isNotEmpty ? rental.carImages.first.trim() : '';
 
     return Container(
@@ -52,9 +53,9 @@ class SellerUpcomingRentalCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20,
                 backgroundImage:
-                    rental.customerProfileImage != null ? CachedNetworkImageProvider(rental.customerProfileImage!) : null,
-                backgroundColor: rental.customerProfileImage == null ? AppColors.silverAccent : null,
-                child: rental.customerProfileImage == null
+                    avatarUrl.startsWith('http') ? CachedNetworkImageProvider(avatarUrl) : null,
+                backgroundColor: avatarUrl.isEmpty ? AppColors.silverAccent : null,
+                child: avatarUrl.isEmpty
                     ? const Icon(
                         Icons.person,
                         size: 22,
@@ -245,4 +246,24 @@ class SellerUpcomingRentalCard extends StatelessWidget {
   }
 
   DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+}
+
+class SellerUpcomingRentalShimmerCard extends StatelessWidget {
+  const SellerUpcomingRentalShimmerCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        height: 120,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
 }

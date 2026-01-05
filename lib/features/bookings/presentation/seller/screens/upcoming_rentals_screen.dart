@@ -44,96 +44,115 @@ class _UpcomingRentalsView extends StatelessWidget {
         final calendarRangeLabel = visibleDates.isEmpty
             ? ''
             : '${AppUtils.toDayMonth(visibleDates.first)} - ${AppUtils.toDayMonth(visibleDates.last)}, ${visibleDates.last.year}';
+        final displayedRentals = state.selectedDate == null ? state.rentals : state.selectedRentals;
 
         return Container(
           color: AppColors.background,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: headerHeight,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.blue.shade600,
-                        Colors.grey.shade900,
-                      ],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
+          child: Column(
+            children: [
+              Container(
+                height: headerHeight,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.blue.shade600,
+                      Colors.grey.shade900,
+                    ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 40),
-                        Center(
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: canGoPrev
-                                        ? () => context
-                                            .read<SellerUpcomingRentalsBloc>()
-                                            .add(SellerUpcomingCalendarPrevPage(pageSize: pageSize))
-                                        : null,
-                                    icon: const Icon(Icons.chevron_left, color: Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  const Text(
-                                    'Calendar',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    onPressed: canGoNext
-                                        ? () => context
-                                            .read<SellerUpcomingRentalsBloc>()
-                                            .add(SellerUpcomingCalendarNextPage(pageSize: pageSize))
-                                        : null,
-                                    icon: const Icon(Icons.chevron_right, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                calendarRangeLabel,
-                                style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.85),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SellerCalendarStrip(
-                          dates: visibleDates,
-                          selectedDate: state.selectedDate,
-                          onChanged: (date) => context
-                              .read<SellerUpcomingRentalsBloc>()
-                              .add(SellerUpcomingCalendarDateSelected(date: date)),
-                        ),
-                      ],
-                    ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
                   ),
                 ),
-                Container(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 40),
+                      Center(
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                IconButton(
+                                  onPressed: canGoPrev
+                                      ? () => context
+                                          .read<SellerUpcomingRentalsBloc>()
+                                          .add(
+                                            SellerUpcomingCalendarPrevPage(
+                                              pageSize: pageSize,
+                                            ),
+                                          )
+                                      : null,
+                                  icon: const Icon(
+                                    Icons.chevron_left,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const Spacer(),
+                                const Text(
+                                  'Calendar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: canGoNext
+                                      ? () => context
+                                          .read<SellerUpcomingRentalsBloc>()
+                                          .add(
+                                            SellerUpcomingCalendarNextPage(
+                                              pageSize: pageSize,
+                                            ),
+                                          )
+                                      : null,
+                                  icon: const Icon(
+                                    Icons.chevron_right,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              calendarRangeLabel,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.85),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SellerCalendarStrip(
+                        dates: visibleDates,
+                        selectedDate: state.selectedDate,
+                        onChanged: (date) => context
+                            .read<SellerUpcomingRentalsBloc>()
+                            .add(SellerUpcomingCalendarDateSelected(date: date)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
                   width: double.infinity,
                   color: AppColors.background,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: horizontalPadding,
+                      vertical: 16,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -146,46 +165,62 @@ class _UpcomingRentalsView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        if (state.isLoading)
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 32),
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          )
-                        else if (state.rentals.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 24),
-                            child: Text(
-                              'No upcoming bookings',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade700,
+                        Expanded(
+                          child:   state.isLoading ?
+                                ListView.separated(
+                                  itemCount: 5,
+                                  padding: EdgeInsets.zero,
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 12),
+                                  itemBuilder: (context, index) {
+                                    return const SellerUpcomingRentalShimmerCard();
+                                  },
+                                ) :
+                              
+
+                              displayedRentals.isEmpty ?
+                                Center(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.event,
+                                        size: 80,
+                                        color: Colors.grey.shade700,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        state.selectedDate == null
+                                            ? 'No upcoming bookings'
+                                            : 'No bookings for this date',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ) :
+                              
+
+                              ListView.separated(
+                                itemCount: displayedRentals.length,
+                                padding: const EdgeInsets.only(bottom: 24),
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(height: 12),
+                                itemBuilder: (context, index) {
+                                  final rental = displayedRentals[index];
+                                  return SellerUpcomingRentalCard(rental: rental);
+                                },
                               ),
-                            ),
-                          )
-                        else
-                          ListView.separated(
-                            itemCount: state.rentals.length,
-                            shrinkWrap: true,
-                            padding: EdgeInsets.zero,
-                            physics: const NeverScrollableScrollPhysics(),
-                            separatorBuilder: (_, __) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final rental = state.rentals[index];
-                              return SellerUpcomingRentalCard(
-                                rental: rental,
-                              );
-                            },
-                          ),
-                        const SizedBox(height: 100),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },

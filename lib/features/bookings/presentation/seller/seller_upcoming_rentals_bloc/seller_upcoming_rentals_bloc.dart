@@ -44,7 +44,7 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
       state.copyWith(
         dateRange: range,
         calendarStartIndex: todayIndex,
-        selectedDate: today,
+        clearSelectedDate: true,
       ),
     );
   }
@@ -72,7 +72,14 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
     SellerUpcomingCalendarDateSelected event,
     Emitter<SellerUpcomingRentalsState> emit,
   ) {
-    emit(state.copyWith(selectedDate: _dateOnly(event.date)));
+    final selected = _dateOnly(event.date);
+    final current = state.selectedDate;
+    if (current != null && _isSameDay(current, selected)) {
+      emit(state.copyWith(clearSelectedDate: true));
+      return;
+    }
+
+    emit(state.copyWith(selectedDate: selected));
   }
 
   List<DateTime> _generateDateRange({
@@ -91,4 +98,8 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
   }
 
   DateTime _dateOnly(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
+
+  bool _isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
 }

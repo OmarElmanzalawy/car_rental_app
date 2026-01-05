@@ -230,19 +230,23 @@ class _UpcomingRentalsView extends StatelessWidget {
                                       
                                       print("${rental.carTitle} pick up time: ${rental.pickupDate.hour}:${rental.pickupDate.minute}");
 
-                                      bool isPickUpWithin2Hours = AppUtils.isWithin2Hours(rental.pickupDate);
-                                      bool isReturnWithin2Hours = AppUtils.isWithin2Hours(rental.dropOffDate);
-                                      bool isActiveOrApproved = rental.status == RentalStatus.active || rental.status == RentalStatus.approved;
+                                      final isPickUpWithin3Hours = AppUtils.isWithin2Hours(rental.pickupDate);
+                                      final isDropoffWithin3Hours = AppUtils.isWithin2Hours(rental.dropOffDate);
+                                      final canConfirmPickup = rental.status == RentalStatus.approved && isPickUpWithin3Hours;
+                                      final canConfirmDropoff = rental.status == RentalStatus.active && isDropoffWithin3Hours;
 
-                                      print(isReturnWithin2Hours ? 'Return time is within 2 hours' : 'Return time is not within 2 hours');
-                                      print(isPickUpWithin2Hours ? 'Pick up time is within 2 hours' : 'Pick up time is not within 2 hours');
-                                
+                                      print(isDropoffWithin3Hours ? 'Return time is within 3 hours' : 'Return time is not within 3 hours');
+                                      print(isPickUpWithin3Hours ? 'Pick up time is within 3 hours' : 'Pick up time is not within 3 hours');
+                                  
                                       return SellerUpcomingRentalCard(
                                         rental: rental,
-                                        actionLabel: isActiveOrApproved ? isPickUpWithin2Hours ? 'Confirm pickup' : isReturnWithin2Hours ? 'Confirm return' : null : null,
-                                        onActionPressed: isActiveOrApproved && (isPickUpWithin2Hours || isReturnWithin2Hours) ? () async{
+                                        actionLabel: canConfirmPickup
+                                            ? 'Confirm pickup'
+                                            : (canConfirmDropoff ? 'Confirm return' : null),
+                                        onActionPressed: (canConfirmPickup || canConfirmDropoff)
+                                            ? () async {
 
-                                          if (isPickUpWithin2Hours) {
+                                          if (canConfirmPickup) {
                                             //invoke pickup confirmed event
                                             await DialogueService.showAdaptiveAlertDialog(
                                               context,
@@ -264,7 +268,7 @@ class _UpcomingRentalsView extends StatelessWidget {
                                                   )
                                               ]
                                             );
-                                          } else if (isReturnWithin2Hours) {
+                                          } else if (canConfirmDropoff) {
                                             //invoke return confirmed event
                                             await DialogueService.showAdaptiveAlertDialog(
                                               context,
@@ -287,7 +291,8 @@ class _UpcomingRentalsView extends StatelessWidget {
                                               ]
                                             );
                                           }
-                                        } : null
+                                        }
+                                            : null
                                         ) ;
                                     },
                                   ),

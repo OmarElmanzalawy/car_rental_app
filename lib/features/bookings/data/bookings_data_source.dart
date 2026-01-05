@@ -12,6 +12,8 @@ abstract class BookingsDataSource {
   Future<void> cancelBookings({required String rentalId,required String carId});
   Future<Map<String,dynamic>> fetchCarModel(String carId);
   Future<List<RentalWithCarAndUserDto>> fetchSellerUpcomingRentals();
+  Future<void> confirmPickup(String rentalId);
+  Future<void> confirmDropoff(String rentalId);
 }
 
 class BookingsDatSourceImpl extends BookingsDataSource{
@@ -121,5 +123,31 @@ Future<void> cancelBookings({required String rentalId,required String carId}) as
   print(e.toString());
 }
 }
+
+@override
+  Future<void> confirmPickup(String rentalId) async {
+    try{
+      //change rental status to active
+      await client.from("rentals").update({"status": RentalStatus.active.name}).eq("id", rentalId);
+      
+    }catch(e){
+      print("something went wrong while confirming pickup");
+      print(e.toString());
+      
+    }
+  }
+
+  @override
+  Future<void> confirmDropoff(String rentalId) async{
+    //change rental status to completed
+    try{
+      await client.from("rentals").update({"status": RentalStatus.completed.name}).eq("id", rentalId);
+      
+    }catch(e){
+      print("something went wrong while confirming dropoff");
+      print(e.toString());
+      
+    }
+  }
 
 }

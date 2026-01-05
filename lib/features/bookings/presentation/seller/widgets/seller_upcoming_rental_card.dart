@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
@@ -165,12 +166,16 @@ class SellerUpcomingRentalCard extends StatelessWidget {
                       children: [
                         Icon(Icons.location_on_outlined, size: 16, color: AppColors.textPrimary,),
                         const SizedBox(width: 4),
-                        Text(
-                          rental.pickupAddress,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
+                        Expanded(
+                          child: Text(
+                            rental.pickupAddress,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                         ),
                       ],
@@ -220,6 +225,8 @@ class SellerUpcomingRentalCard extends StatelessWidget {
               width: double.infinity,
               child: ActionButton(
                 label: actionLabel!,
+                isLiquidGlass: true,
+                liquidGlassStyle: AdaptiveButtonStyle.prominentGlass,
                 onPressed: onActionPressed!,
                 backgroundColor: AppColors.primary,
               ),

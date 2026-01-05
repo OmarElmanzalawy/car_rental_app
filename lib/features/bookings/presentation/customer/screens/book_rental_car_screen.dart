@@ -288,12 +288,16 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                                   color: AppColors.primary,
                                                   size: 20,
                                                 ),
-                                                Text(
-                                                  state.pickupAddress!,
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.primary,
+                                                Expanded(
+                                                  child: Text(
+                                                    state.pickupAddress!,
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: AppColors.primary,
+                                                    ),
                                                   ),
                                                 ),
                                               ],

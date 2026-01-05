@@ -52,7 +52,9 @@ enum RentalStatus{
   approved,
   active,
   completed,
-  canceled;
+  canceled,
+  rejected,
+  expired;
 
   String get label {
     switch (this) {
@@ -66,6 +68,10 @@ enum RentalStatus{
         return 'Completed';
       case RentalStatus.canceled:
         return 'Cancelled';
+      case RentalStatus.rejected:
+        return 'Rejected';
+      case RentalStatus.expired:
+        return 'Expired';
     }
   }
 }
@@ -77,6 +83,8 @@ const bookingStatusFilterLabels = <String>[
   'Active',
   'Complete',
   'Cancelled',
+  'Rejected',
+  'Expired',
 ];
 
 const bookingStatusFilterValues = <RentalStatus?>[
@@ -86,4 +94,6 @@ const bookingStatusFilterValues = <RentalStatus?>[
   RentalStatus.active,
   RentalStatus.completed,
   RentalStatus.canceled,
+  RentalStatus.rejected,
+  RentalStatus.expired,
 ];

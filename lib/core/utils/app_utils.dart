@@ -150,5 +150,11 @@ static LatLng latLngFromSupabase(String geoJson) {
     }
   }
 
+  static bool isWithin2Hours(DateTime date) {
+    final now = DateTime.now();
+    final diff = date.difference(now);
+    return diff.inHours.abs() <= 3;
+  }
+
 
 }

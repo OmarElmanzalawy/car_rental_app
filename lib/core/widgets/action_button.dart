@@ -1,9 +1,10 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({super.key, required this.label, required this.onPressed, this.backgroundColor, this.foregroundColor,this.imagePath,this.isDense = false});
+  const ActionButton({super.key, required this.label, this.isLiquidGlass = false,required this.onPressed, this.backgroundColor, this.foregroundColor,this.imagePath,this.isDense = false, this.liquidGlassStyle});
 
   final String label;
   final VoidCallback onPressed;
@@ -11,10 +12,21 @@ class ActionButton extends StatelessWidget {
   final Color? foregroundColor;
   final String? imagePath;
   final bool isDense;
+  final bool isLiquidGlass;
+  final AdaptiveButtonStyle? liquidGlassStyle;
+  
 
   @override
   Widget build(BuildContext context) {
-    return PlatformElevatedButton(
+    return  isLiquidGlass ?
+      AdaptiveButton(
+        onPressed: onPressed,
+        label: label,
+        color: backgroundColor ?? AppColors.primary,
+        textColor: foregroundColor ?? Colors.white,
+        style: liquidGlassStyle ?? AdaptiveButtonStyle.filled,
+      )
+     : PlatformElevatedButton(
       padding: isDense ? EdgeInsets.zero : null,
       onPressed: onPressed,
        child: imagePath != null ? 

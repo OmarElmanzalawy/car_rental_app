@@ -1,7 +1,10 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:bloc/bloc.dart';
+import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/features/bookings/data/bookings_data_source.dart';
 import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and_user_dto.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'seller_upcoming_rentals_event.dart';
@@ -17,6 +20,40 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
     on<SellerUpcomingCalendarNextPage>(_onCalendarNextPage);
     on<SellerUpcomingCalendarDateSelected>(_onCalendarDateSelected);
     on<SellerUpcomingRentalsFetched>(_onRentalsFetched);
+    on<SellerUpcomingConfirmPickupEvent>(_onConfirmPickup);
+    on<SellerUpcomingConfirmDropoffEvent>(_onConfirmDropoff);
+  }
+
+  Future<void> _onConfirmPickup(
+    SellerUpcomingConfirmPickupEvent event,
+    Emitter<SellerUpcomingRentalsState> emit,
+  ) async {
+    try{
+      await dataSource.confirmPickup(event.rentalId);
+      DialogueService.showAdaptiveSnackBar(event.context, message: "Pickup Confirmed", type: AdaptiveSnackBarType.info);
+    }catch(e){
+      DialogueService.showAdaptiveSnackBar(event.context, message: e.toString(),type: AdaptiveSnackBarType.error);
+    }
+    
+    //reload rentals,
+    add(SellerUpcomingRentalsFetched());
+    
+  }
+
+  Future<void> _onConfirmDropoff(
+    SellerUpcomingConfirmDropoffEvent event,
+    Emitter<SellerUpcomingRentalsState> emit,
+  ) async {
+    try{
+      await dataSource.confirmDropoff(event.rentalId);
+      DialogueService.showAdaptiveSnackBar(event.context, message: "Dropoff Confirmed", type: AdaptiveSnackBarType.info);
+    }catch(e){
+      DialogueService.showAdaptiveSnackBar(event.context, message: e.toString(),type: AdaptiveSnackBarType.error);
+    }
+
+    //reload rentals,
+    add(SellerUpcomingRentalsFetched());
+    
   }
 
   Future<void> _onRentalsFetched(

@@ -12,11 +12,24 @@ class SellerUpcomingRentalsFetched extends SellerUpcomingRentalsEvent {
 }
 
 class SellerUpcomingConfirmPickupEvent extends SellerUpcomingRentalsEvent {
-  
+
+  final String rentalId;
+  final BuildContext context;
+
+  const SellerUpcomingConfirmPickupEvent({required this.rentalId, required this.context});
+
+  @override
+  List<Object> get props => [rentalId];
 }
 
 class SellerUpcomingConfirmDropoffEvent extends SellerUpcomingRentalsEvent {
-  
+  final String rentalId;
+  final BuildContext context;
+
+  const SellerUpcomingConfirmDropoffEvent({required this.rentalId, required this.context});
+
+  @override
+  List<Object> get props => [rentalId];
 }
 
 class SellerUpcomingCalendarStarted extends SellerUpcomingRentalsEvent {

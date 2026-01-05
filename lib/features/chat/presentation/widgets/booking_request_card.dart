@@ -410,7 +410,7 @@ class _StatusPill extends StatelessWidget {
         bg = Colors.green.withValues(alpha: 0.12);
         fg = Colors.green.shade700;
         break;
-      case RentalStatus.canceled:
+      case RentalStatus.canceled || RentalStatus.rejected || RentalStatus.expired:
         bg = Colors.red.withValues(alpha: 0.12);
         fg = Colors.red.shade700;
         break;

@@ -48,12 +48,19 @@ enum MessageType{
 }
 
 enum RentalStatus{
+  //Waiting for seller approval
   pending,
+  //Seller approved the rental
   approved,
+  //Rental has started and is ongoing
   active,
+  //Rental has ended
   completed,
+  //Rental was cancelled by customer (or seller (currently not implemented))
   canceled,
+  //Seller rejected the rental
   rejected,
+  //Rental expired before start
   expired;
 
   String get label {

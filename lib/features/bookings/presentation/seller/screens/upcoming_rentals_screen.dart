@@ -51,12 +51,6 @@ class _UpcomingRentalsView extends StatelessWidget {
 
         return Container(
           color: AppColors.background,
-          // RefreshIndicator(
-          // color: AppColors.primary,
-          // backgroundColor: AppColors.background,
-          // onRefresh: () async {
-          //   await context.read<BookingsCubit>().getBookings(Supabase.instance.client.auth.currentUser!.id);
-          // },
             child: Column(
               children: [
                 Container(

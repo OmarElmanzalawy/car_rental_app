@@ -325,7 +325,7 @@ class _BookingRequestCardState extends State<BookingRequestCard> {
                                       context.read<ChatBloc>().add(
                                             BookingRequestResponded(
                                               rentalId: data.rentalId,
-                                              status: RentalStatus.canceled,
+                                              status: RentalStatus.rejected,
                                             ),
                                           );
                                     },

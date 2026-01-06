@@ -39,7 +39,10 @@ class BookingsDatSourceImpl extends BookingsDataSource{
   final response = await client
       .from('rentals_with_car')
       .select('*')
-      .eq('customer_id', customerId);
+      .eq('customer_id', customerId)
+      // sort by created_at in descending order
+      // so that the latest bookings are shown first
+      .order('created_at', ascending: false);
 
   return response
       .map<Rentalwithcardto>((e) => Rentalwithcardto.fromMap(e))

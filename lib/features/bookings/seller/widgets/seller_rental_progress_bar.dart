@@ -1,4 +1,5 @@
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 class SellerRentalProgressBar extends StatelessWidget {
@@ -121,7 +122,8 @@ class SellerRentalProgressBar extends StatelessWidget {
   String _dayLabel(DateTime dt) {
     const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final weekday = weekdays[(dt.weekday - 1).clamp(0, 6)];
-    return '$weekday ${dt.day}';
+    final time = AppUtils.toReadableTime(dt);
+    return '$weekday ${dt.day}\n $time';
   }
 }
 

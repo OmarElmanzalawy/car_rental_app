@@ -54,12 +54,12 @@ class RentalCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: rental.status == RentalStatus.pending ? AppColors.primaryLight : 
-                  rental.status == RentalStatus.canceled ? Colors.redAccent.withOpacity(0.2) : Colors.greenAccent.withOpacity(0.2),
+                  // color: rental.status == RentalStatus.pending ? AppColors.primaryLight : 
+                  // rental.status == RentalStatus.canceled ? Colors.redAccent.withOpacity(0.2) : Colors.greenAccent.withOpacity(0.2),
+                  color: AppUtils.getStatusChipColor(rental.status).withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(AppUtils.capitalize(rental.status.name), style: TextStyle(color: rental.status == RentalStatus.pending ? AppColors.primary : 
-                rental.status == RentalStatus.canceled ? Colors.redAccent : Colors.green.shade700, fontSize: 12, fontWeight: FontWeight.w600)),
+                child: Text(AppUtils.capitalize(rental.status.name), style: TextStyle(color: AppUtils.getStatusChipColor(rental.status), fontSize: 12, fontWeight: FontWeight.w600)),
               ),
             ],
           ),

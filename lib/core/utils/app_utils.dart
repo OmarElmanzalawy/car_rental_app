@@ -141,16 +141,16 @@ static LatLng latLngFromSupabase(String geoJson) {
         return Colors.lightBlue;
       case RentalStatus.active || RentalStatus.approved:
         return Colors.green;
-      case RentalStatus.canceled:
+      case RentalStatus.canceled || RentalStatus.rejected:
         return Colors.red;
       case RentalStatus.completed:
         return Colors.blue;
-      default:
-        return Colors.black;
+      case RentalStatus.expired:
+        return Colors.grey;
     }
   }
 
-  static bool isWithin2Hours(DateTime date) {
+  static bool isWithin3Hours(DateTime date) {
     final now = DateTime.now();
     final diff = date.difference(now);
     return diff.inHours.abs() <= 3;

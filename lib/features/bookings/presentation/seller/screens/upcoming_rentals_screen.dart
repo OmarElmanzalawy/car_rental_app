@@ -224,10 +224,14 @@ class _UpcomingRentalsView extends StatelessWidget {
                                       
                                       print("${rental.carTitle} pick up time: ${rental.pickupDate.hour}:${rental.pickupDate.minute}");
 
-                                      final isPickUpWithin3Hours = AppUtils.isWithin2Hours(rental.pickupDate);
-                                      final isDropoffWithin3Hours = AppUtils.isWithin2Hours(rental.dropOffDate);
+                                      final isPickUpWithin3Hours = AppUtils.isWithin3Hours(rental.pickupDate);
+                                      final isDropoffWithin3Hours = AppUtils.isWithin3Hours(rental.dropOffDate);
                                       final canConfirmPickup = rental.status == RentalStatus.approved && isPickUpWithin3Hours;
                                       final canConfirmDropoff = rental.status == RentalStatus.active && isDropoffWithin3Hours;
+
+                                      print('now=${DateTime.now()}');
+                                      print('dropoff=${rental.dropOffDate}');
+                                      print('diff=${rental.dropOffDate.difference(DateTime.now())}');
 
                                       print(isDropoffWithin3Hours ? 'Return time is within 3 hours' : 'Return time is not within 3 hours');
                                       print(isPickUpWithin3Hours ? 'Pick up time is within 3 hours' : 'Pick up time is not within 3 hours');
@@ -274,7 +278,7 @@ class _UpcomingRentalsView extends StatelessWidget {
                                                   onPressed: (){
                                                     context.read<SellerUpcomingRentalsBloc>().add(SellerUpcomingConfirmDropoffEvent(rentalId: rental.id,context: context));
                                                   },
-                                                  style: AlertActionStyle.success,
+                                                  style: AlertActionStyle.primary,
                                                   ),
                                                   AlertAction(
                                                   title: "Cancel",

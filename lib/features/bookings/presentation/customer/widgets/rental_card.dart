@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/core/widgets/action_button.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/bookings_cubit/bookings_cubit.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/widgets/rental_status_time_bar.dart';
@@ -98,6 +99,7 @@ class RentalCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
+          rental.status == RentalStatus.completed ? const SizedBox.shrink() :
           RentalStatusTimeBar(
             status: rental.status,
             pickupDate: rental.pickupDate,
@@ -115,7 +117,7 @@ class RentalCard extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-             rental.status != RentalStatus.canceled ?  _OutlinedPill(
+             rental.status != RentalStatus.canceled && rental.status != RentalStatus.completed ?  _OutlinedPill(
                 label: 'Cancel',
                 borderColor: Colors.redAccent,
                 textColor: Colors.redAccent,
@@ -158,6 +160,23 @@ class RentalCard extends StatelessWidget {
                 ),
             ],
           ),
+           rental.status == RentalStatus.completed ? 
+            //show review button
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: FractionallySizedBox(
+                widthFactor: 1,
+                child: ActionButton(
+                  label: "Leave a review",
+                  backgroundColor: Colors.green,
+                  isLiquidGlass: true,
+                  onPressed: (){
+                    //Navigate to review screen
+                  }
+                  ),
+              ),
+            )
+          : const SizedBox.shrink()
         ],
       ),
     );

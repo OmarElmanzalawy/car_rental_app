@@ -5,7 +5,7 @@ import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/core/widgets/action_button.dart';
 import 'package:car_rental_app/core/widgets/status_chip.dart';
 import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and_user_dto.dart';
-import 'package:car_rental_app/features/bookings/seller/widgets/seller_rental_progress_bar.dart';
+import 'package:car_rental_app/features/bookings/presentation/seller/widgets/seller_rental_progress_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';

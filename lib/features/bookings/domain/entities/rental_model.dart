@@ -56,4 +56,5 @@ class RentalModel {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
 }

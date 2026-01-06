@@ -216,6 +216,7 @@ pickup_address,varchar,Human readable address
 
 ### reviews
 id,uuid,Primary Key
+rental_id,uuid,Foreign Key -> rentals.id
 reviewer_id,uuid,Foreign Key -> users.id
 car_id,uuid,Foreign Key -> cars.id
 rating,int8,

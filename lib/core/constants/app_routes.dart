@@ -17,6 +17,7 @@ import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listi
 import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/features/reviews/presentation/review_cubit/review_cubit.dart';
 import 'package:car_rental_app/features/reviews/presentation/screens/review_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,8 +116,11 @@ final List<RouteBase> kappRoutes = [
     path: AppRoutes.carDetail,
     builder: (context, state) {
       final model = state.extra as CarModel;
-      return BlocProvider(
-        create: (context) => DatePickerBloc(),
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => DatePickerBloc()),
+          BlocProvider(create: (context) => ReviewCubit()..fetchReviews(model.id)),
+        ],
         child: CarDetailScreen(model: model),
       );
     },

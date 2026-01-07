@@ -4,27 +4,37 @@ import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/core/widgets/action_button.dart';
+import 'package:car_rental_app/features/bookings/presentation/customer/widgets/date_picker_grid.dart';
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/review_card.dart';
+import 'package:car_rental_app/features/reviews/domain/review_model.dart';
+import 'package:car_rental_app/features/reviews/presentation/review_cubit/review_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:car_rental_app/features/bookings/presentation/customer/widgets/date_picker_grid.dart';
 import 'package:readmore/readmore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class CarDetailScreen extends StatelessWidget {
-  CarDetailScreen({super.key,required this.model});
+class CarDetailScreen extends StatefulWidget {
+  CarDetailScreen({super.key, required this.model});
 
   final CarModel model;
+
+  @override
+  State<CarDetailScreen> createState() => _CarDetailScreenState();
+}
+
+class _CarDetailScreenState extends State<CarDetailScreen> {
   final PageController pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
-    final bool isImageTransparent = model.images!.first.endsWith(".png");
+    final bool isImageTransparent = widget.model.images!.first.endsWith(".png");
     final Size size = MediaQuery.sizeOf(context);
     return AdaptiveScaffold(
       enableBlur: false,
@@ -55,33 +65,46 @@ class CarDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height:  isImageTransparent ? 40 : 0),
+                  SizedBox(height: isImageTransparent ? 40 : 0),
                   SizedBox(
-                    height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
+                    height: isImageTransparent
+                        ? size.height * 0.26
+                        : size.height * 0.38,
                     child: Center(
                       child: Stack(
                         children: [
                           PageView.builder(
-                            itemCount: model.images!.length,
+                            itemCount: widget.model.images!.length,
                             controller: pageController,
                             itemBuilder: (context, index) => CachedNetworkImage(
-                              imageUrl:  model.images![index],
-                              width: isImageTransparent ? size.width * 0.9 : size.width,
-                              height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
+                              imageUrl: widget.model.images![index],
+                              width: isImageTransparent
+                                  ? size.width * 0.9
+                                  : size.width,
+                              height: isImageTransparent
+                                  ? size.height * 0.26
+                                  : size.height * 0.38,
                               fit: BoxFit.cover,
-                              progressIndicatorBuilder: (context, url, progress) {
-                                return Center(
-                                  child: CircularProgressIndicator.adaptive(
-                                    value: progress.progress,
-                                  ),
-                                );
-                              },
+                              progressIndicatorBuilder:
+                                  (context, url, progress) {
+                                    return Center(
+                                      child: CircularProgressIndicator.adaptive(
+                                        value: progress.progress,
+                                      ),
+                                    );
+                                  },
                               errorWidget: (context, error, stackTrace) {
                                 return Image.asset(
                                   "assets/icons/car_placeholder.png",
-                                  fit: isImageTransparent ? BoxFit.cover : BoxFit.cover,
-                                  width: isImageTransparent ? size.width * 0.9 : size.width,
-                                  height: isImageTransparent ? size.height * 0.26 : size.height * 0.38,
+                                  fit: isImageTransparent
+                                      ? BoxFit.cover
+                                      : BoxFit.cover,
+                                  width: isImageTransparent
+                                      ? size.width * 0.9
+                                      : size.width,
+                                  height: isImageTransparent
+                                      ? size.height * 0.26
+                                      : size.height * 0.38,
                                 );
                               },
                             ),
@@ -93,7 +116,7 @@ class CarDetailScreen extends StatelessWidget {
                             child: Center(
                               child: SmoothPageIndicator(
                                 controller: pageController,
-                                count: model.images!.length,
+                                count: widget.model.images!.length,
                                 effect: const ExpandingDotsEffect(
                                   dotWidth: 10,
                                   dotHeight: 10,
@@ -104,7 +127,7 @@ class CarDetailScreen extends StatelessWidget {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ),
                   ),
                   Container(
@@ -127,7 +150,7 @@ class CarDetailScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                model.title,
+                                widget.model.title,
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,
@@ -143,7 +166,7 @@ class CarDetailScreen extends StatelessWidget {
                                   ),
                                   SizedBox(width: 4),
                                   Text(
-                                    "${model.rating}",
+                                    "${widget.model.rating}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -164,16 +187,8 @@ class CarDetailScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          // Text(
-                          //   "${model.description}........ Read More",
-                          //   style: TextStyle(
-                          //     fontSize: 14,
-                          //     height: 1.5,
-                          //     color: AppColors.textSecondary,
-                          //   ),
-                          // ),
                           ReadMoreText(
-                            model.description,
+                            widget.model.description,
                             style: TextStyle(
                               fontSize: 14,
                               height: 1.5,
@@ -201,41 +216,44 @@ class CarDetailScreen extends StatelessWidget {
                               _DetailTile(
                                 icon: Icons.speed,
                                 label: "Max Speed",
-                                value: "${model.maxSpeed} Km/h",
+                                value: "${widget.model.maxSpeed} Km/h",
                               ),
                               _DetailTile(
                                 icon: Icons.airline_seat_recline_normal,
                                 label: "Ability",
-                                value: "${model.seats} Seats",
+                                value: "${widget.model.seats} Seats",
                               ),
                               _DetailTile(
                                 icon: Icons.car_repair,
                                 label: "Gearbox",
-                                value: "${model.gearbox.name}",
+                                value: "${widget.model.gearbox.name}",
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8,),
-                           Row(
+                          const SizedBox(height: 8),
+                          Row(
                             mainAxisSize: MainAxisSize.min,
                             spacing: 8,
                             children: [
                               _DetailTile(
-                                icon: switch (model.fuelType) {
-                                  FuelType.electric => Icons.electric_bolt_outlined,
-                                  FuelType.petrol => Icons.local_gas_station_outlined,
-                                  FuelType.naturalGas => Icons.propane_tank_outlined,
-                                  FuelType.hybrid => Icons.tonality_outlined
+                                icon: switch (widget.model.fuelType) {
+                                  FuelType.electric =>
+                                    Icons.electric_bolt_outlined,
+                                  FuelType.petrol =>
+                                    Icons.local_gas_station_outlined,
+                                  FuelType.naturalGas =>
+                                    Icons.propane_tank_outlined,
+                                  FuelType.hybrid => Icons.tonality_outlined,
                                 },
                                 label: "Fuel Type",
-                                value: "${AppUtils.capitalize(model.fuelType.name)}",
-      
+                                value:
+                                    "${AppUtils.capitalize(widget.model.fuelType.name)}",
                               ),
                             ],
                           ),
                           const SizedBox(height: 20),
                           //  const SizedBox(height: 12),
-                           const Text(
+                          const Text(
                             "Seller",
                             style: TextStyle(
                               fontSize: 18,
@@ -250,12 +268,14 @@ class CarDetailScreen extends StatelessWidget {
                                 CircleAvatar(
                                   radius: 18,
                                   backgroundColor: Colors.grey.shade200,
-                                  backgroundImage: (model.ownerProfileImage != null &&
-                                          model.ownerProfileImage!.isNotEmpty)
-                                      ? NetworkImage(model.ownerProfileImage!)
+                                  backgroundImage:
+                                      (widget.model.ownerProfileImage != null &&
+                                          widget.model.ownerProfileImage!.isNotEmpty)
+                                      ? NetworkImage(widget.model.ownerProfileImage!)
                                       : null,
-                                  child: (model.ownerProfileImage == null ||
-                                          model.ownerProfileImage!.isEmpty)
+                                  child:
+                                      (widget.model.ownerProfileImage == null ||
+                                          widget.model.ownerProfileImage!.isEmpty)
                                       ? Icon(
                                           Icons.person,
                                           color: Colors.grey.shade700,
@@ -267,7 +287,7 @@ class CarDetailScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      model.ownerName ?? "Seller",
+                                      widget.model.ownerName ?? "Seller",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
@@ -277,15 +297,17 @@ class CarDetailScreen extends StatelessWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 2),
-                                     model.ownerPhone != null ? Text(
-                                      model.ownerPhone!,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade700,
-                                      ),
-                                    ) : const SizedBox.shrink()
+                                    widget.model.ownerPhone != null
+                                        ? Text(
+                                            widget.model.ownerPhone!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
                                   ],
                                 ),
                                 Spacer(),
@@ -294,44 +316,65 @@ class CarDetailScreen extends StatelessWidget {
                                   child: BlocListener<ChatBloc, ChatState>(
                                     listener: (context, state) {
                                       if (state is ChatInitiated) {
-                                        final currentUserId =
-                                            Supabase.instance.client.auth.currentUser?.id;
+                                        final currentUserId = Supabase
+                                            .instance
+                                            .client
+                                            .auth
+                                            .currentUser
+                                            ?.id;
                                         if (currentUserId == null) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
                                             const SnackBar(
-                                              content: Text('User not authenticated'),
+                                              content: Text(
+                                                'User not authenticated',
+                                              ),
                                             ),
                                           );
                                           return;
                                         }
-
+                                  
                                         final String user1;
                                         final String user2;
-                                        if (currentUserId.compareTo(model.ownerId) < 0) {
+                                        if (currentUserId.compareTo(
+                                              widget.model.ownerId,
+                                            ) <
+                                            0) {
                                           user1 = currentUserId;
-                                          user2 = model.ownerId;
+                                          user2 = widget.model.ownerId;
                                         } else {
-                                          user1 = model.ownerId;
+                                          user1 = widget.model.ownerId;
                                           user2 = currentUserId;
                                         }
-
-                                        final conversationModel = ConversationModel(
-                                          id: state.conversationId,
-                                          user1: user1,
-                                          user2: user2,
-                                          updatedAt: DateTime.now(),
-                                          otherUserId: model.ownerId,
-                                          otherUserName: model.ownerName,
-                                          otherUserProfileImage: model.ownerProfileImage,
-                                        );
-
+                                  
+                                        final conversationModel =
+                                            ConversationModel(
+                                              id: state.conversationId,
+                                              user1: user1,
+                                              user2: user2,
+                                              updatedAt: DateTime.now(),
+                                              otherUserId: widget.model.ownerId,
+                                              otherUserName: widget.model.ownerName,
+                                              otherUserProfileImage:
+                                                  widget.model.ownerProfileImage,
+                                            );
+                                  
                                         context.push(
                                           AppRoutes.chat,
-                                          extra: {'conversationModel': conversationModel},
+                                          extra: {
+                                            'conversationModel':
+                                                conversationModel,
+                                          },
                                         );
-                                      } else if (state is ChatInitiationFailure) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(content: Text(state.message)),
+                                      } else if (state
+                                          is ChatInitiationFailure) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(state.message),
+                                          ),
                                         );
                                       }
                                     },
@@ -345,10 +388,10 @@ class CarDetailScreen extends StatelessWidget {
                                             color: Colors.black,
                                             onPressed: () {
                                               context.read<ChatBloc>().add(
-                                                    InitiateChatRequested(
-                                                      ownerId: model.ownerId,
-                                                    ),
-                                                  );
+                                                InitiateChatRequested(
+                                                  ownerId: widget.model.ownerId,
+                                                ),
+                                              );
                                             },
                                           ),
                                         );
@@ -359,10 +402,71 @@ class CarDetailScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20,),
-                          const DatePickerGrid(),
-      
-                          const SizedBox(height: 100),
+                          const SizedBox(height: 20),
+                          BlocSelector<ReviewCubit, ReviewState, List<ReviewModel>>(
+                            selector: (state) => state.reviews,
+                            builder: (context, state) {
+                              if (state.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Reviews",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Icon(Icons.star, color: Colors.amber),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "${widget.model.rating}",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        "(${widget.model.totalRatingCount} reviews)",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  ...state.map(
+                                    (e) => ReviewCard(
+                                      reviewModel: e,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ActionButton(
+                                    label: "See all reviews",
+                                    onPressed: () {},
+                                    backgroundColor:
+                                        AppColors.silverAccent.withOpacity(0.55),
+                                    foregroundColor: Colors.grey,
+                                    isLiquidGlass: true,
+                                    liquidGlassStyle:
+                                        AdaptiveButtonStyle.filled,
+                                    liquidGlassSize:
+                                        AdaptiveButtonSize.medium,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                           const SizedBox(height: 20,),
+                           const DatePickerGrid(),
+                          const SizedBox(height: 110),
                         ],
                       ),
                     ),
@@ -393,7 +497,7 @@ class CarDetailScreen extends StatelessWidget {
                     Expanded(
                       child: RichText(
                         text: TextSpan(
-                          text: "\$${model.pricePerDay.toStringAsFixed(0)}",
+                          text: "\$${widget.model.pricePerDay.toStringAsFixed(0)}",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
@@ -419,7 +523,13 @@ class CarDetailScreen extends StatelessWidget {
                         minSize: Size(140, 40),
                         size: AdaptiveButtonSize.large,
                         onPressed: () {
-                          context.push(AppRoutes.bookRentalCar, extra: {"datePickerBloc": context.read<DatePickerBloc>(),"model": model});
+                          context.push(
+                            AppRoutes.bookRentalCar,
+                            extra: {
+                              "datePickerBloc": context.read<DatePickerBloc>(),
+                              "model": widget.model,
+                            },
+                          );
                         },
                         label: "Book Now",
                         borderRadius: BorderRadius.circular(25),
@@ -453,17 +563,17 @@ class _DetailTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     return Flexible(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Container(
-                height: size.height * 0.12,
-                width: size.width * 0.28,
-                decoration: BoxDecoration(
-                  color: AppColors.silverAccent.withOpacity(0.4),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-                child: Column(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: Container(
+          height: size.height * 0.12,
+          width: size.width * 0.28,
+          decoration: BoxDecoration(
+            color: AppColors.silverAccent.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -498,22 +608,6 @@ class _RoundIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   width: 36,
-    //   height: 36,
-    //   decoration: BoxDecoration(
-    //     color: AppColors.surface,
-    //     shape: BoxShape.circle,
-    //     boxShadow: [
-    //       BoxShadow(
-    //         color: Colors.black.withOpacity(0.05),
-    //         blurRadius: 10,
-    //         offset: const Offset(0, 4),
-    //       ),
-    //     ],
-    //   ),
-    //   child: Icon(icon, color: Colors.black),
-    // );
     return AdaptiveButton.icon(
       iconColor: Colors.black87,
       style: AdaptiveButtonStyle.prominentGlass,
@@ -541,7 +635,9 @@ class _DateChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color bg = disabled
         ? AppColors.border
-        : (selected ? AppColors.primary : AppColors.silverAccent.withOpacity(0.5));
+        : (selected
+              ? AppColors.primary
+              : AppColors.silverAccent.withOpacity(0.5));
     final Color dayColor = disabled
         ? Colors.grey.shade400
         : (selected ? Colors.white : Colors.grey.shade700);
@@ -558,13 +654,7 @@ class _DateChip extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            dayLabel,
-            style: TextStyle(
-              fontSize: 12,
-              color: dayColor,
-            ),
-          ),
+          Text(dayLabel, style: TextStyle(fontSize: 12, color: dayColor)),
           const SizedBox(height: 4),
           Text(
             "$date",

@@ -37,5 +37,20 @@ class ReviewCubit extends Cubit<ReviewState> {
     final bool isSuccess = await dataSource.submitReview(reviewDto: model.toReviewDto());
     emit(state.copyWith(isSubmitting: false, isSuccess: isSuccess));
   }
+
+  void fetchReviews(String carId) async{
+    final List<ReviewModel> reviews = await dataSource.getReviews(carId);
+    emit(state.copyWith(reviews: reviews));
+  }
+
+  Future<String> fetchProfileImageUrl(String userId) async{
+    final String url = await dataSource.getProfileImageUrl(userId);
+    return url;
+  }
+
+  Future<String> fetchReviewerName(String userId) async{
+    final String name = await dataSource.getReviewerName(userId);
+    return name;
+  }
   
 }

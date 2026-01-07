@@ -6,7 +6,8 @@ class ReviewState extends Equatable {
     this.showDetails = false,
     this.isSubmitting = false,
     this.isSuccess = false,
-    this.selectedTags = const {}
+    this.selectedTags = const {},
+    this.reviews = const [],
     });
 
   final int rating;
@@ -14,6 +15,7 @@ class ReviewState extends Equatable {
   final bool isSubmitting;
   final bool isSuccess;
   final Set<String> selectedTags;
+  final List<ReviewModel> reviews;
 
     String get headlineForRating {
     switch (rating) {
@@ -50,17 +52,19 @@ class ReviewState extends Equatable {
     bool? isSubmitting,
     bool? isSuccess,
     Set<String>? selectedTags,
+    List<ReviewModel>? reviews,
   }) {
     return ReviewState(
       rating: rating ?? this.rating,
       showDetails: showDetails ?? this.showDetails,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       selectedTags: selectedTags ?? this.selectedTags,
-      isSuccess: isSuccess ?? this.isSuccess
+      isSuccess: isSuccess ?? this.isSuccess,
+      reviews: reviews ?? this.reviews,
     );
   }
 
   @override
-  List<Object> get props => [rating, showDetails, isSubmitting, selectedTags, isSuccess];
+  List<Object> get props => [rating, showDetails, isSubmitting, selectedTags, isSuccess, reviews];
 }
 

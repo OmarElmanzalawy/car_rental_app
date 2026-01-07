@@ -15,18 +15,9 @@ import 'package:go_router/go_router.dart';
 
 class RentalCard extends StatelessWidget {
   const RentalCard({
-    super.key,
+    super.key, 
     required this.rental,
   });
-
-  // final String title;
-  // final String statusLabel;
-  // final String dateText;
-  // final String timeText;
-  // final String locationText;
-  // final String statusBarText;
-  // final String totalText;
-  // final String? imageUrl;
 
   final Rentalwithcardto rental;
 
@@ -172,6 +163,7 @@ class RentalCard extends StatelessWidget {
                   isLiquidGlass: true,
                   onPressed: (){
                     //Navigate to review screen
+                    context.push(AppRoutes.review,extra: rental);
                   }
                   ),
               ),

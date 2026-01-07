@@ -3,6 +3,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.d
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
+import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/date_picker_bloc/date_picker_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/screens/book_rental_car_screen.dart';
@@ -16,6 +17,7 @@ import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listi
 import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/features/reviews/presentation/screens/review_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/book_rental_cubit/book_rental_cubit.dart';
@@ -35,6 +37,7 @@ class AppRoutes {
   static const String bookings = "/bookings";
   static const String addCarListing = "/add-car-listing";
   static const String chat = "/chat";
+  static const String review = "/review";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -50,6 +53,13 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.verified,
     builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.review,
+    builder: (context, state) {
+      final extra = state.extra as Rentalwithcardto;
+      return ReviewScreen(rental: extra);
+    } ,
   ),
   GoRoute(
     path: AppRoutes.chat,

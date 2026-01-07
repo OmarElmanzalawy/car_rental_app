@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class ActionButton extends StatelessWidget {
-  const ActionButton({super.key, required this.label, this.isLiquidGlass = false,required this.onPressed, this.backgroundColor, this.foregroundColor,this.imagePath,this.isDense = false, this.liquidGlassStyle});
+  const ActionButton({super.key, required this.label, this.isLiquidGlass = false,required this.onPressed, this.backgroundColor, this.foregroundColor,this.imagePath,this.isDense = false, this.liquidGlassStyle,this.padding,this.liquidGlassSize});
 
   final String label;
   final VoidCallback onPressed;
@@ -13,6 +13,9 @@ class ActionButton extends StatelessWidget {
   final String? imagePath;
   final bool isDense;
   final bool isLiquidGlass;
+  final EdgeInsetsGeometry? padding;
+  final AdaptiveButtonSize? liquidGlassSize;
+
   final AdaptiveButtonStyle? liquidGlassStyle;
   
 
@@ -24,6 +27,8 @@ class ActionButton extends StatelessWidget {
         label: label,
         color: backgroundColor ?? AppColors.primary,
         textColor: foregroundColor ?? Colors.white,
+        padding: padding,
+        size: liquidGlassSize ?? AdaptiveButtonSize.medium,
         style: liquidGlassStyle ?? AdaptiveButtonStyle.filled,
       )
      : PlatformElevatedButton(
@@ -43,7 +48,7 @@ class ActionButton extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             foregroundColor: foregroundColor ?? Colors.white,
           backgroundColor: backgroundColor ?? AppColors.primary,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: padding ?? const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
           ),
@@ -51,6 +56,7 @@ class ActionButton extends StatelessWidget {
         ),
         cupertino: (context, platform) => CupertinoElevatedButtonData(
           borderRadius: BorderRadius.circular(25),
+          padding: padding,
         ),
        );
   }

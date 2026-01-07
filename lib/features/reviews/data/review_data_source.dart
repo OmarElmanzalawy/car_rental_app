@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class ReviewDataSource {
 
-  Future<void> submitReview({
+  Future<bool> submitReview({
     required ReviewDto reviewDto,
   });
 
@@ -19,12 +19,14 @@ class ReviewDataSourceImpl implements ReviewDataSource {
   ReviewDataSourceImpl(this.client);
 
   @override
-  Future<void> submitReview({required ReviewDto reviewDto}) async {
+  Future<bool> submitReview({required ReviewDto reviewDto}) async {
     
     try{
       await client.from("reviews").insert(reviewDto.toJson());
+      return true;
     }catch(e){
       print("Error happened while submitting review \n${e.toString()}");
+      return false;
     }
   }
 

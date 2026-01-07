@@ -276,7 +276,7 @@ class _UpcomingRentalsView extends StatelessWidget {
                                                 AlertAction(
                                                   title: "Confirm",
                                                   onPressed: (){
-                                                    context.read<SellerUpcomingRentalsBloc>().add(SellerUpcomingConfirmDropoffEvent(rentalId: rental.id,context: context));
+                                                    context.read<SellerUpcomingRentalsBloc>().add(SellerUpcomingConfirmDropoffEvent(rentalId: rental.id,carId: rental.carId,context: context,));
                                                   },
                                                   style: AlertActionStyle.primary,
                                                   ),

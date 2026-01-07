@@ -13,6 +13,7 @@ class RentalModel {
   final LatLng pickupLoc;
   final String pickupAddress;
   final DateTime createdAt;
+  final bool reivewSubmitted;
 
   RentalModel({
     required this.id,
@@ -25,6 +26,7 @@ class RentalModel {
     required this.pickupLoc,
     required this.pickupAddress,
     required this.createdAt,
+    required this.reivewSubmitted,
   });
 
   factory RentalModel.fromMap(Map<String, dynamic> map) {
@@ -39,6 +41,7 @@ class RentalModel {
       pickupLoc: AppUtils.latLngFromSupabase(map['pickup_loc'] as String),
       pickupAddress: map['pickup_address'] as String,
       createdAt: DateTime.parse(map['created_at'] as String),
+      reivewSubmitted: map['review_submitted'] as bool,
     );
   }
 
@@ -54,6 +57,7 @@ class RentalModel {
       'pickup_loc': AppUtils.latLngToWkt(pickupLoc),
       'pickup_address': pickupAddress,
       'created_at': createdAt.toIso8601String(),
+      'review_submitted': reivewSubmitted,
     };
   }
 

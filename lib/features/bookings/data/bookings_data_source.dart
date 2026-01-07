@@ -13,7 +13,7 @@ abstract class BookingsDataSource {
   Future<Map<String,dynamic>> fetchCarModel(String carId);
   Future<List<RentalWithCarAndUserDto>> fetchSellerUpcomingRentals();
   Future<void> confirmPickup(String rentalId);
-  Future<void> confirmDropoff(String rentalId);
+  Future<void> confirmDropoff(String rentalId,String carId);
 }
 
 class BookingsDatSourceImpl extends BookingsDataSource{
@@ -26,7 +26,8 @@ class BookingsDatSourceImpl extends BookingsDataSource{
     final response = await client
       .from('rentals_with_car_and_user')
       .select('*')
-      .eq('seller_id', client.auth.currentUser!.id);
+      .eq('seller_id', client.auth.currentUser!.id)
+      .order('created_at', ascending: false);
 
     return response
       .map<RentalWithCarAndUserDto>((e) => RentalWithCarAndUserDto.fromJson(e))
@@ -141,10 +142,12 @@ Future<void> cancelBookings({required String rentalId,required String carId}) as
   }
 
   @override
-  Future<void> confirmDropoff(String rentalId) async{
+  Future<void> confirmDropoff(String rentalId,String carId) async{
     //change rental status to completed
     try{
       await client.from("rentals").update({"status": RentalStatus.completed.name}).eq("id", rentalId);
+      // mark the car as available
+      await client.from("cars").update({"available": true}).eq("id", carId);
       
     }catch(e){
       print("something went wrong while confirming dropoff");

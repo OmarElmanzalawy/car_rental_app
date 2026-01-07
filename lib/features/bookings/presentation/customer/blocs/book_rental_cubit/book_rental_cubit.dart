@@ -221,7 +221,8 @@ class BookRentalCubit extends Cubit<BookRentalState> {
       status: RentalStatus.pending,
       pickupLoc: state.pickupPosition!,
       pickupAddress: state.pickupAddress!,
-      createdAt: DateTime.now()
+      createdAt: DateTime.now(),
+      reivewSubmitted: false,
       );
 
       await BookRentalDataSourceImpl(Supabase.instance.client).bookRentalCar(rentalModel,carModel , carModel.ownerId,state.name!);

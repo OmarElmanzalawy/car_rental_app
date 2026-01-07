@@ -151,7 +151,7 @@ class RentalCard extends StatelessWidget {
                 ),
             ],
           ),
-           rental.status == RentalStatus.completed ? 
+           rental.status == RentalStatus.completed && !rental.reivewSubmitted ? 
             //show review button
             Padding(
               padding: const EdgeInsets.only(top: 8.0),

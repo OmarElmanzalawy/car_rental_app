@@ -213,6 +213,7 @@ status,rental_status,"Enum (e.g., 'pending', 'active', 'completed')"
 total_price,float8,
 pickup_loc,geography,PostGIS geography point
 pickup_address,varchar,Human readable address
+review_submitted,bool,Default false
 
 ### reviews
 id,uuid,Primary Key

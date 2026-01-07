@@ -45,7 +45,7 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
     Emitter<SellerUpcomingRentalsState> emit,
   ) async {
     try{
-      await dataSource.confirmDropoff(event.rentalId);
+      await dataSource.confirmDropoff(event.rentalId,event.carId);
       DialogueService.showAdaptiveSnackBar(event.context, message: "Dropoff Confirmed", type: AdaptiveSnackBarType.info);
     }catch(e){
       DialogueService.showAdaptiveSnackBar(event.context, message: e.toString(),type: AdaptiveSnackBarType.error);

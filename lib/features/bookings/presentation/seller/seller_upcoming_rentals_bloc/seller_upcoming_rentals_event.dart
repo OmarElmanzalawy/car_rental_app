@@ -24,12 +24,14 @@ class SellerUpcomingConfirmPickupEvent extends SellerUpcomingRentalsEvent {
 
 class SellerUpcomingConfirmDropoffEvent extends SellerUpcomingRentalsEvent {
   final String rentalId;
+  //we need this here to mark the car as available after dropoff confirmation
+  final String carId;
   final BuildContext context;
 
-  const SellerUpcomingConfirmDropoffEvent({required this.rentalId, required this.context});
+  const SellerUpcomingConfirmDropoffEvent({required this.rentalId, required this.carId, required this.context});
 
   @override
-  List<Object> get props => [rentalId];
+  List<Object> get props => [rentalId,carId];
 }
 
 class SellerUpcomingCalendarStarted extends SellerUpcomingRentalsEvent {

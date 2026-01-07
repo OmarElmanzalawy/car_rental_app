@@ -1,15 +1,18 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/services/dialogue_service.dart';
 import 'package:car_rental_app/core/widgets/action_button.dart';
 import 'package:car_rental_app/core/widgets/custom_textfield.dart';
 import 'package:car_rental_app/core/widgets/status_chip.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
+import 'package:car_rental_app/features/reviews/domain/review_model.dart';
 import 'package:car_rental_app/features/reviews/presentation/review_cubit/review_cubit.dart';
 import 'package:car_rental_app/features/reviews/presentation/widgets/review_star.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:uuid/uuid.dart';
 
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key, required this.rental});
@@ -42,7 +45,18 @@ class _ReviewScreenState extends State<ReviewScreen> {
         child: Material(
           color: AppColors.background,
           child: SafeArea(
-            child: BlocBuilder<ReviewCubit, ReviewState>(
+            child: BlocConsumer<ReviewCubit, ReviewState>(
+              listenWhen: (previous, current) => current.isSuccess != previous.isSuccess,
+              listener: (context, state) {
+                if (state.isSuccess) {
+                  DialogueService.showAdaptiveSnackBar(
+                    context,
+                    message: state.isSuccess ? "Review submitted successfully" : "Failed to submit review",
+                    type: state.isSuccess ? AdaptiveSnackBarType.success : AdaptiveSnackBarType.error,
+                    );
+                  context.pop();
+                }
+              },
               builder: (context, state) {
                 print("bloc rebuild");
                 return Column(
@@ -166,7 +180,18 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         isLiquidGlass: true,
                         liquidGlassSize: AdaptiveButtonSize.large,
                         label: "Done",
-                        onPressed: () {},
+                        onPressed: () {
+                          final model = ReviewModel(
+                            id: Uuid().v4(),
+                            rentalId: widget.rental.id,
+                            reviewerId: widget.rental.customerId,
+                            carId: widget.rental.carId,
+                            rating: state.rating,
+                            comment: notesController.text,
+                            createdAt: DateTime.now()
+                          );
+                          context.read<ReviewCubit>().submitReview(model);
+                        },
                         backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
                       ),

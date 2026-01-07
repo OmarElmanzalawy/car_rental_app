@@ -20,6 +20,7 @@ class Rentalwithcardto {
   final DateTime createdAt;
   final String carName;
   final List<String> carImageUrl;
+  final bool reivewSubmitted;
 
   Rentalwithcardto({
     required this.id,
@@ -34,6 +35,7 @@ class Rentalwithcardto {
     required this.createdAt,
     required this.carName,
     required this.carImageUrl,
+    required this.reivewSubmitted
   });
 
   factory Rentalwithcardto.fromMap(Map<String, dynamic> map) {
@@ -50,6 +52,7 @@ class Rentalwithcardto {
       createdAt: DateTime.parse(map['created_at'] as String),
       carName: map['car_title'] as String,
       carImageUrl: List<String>.from(map['car_images'] as List),
+      reivewSubmitted: map['review_submitted'] as bool,
     );
   }
 

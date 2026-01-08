@@ -17,6 +17,8 @@ import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listi
 import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/features/payment/presentation/screens/add_payment_card_screen.dart';
+import 'package:car_rental_app/features/payment/presentation/screens/payment_method_screen.dart';
 import 'package:car_rental_app/features/reviews/presentation/review_cubit/review_cubit.dart';
 import 'package:car_rental_app/features/reviews/presentation/screens/review_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +41,8 @@ class AppRoutes {
   static const String addCarListing = "/add-car-listing";
   static const String chat = "/chat";
   static const String review = "/review";
+  static const String paymentMethod = "/payment-method";
+  static const String addPaymentCard = "/add-payment-card";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -47,9 +51,14 @@ class AppRoutes {
 final List<RouteBase> kappRoutes = [
   GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
   GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
+  GoRoute(path: AppRoutes.paymentMethod, builder: (context, state) => PaymentMethodScreen()),
   GoRoute(
     path: AppRoutes.customerHome,
     builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.addPaymentCard,
+    builder: (context, state) => AddPaymentCardScreen(),
   ),
   GoRoute(
     path: AppRoutes.verified,

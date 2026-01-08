@@ -555,80 +555,83 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                     textColor: Colors.white,
                                     size: AdaptiveButtonSize.large,
                                     minSize: const Size(140, 44),
-                                    label: "Submit Booking",
-                                    onPressed: () async {
-                                      final formValid =
-                                          _formKey.currentState?.validate() ??
-                                          false;
-                                      print(
-                                        formValid
-                                            ? "Form is valid"
-                                            : "not valid",
-                                      );
-                                      final s = context
-                                          .read<BookRentalCubit>()
-                                          .state;
-                                      final hasName =
-                                          (s.name?.trim().isNotEmpty ??
-                                              false) ||
-                                          _nameController.text
-                                              .trim()
-                                              .isNotEmpty;
-                                      final hasPhone =
-                                          (s.phoneNumber?.trim().isNotEmpty ??
-                                          false);
-                                      final hasAddress =
-                                          s.pickupAddress != null &&
-                                          s.pickupAddress!.trim().isNotEmpty;
-                                      final hasDates =
-                                          s.pickupDate != null &&
-                                          s.dropOffDate != null;
-                                      if (!formValid ||
-                                          !hasName ||
-                                          !hasPhone ||
-                                          !hasAddress ||
-                                          !hasDates) {
-                                        await DialogueService.showAdaptiveAlertDialog(
-                                          context,
-                                          title: "Incomplete form",
-                                          content:
-                                              "Please enter name, phone, pickup address, and select start and end.",
-                                          actions: [
-                                            AlertAction(
-                                              title: "OK",
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              style: AlertActionStyle.primary,
-                                            ),
-                                          ],
-                                        );
-                                        return;
-                                      }
-                                      await context
-                                          .read<BookRentalCubit>()
-                                          .bookRentalCar(widget.carModel);
-                                      await context
-                                          .read<BookRentalCubit>()
-                                          .saveUserInfo(
-                                            name: s.name,
-                                            phoneNumber: s.phoneNumber,
-                                          );
-
-                                      //show success dialog
-                                      await DialogueService.showAdaptiveAlertDialog(
-                                        context,
-                                        title: "Success",
-                                        content:
-                                            "Your booking has been submitted. you will be notified if owner accepts your request.",
-                                        actions: [
-                                          AlertAction(
-                                            title: "OK",
-                                            onPressed: () => context.pop(),
-                                            style: AlertActionStyle.primary,
-                                          ),
-                                        ],
-                                      );
+                                    label: "Proceed to payment",
+                                    onPressed: () {
+                                      context.push(AppRoutes.paymentMethod);
                                     },
+                                    // onPressed: () async {
+                                    //   final formValid =
+                                    //       _formKey.currentState?.validate() ??
+                                    //       false;
+                                    //   print(
+                                    //     formValid
+                                    //         ? "Form is valid"
+                                    //         : "not valid",
+                                    //   );
+                                    //   final s = context
+                                    //       .read<BookRentalCubit>()
+                                    //       .state;
+                                    //   final hasName =
+                                    //       (s.name?.trim().isNotEmpty ??
+                                    //           false) ||
+                                    //       _nameController.text
+                                    //           .trim()
+                                    //           .isNotEmpty;
+                                    //   final hasPhone =
+                                    //       (s.phoneNumber?.trim().isNotEmpty ??
+                                    //       false);
+                                    //   final hasAddress =
+                                    //       s.pickupAddress != null &&
+                                    //       s.pickupAddress!.trim().isNotEmpty;
+                                    //   final hasDates =
+                                    //       s.pickupDate != null &&
+                                    //       s.dropOffDate != null;
+                                    //   if (!formValid ||
+                                    //       !hasName ||
+                                    //       !hasPhone ||
+                                    //       !hasAddress ||
+                                    //       !hasDates) {
+                                    //     await DialogueService.showAdaptiveAlertDialog(
+                                    //       context,
+                                    //       title: "Incomplete form",
+                                    //       content:
+                                    //           "Please enter name, phone, pickup address, and select start and end.",
+                                    //       actions: [
+                                    //         AlertAction(
+                                    //           title: "OK",
+                                    //           onPressed: () =>
+                                    //               Navigator.of(context).pop(),
+                                    //           style: AlertActionStyle.primary,
+                                    //         ),
+                                    //       ],
+                                    //     );
+                                    //     return;
+                                    //   }
+                                    //   await context
+                                    //       .read<BookRentalCubit>()
+                                    //       .bookRentalCar(widget.carModel);
+                                    //   await context
+                                    //       .read<BookRentalCubit>()
+                                    //       .saveUserInfo(
+                                    //         name: s.name,
+                                    //         phoneNumber: s.phoneNumber,
+                                    //       );
+
+                                    //   //show success dialog
+                                    //   await DialogueService.showAdaptiveAlertDialog(
+                                    //     context,
+                                    //     title: "Success",
+                                    //     content:
+                                    //         "Your booking has been submitted. you will be notified if owner accepts your request.",
+                                    //     actions: [
+                                    //       AlertAction(
+                                    //         title: "OK",
+                                    //         onPressed: () => context.pop(),
+                                    //         style: AlertActionStyle.primary,
+                                    //       ),
+                                    //     ],
+                                    //   );
+                                    // },
                                     borderRadius: BorderRadius.circular(22),
                                   ),
                                 ),

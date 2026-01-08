@@ -57,7 +57,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
       expands: widget.isMultiline,
       controller: widget.controller,
       cursorColor: widget.cursorColor,
-      obscureText: widget.obscureText,
+      obscureText: _obscureText,
       validator: widget.validator,
       enabled: widget.isEnabled,
       keyboardType: widget.keyboardType,
@@ -68,7 +68,7 @@ class _CustomTextfieldState extends State<CustomTextfield> {
         prefixIcon: widget.prefixIcon != null ? Icon(widget.prefixIcon) : null,
         suffixIcon: widget.obscureText ? IconButton(
           icon: Icon(
-            widget.obscureText ? Icons.visibility_off : Icons.visibility,
+            _obscureText ? Icons.visibility_off : Icons.visibility,
             color: Colors.black,
           ),
           onPressed: () {
@@ -77,8 +77,8 @@ class _CustomTextfieldState extends State<CustomTextfield> {
             });
           },
         ) : null,
-        filled: widget.isEnabled ? false : true,
-        fillColor: Colors.grey.shade200,
+        filled: widget.isFilled ?? false,
+        fillColor: widget.fillColor ?? Colors.grey.shade200,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 12),
           borderSide:  BorderSide(color: widget.borderColor ?? Colors.white),

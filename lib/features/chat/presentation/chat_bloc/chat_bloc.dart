@@ -101,6 +101,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ) async {
     emit(const ChatMessagesLoading());
 
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        await _chatRemoteDataSource.resetUnreadCount(
+          conversationId: event.conversationId,
+          userId: userId,
+        );
+      }
+    } catch (_) {}
+
     await emit.forEach<List<MessageModel>>(
       _chatRemoteDataSource.getMessages(conversationId: event.conversationId),
       onData: (messages) {

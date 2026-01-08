@@ -448,17 +448,20 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  ActionButton(
-                                    label: "See all reviews",
-                                    onPressed: () {},
-                                    backgroundColor:
-                                        AppColors.silverAccent.withOpacity(0.55),
-                                    foregroundColor: Colors.grey,
-                                    isLiquidGlass: true,
-                                    liquidGlassStyle:
-                                        AdaptiveButtonStyle.filled,
-                                    liquidGlassSize:
-                                        AdaptiveButtonSize.medium,
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ActionButton(
+                                      label: "See all reviews",
+                                      onPressed: () {},
+                                      backgroundColor:
+                                          AppColors.silverAccent.withOpacity(0.55),
+                                      foregroundColor: Colors.grey,
+                                      isLiquidGlass: true,
+                                      liquidGlassStyle:
+                                          AdaptiveButtonStyle.filled,
+                                      liquidGlassSize:
+                                          AdaptiveButtonSize.medium,
+                                    ),
                                   ),
                                 ],
                               );

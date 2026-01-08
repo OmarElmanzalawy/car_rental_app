@@ -232,6 +232,8 @@ created_at,timestamptz,
 | user_1 | uuid | Foreign Key → users.id |
 | user_2 | uuid | Foreign Key → users.id |
 | updated_at | timestamptz | Updates whenever a new message is sent so the chat 
+| user_1_unread_count | int8 | Default 0 |
+| user_2_unread_count | int8 | Default 0 |
 
 ### messages
 id (uuid, PK)

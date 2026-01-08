@@ -1,15 +1,22 @@
 part of 'navigation_bar_cubit.dart';
 
 @immutable
-sealed class NavigationBarState {
+class NavigationBarState {
   final int index;
-  const NavigationBarState(this.index);
-}
+  final int unReadChatCount;
 
-final class NavigationBarInitial extends NavigationBarState {
-  const NavigationBarInitial() : super(0);
-}
+  const NavigationBarState({
+    required this.index,
+    required this.unReadChatCount,
+  });
 
-final class NavigationBarChanged extends NavigationBarState {
-  const NavigationBarChanged(super.index);
+  NavigationBarState copyWith({
+    int? index,
+    int? unReadChatCount,
+  }) {
+    return NavigationBarState(
+      index: index ?? this.index,
+      unReadChatCount: unReadChatCount ?? this.unReadChatCount,
+    );
+  }
 }

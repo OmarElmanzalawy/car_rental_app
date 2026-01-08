@@ -9,6 +9,11 @@ abstract class ChatRemoteDataSource {
     required MessageModel messageModel,
   });
 
+  Future<void> resetUnreadCount({
+    required String conversationId,
+    required String userId,
+  });
+
   Future<void> sendSystemMessage({
     required String conversationId,
     required String message,
@@ -52,6 +57,37 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     await client.from("conversations").update({
       "updated_at": DateTime.now().toIso8601String(),
     }).eq("id", messageModel.conversationId);
+  }
+
+  @override
+  Future<void> resetUnreadCount({
+    required String conversationId,
+    required String userId,
+  }) async {
+    final row = await client
+        .from('conversations')
+        .select('user_1,user_2')
+        .eq('id', conversationId)
+        .maybeSingle();
+
+    if (row == null) {
+      return;
+    }
+
+    final user1 = row['user_1'] as String?;
+    final user2 = row['user_2'] as String?;
+
+    final String? column = user1 == userId
+        ? 'user_1_unread_count'
+        : user2 == userId
+            ? 'user_2_unread_count'
+            : null;
+
+    if (column == null) {
+      return;
+    }
+
+    await client.from('conversations').update({column: 0}).eq('id', conversationId);
   }
 
   @override

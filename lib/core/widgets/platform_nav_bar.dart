@@ -93,6 +93,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BlocBuilder<NavigationBarCubit, NavigationBarState>(
       builder: (context, state) {
         final currentIndex = state.index;
+        final unreadCount = state.unReadChatCount;
         
         return Container(
           padding: const EdgeInsets.only(top: 12, bottom: 24),
@@ -112,12 +113,26 @@ class CustomBottomNavigationBar extends StatelessWidget {
               if (!isSeller) ...[
                 _buildNavItem(context, 0, Icons.directions_car, "Cars", currentIndex),
                 _buildNavItem(context, 1, Icons.calendar_month_outlined, "Bookings", currentIndex),
-                _buildNavItem(context, 2, Icons.chat_bubble_outline, "Chat", currentIndex),
+                _buildNavItem(
+                  context,
+                  2,
+                  Icons.chat_bubble_outline,
+                  "Chat",
+                  currentIndex,
+                  badgeCount: unreadCount,
+                ),
                 _buildNavItem(context, 3, Icons.person_outline, "Profile", currentIndex),
               ] else ...[
                 _buildNavItem(context, 0, Icons.dashboard_outlined, "Dashboard", currentIndex),
                 _buildNavItem(context, 1, Icons.directions_car, "My Cars", currentIndex),
-                _buildNavItem(context, 2, Icons.chat_bubble_outline, "Inbox", currentIndex),
+                _buildNavItem(
+                  context,
+                  2,
+                  Icons.chat_bubble_outline,
+                  "Inbox",
+                  currentIndex,
+                  badgeCount: unreadCount,
+                ),
                 _buildNavItem(context, 3, Icons.person_outline, "Profile", currentIndex),
               ],
             ],
@@ -127,8 +142,41 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label, int currentIndex) {
+  Widget _buildNavItem(
+    BuildContext context,
+    int index,
+    IconData icon,
+    String label,
+    int currentIndex, {
+    int badgeCount = 0,
+  }) {
     final isSelected = index == currentIndex;
+    final showBadge = index == 2 && badgeCount > 0;
+    final badgeText = badgeCount > 99 ? "99+" : badgeCount.toString();
+
+    final iconBase = Icon(
+      icon,
+      color: isSelected ? Colors.black : Colors.grey.shade400,
+      size: 26,
+    );
+
+    final iconWidget = showBadge
+        ? Badge(
+            backgroundColor: AppColors.primary,
+            alignment: Alignment.topRight,
+            offset: const Offset(8, -6),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            label: Text(
+              badgeText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            child: iconBase,
+          )
+        : iconBase;
     
     return InkWell(
       onTap: () {
@@ -148,11 +196,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          Icon(
-            icon,
-            color: isSelected ? Colors.black : Colors.grey.shade400,
-            size: 26,
-          ),
+          iconWidget,
           const SizedBox(height: 4),
           Text(
             label,

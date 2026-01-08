@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/bookings/presentation/seller/screens/upcoming_rentals_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
+import 'package:car_rental_app/features/home/data/nav_bar_data_source.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/widgets/seller_stat_tile.dart';
@@ -14,6 +15,7 @@ import 'package:car_rental_app/features/profile/presentation/screens/profile_scr
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SellerHomeScreen extends StatelessWidget {
   const SellerHomeScreen({super.key});
@@ -22,7 +24,12 @@ class SellerHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => NavigationBarCubit()),
+        BlocProvider(
+          create: (_) => NavigationBarCubit(
+            dataSource: NavigationBarDataSourceImpl(Supabase.instance.client),
+            userId: Supabase.instance.client.auth.currentUser!.id,
+          ),
+        ),
         BlocProvider(
           create: (_) => SellerBlocBloc()..add(const SellerListingsStarted()),
         ),

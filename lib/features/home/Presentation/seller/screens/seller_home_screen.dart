@@ -46,6 +46,9 @@ class SellerHomeScreen extends StatelessWidget {
                     index: state.index,
                     children: [
                       const _DashboardContent(),
+                      const Center(
+                        child: Text("Earnings"),
+                      ),
                       const UpcomingRentalsScreen(),
                       const UsersListScreen(),
                       const ProfileScreen(),

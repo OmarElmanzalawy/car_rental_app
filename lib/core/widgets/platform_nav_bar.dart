@@ -39,12 +39,16 @@ class GlassNavBar extends StatelessWidget {
       builder: (context, state) {
         return CNTabBar(
           tint: Colors.blue.shade700,
-          split: true,
+          split: isSeller ? false : true,
           items: isSeller
               ? const [
                   CNTabBarItem(
                     icon: CNSymbol("square.grid.2x2"),
                     label: "Dashboard",
+                  ),
+                   CNTabBarItem(
+                    icon: CNSymbol("dollarsign"),
+                    label: "Earnings",
                   ),
                   CNTabBarItem(
                     icon: CNSymbol("calendar"),
@@ -56,6 +60,7 @@ class GlassNavBar extends StatelessWidget {
                   ),
                   CNTabBarItem(
                     icon: CNSymbol("person"),
+                    label: "Profile",
                   ),
                 ]
               : const [

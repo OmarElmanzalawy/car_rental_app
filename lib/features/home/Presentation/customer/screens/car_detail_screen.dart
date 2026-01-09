@@ -22,7 +22,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CarDetailScreen extends StatefulWidget {
   const CarDetailScreen({super.key, required this.model});
-  
+
   final CarModel model;
 
   @override
@@ -270,12 +270,20 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   backgroundColor: Colors.grey.shade200,
                                   backgroundImage:
                                       (widget.model.ownerProfileImage != null &&
-                                          widget.model.ownerProfileImage!.isNotEmpty)
-                                      ? NetworkImage(widget.model.ownerProfileImage!)
+                                          widget
+                                              .model
+                                              .ownerProfileImage!
+                                              .isNotEmpty)
+                                      ? NetworkImage(
+                                          widget.model.ownerProfileImage!,
+                                        )
                                       : null,
                                   child:
                                       (widget.model.ownerProfileImage == null ||
-                                          widget.model.ownerProfileImage!.isEmpty)
+                                          widget
+                                              .model
+                                              .ownerProfileImage!
+                                              .isEmpty)
                                       ? Icon(
                                           Icons.person,
                                           color: Colors.grey.shade700,
@@ -334,7 +342,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                           );
                                           return;
                                         }
-                                  
+
                                         final String user1;
                                         final String user2;
                                         if (currentUserId.compareTo(
@@ -347,7 +355,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                           user1 = widget.model.ownerId;
                                           user2 = currentUserId;
                                         }
-                                  
+
                                         final conversationModel =
                                             ConversationModel(
                                               id: state.conversationId,
@@ -355,11 +363,13 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                               user2: user2,
                                               updatedAt: DateTime.now(),
                                               otherUserId: widget.model.ownerId,
-                                              otherUserName: widget.model.ownerName,
-                                              otherUserProfileImage:
-                                                  widget.model.ownerProfileImage,
+                                              otherUserName:
+                                                  widget.model.ownerName,
+                                              otherUserProfileImage: widget
+                                                  .model
+                                                  .ownerProfileImage,
                                             );
-                                  
+
                                         context.push(
                                           AppRoutes.chat,
                                           extra: {
@@ -383,9 +393,10 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                         return SizedBox(
                                           width: 100,
                                           height: 35,
-                                          child: AdaptiveButton(
+                                          child: ActionButton(
                                             label: "Chat",
-                                            color: Colors.black,
+                                            backgroundColor: Colors.black,
+                                            foregroundColor: Colors.white,
                                             onPressed: () {
                                               context.read<ChatBloc>().add(
                                                 InitiateChatRequested(
@@ -403,7 +414,11 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          BlocSelector<ReviewCubit, ReviewState, List<ReviewModel>>(
+                          BlocSelector<
+                            ReviewCubit,
+                            ReviewState,
+                            List<ReviewModel>
+                          >(
                             selector: (state) => state.reviews,
                             builder: (context, state) {
                               if (state.isEmpty) {
@@ -443,9 +458,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                   ...state.map(
-                                    (e) => ReviewCard(
-                                      reviewModel: e,
-                                    ),
+                                    (e) => ReviewCard(reviewModel: e),
                                   ),
                                   const SizedBox(height: 16),
                                   SizedBox(
@@ -453,8 +466,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                     child: ActionButton(
                                       label: "See all reviews",
                                       onPressed: () {},
-                                      backgroundColor:
-                                          AppColors.silverAccent.withOpacity(0.55),
+                                      backgroundColor: AppColors.silverAccent
+                                          .withOpacity(0.55),
                                       foregroundColor: Colors.grey,
                                       isLiquidGlass: true,
                                       liquidGlassStyle:
@@ -467,8 +480,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                               );
                             },
                           ),
-                           const SizedBox(height: 20,),
-                           const DatePickerGrid(),
+                          const SizedBox(height: 20),
+                          const DatePickerGrid(),
                           const SizedBox(height: 110),
                         ],
                       ),
@@ -500,7 +513,8 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                     Expanded(
                       child: RichText(
                         text: TextSpan(
-                          text: "\$${widget.model.pricePerDay.toStringAsFixed(0)}",
+                          text:
+                              "\$${widget.model.pricePerDay.toStringAsFixed(0)}",
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
@@ -520,24 +534,40 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                       ),
                     ),
                     SizedBox(
-                      child: AdaptiveButton(
-                        textColor: Colors.white,
-                        style: AdaptiveButtonStyle.filled,
-                        minSize: Size(140, 40),
-                        size: AdaptiveButtonSize.large,
-                        onPressed: () {
-                          context.push(
-                            AppRoutes.bookRentalCar,
-                            extra: {
-                              "datePickerBloc": context.read<DatePickerBloc>(),
-                              "model": widget.model,
+                      child:
+                          BlocBuilder<
+                            DatePickerBloc,
+                            DatePickerState>(
+                            buildWhen: (previous, current) =>
+                                current.startDate != null ||
+                                current.endDate != null,
+                            builder: (context, state) {
+                              final isButtonEnabled = state.startDate != null ||
+                                  state.endDate != null;
+                              return AdaptiveButton(
+                                textColor: Colors.white,
+                                enabled: isButtonEnabled,
+                                style: AdaptiveButtonStyle.filled,
+                                minSize: Size(140, 40),
+                                size: AdaptiveButtonSize.large,
+                                onPressed: () {
+                                  context.push(
+                                    AppRoutes.bookRentalCar,
+                                    extra: {
+                                      "datePickerBloc": context
+                                          .read<DatePickerBloc>(),
+                                      "model": widget.model,
+                                    },
+                                  );
+                                },
+                                label: "Book Now",
+                                borderRadius: BorderRadius.circular(25),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                ),
+                              );
                             },
-                          );
-                        },
-                        label: "Book Now",
-                        borderRadius: BorderRadius.circular(25),
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                      ),
+                          ),
                     ),
                   ],
                 ),

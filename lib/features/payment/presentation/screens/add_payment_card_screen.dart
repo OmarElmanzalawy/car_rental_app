@@ -31,147 +31,151 @@ class _AddPaymentCardScreenState extends State<AddPaymentCardScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
 
-    return AdaptiveScaffold(
-      body: Container(
-        color: AppColors.background,
-        child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          AdaptiveButton.icon(
-                            onPressed: () => context.pop(),
-                            icon: Icons.arrow_back_ios_new,
-                            color: AppColors.silverAccent,
-                            iconColor: Colors.black,
-                            style: AdaptiveButtonStyle.glass,
-                            minSize: const Size(40, 40),
-                            size: AdaptiveButtonSize.small,
-                          ),
-                          const Spacer(),
-                          const Text(
-                            "Add Card",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
+    return Material(
+      child: AdaptiveScaffold(
+        body: Container(
+          color: AppColors.background,
+          child: SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            AdaptiveButton.icon(
+                              onPressed: () => context.pop(),
+                              icon: Icons.arrow_back_ios_new,
+                              color: AppColors.silverAccent,
+                              iconColor: Colors.black,
+                              style: AdaptiveButtonStyle.glass,
+                              minSize: const Size(40, 40),
+                              size: AdaptiveButtonSize.small,
                             ),
-                          ),
-                          const Spacer(),
-                          const SizedBox(width: 40, height: 40),
-                        ],
-                      ),
-                      const SizedBox(height: 18),
-                      const _PaymentCardPreview(),
-                      const SizedBox(height: 22),
-                      const Text(
-                        "Credit Card Info",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
+                            const Spacer(),
+                            const Text(
+                              "Add Card",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const Spacer(),
+                            const SizedBox(width: 40, height: 40),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 14),
-                      const _FieldLabel("Card Holder Name"),
-                      const SizedBox(height: 10),
-                      CustomTextfield(
-                        hintText: "Enter your Name",
-                        controller: nameController,
-                        borderRadius: 14,
-                        isFilled: true,
-                        fillColor: AppColors.border.withValues(alpha: 0.30),
-                        borderColor: Colors.transparent,
-                        focusColor: AppColors.primary,
-                      ),
-                      const SizedBox(height: 16),
-                      const _FieldLabel("Card number*"),
-                      const SizedBox(height: 10),
-                      CustomTextfield(
-                        hintText: "Enter your Card Number",
-                        controller: cardNumberController,
-                        keyboardType: TextInputType.number,
-                        borderRadius: 14,
-                        isFilled: true,
-                        fillColor: AppColors.border.withValues(alpha: 0.30),
-                        borderColor: Colors.transparent,
-                        focusColor: AppColors.primary,
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const _FieldLabel("Expiry Date MM/YY*"),
-                                const SizedBox(height: 10),
-                                CustomTextfield(
-                                  hintText: "Enter expiry date",
-                                  controller: expiryController,
-                                  keyboardType: TextInputType.datetime,
-                                  borderRadius: 14,
-                                  isFilled: true,
-                                  fillColor: AppColors.border.withValues(
-                                    alpha: 0.30,
-                                  ),
-                                  borderColor: Colors.transparent,
-                                  focusColor: AppColors.primary,
-                                ),
-                              ],
-                            ),
+                        const SizedBox(height: 18),
+                        const _PaymentCardPreview(),
+                        const SizedBox(height: 22),
+                        const Text(
+                          "Credit Card Info",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
                           ),
-                          const SizedBox(width: 12),
-                          SizedBox(
-                            width: size.width * 0.28,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const _FieldLabel("CVV"),
-                                const SizedBox(height: 10),
-                                CustomTextfield(
-                                  hintText: "***",
-                                  controller: cvvController,
-                                  keyboardType: TextInputType.number,
-                                  borderRadius: 14,
-                                  isFilled: true,
-                                  fillColor: AppColors.border.withValues(
-                                    alpha: 0.30,
+                        ),
+                        const SizedBox(height: 14),
+                        const _FieldLabel("Card Holder Name"),
+                        const SizedBox(height: 10),
+                        CustomTextfield(
+                          hintText: "Enter your Name",
+                          controller: nameController,
+                          borderRadius: 14,
+                          isFilled: true,
+                          fillColor: AppColors.border.withValues(alpha: 0.30),
+                          borderColor: Colors.transparent,
+                          focusColor: AppColors.primary,
+                        ),
+                        const SizedBox(height: 16),
+                        const _FieldLabel("Card number*"),
+                        const SizedBox(height: 10),
+                        CustomTextfield(
+                          hintText: "Enter your Card Number",
+                          controller: cardNumberController,
+                          keyboardType: TextInputType.number,
+                          borderRadius: 14,
+                          isFilled: true,
+                          fillColor: AppColors.border.withValues(alpha: 0.30),
+                          borderColor: Colors.transparent,
+                          focusColor: AppColors.primary,
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const _FieldLabel("Expiry Date MM/YY*"),
+                                  const SizedBox(height: 10),
+                                  CustomTextfield(
+                                    hintText: "Enter expiry date",
+                                    controller: expiryController,
+                                    keyboardType: TextInputType.datetime,
+                                    borderRadius: 14,
+                                    isFilled: true,
+                                    fillColor: AppColors.border.withValues(
+                                      alpha: 0.30,
+                                    ),
+                                    borderColor: Colors.transparent,
+                                    focusColor: AppColors.primary,
                                   ),
-                                  borderColor: Colors.transparent,
-                                  focusColor: AppColors.primary,
-                                  obscureText: true,
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: size.height * 0.03),
-                    ],
+                            const SizedBox(width: 12),
+                            SizedBox(
+                              width: size.width * 0.28,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const _FieldLabel("CVV"),
+                                  const SizedBox(height: 10),
+                                  CustomTextfield(
+                                    hintText: "***",
+                                    controller: cvvController,
+                                    keyboardType: TextInputType.number,
+                                    borderRadius: 14,
+                                    isFilled: true,
+                                    fillColor: AppColors.border.withValues(
+                                      alpha: 0.30,
+                                    ),
+                                    borderColor: Colors.transparent,
+                                    focusColor: AppColors.primary,
+                                    obscureText: true,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: size.height * 0.03),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ActionButton(
-                    label: "Save Card",
-                    onPressed: () {},
-                    backgroundColor: AppColors.silverAccent,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ActionButton(
+                      isLiquidGlass: true,
+                      label: "Save Card",
+                      onPressed: () {},
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      liquidGlassSize: AdaptiveButtonSize.large,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -77,7 +77,7 @@ class _MapScreenState extends State<MapScreen> {
                       color: AppColors.primary,
                       textColor: Colors.white,
                       size: AdaptiveButtonSize.medium,
-                      minSize: Size(70, 40),
+                      minSize: Size(150, 40),
                     ),
                   );
                 },

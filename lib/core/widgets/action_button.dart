@@ -40,9 +40,9 @@ class ActionButton extends StatelessWidget {
         children: [
           Image.asset(imagePath!,width: 18,height: 18,fit: BoxFit.cover,color: Colors.white,),
           const SizedBox(width: 8,),
-          Text(label)
+          Text(label, style: TextStyle(color: foregroundColor),)
         ],
-       ) : Text(label),
+       ) : Text(label, style: TextStyle(color: foregroundColor),),
        color: backgroundColor ?? AppColors.primary,
         material: (context, platform) => MaterialElevatedButtonData(
           style: ElevatedButton.styleFrom(

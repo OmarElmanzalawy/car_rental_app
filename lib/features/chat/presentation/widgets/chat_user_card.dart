@@ -112,6 +112,7 @@ class ChatUserCard extends StatelessWidget {
                       horizontal: 8,
                       vertical: 4,
                     ),
+                    constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                     decoration: BoxDecoration(
                       color: AppColors.primary,
                       borderRadius: BorderRadius.circular(999),
@@ -135,4 +136,3 @@ class ChatUserCard extends StatelessWidget {
     );
   }
 }
-

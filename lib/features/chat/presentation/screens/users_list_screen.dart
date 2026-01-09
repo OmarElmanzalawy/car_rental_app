@@ -136,6 +136,11 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                     ? c.user2
                                     : c.user1;
                             final timeText = AppUtils.toDayMonth(c.updatedAt);
+                            final unreadCount = currentUserId == null
+                                ? 0
+                                : (c.user1 == currentUserId
+                                    ? c.user1UnreadCount
+                                    : c.user2UnreadCount);
                             return ChatUserCard(
                               name: c.otherUserName ?? otherUserId,
                               lastMessage: c.lastMessage ?? "Tap to open chat",
@@ -144,7 +149,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
                                 "assets/images/profile.jpg",
                               ),
                               isOnline: false,
-                              unreadCount: 0,
+                              unreadCount: unreadCount,
                               onTap: () {
                                 context.push(
                                   AppRoutes.chat,

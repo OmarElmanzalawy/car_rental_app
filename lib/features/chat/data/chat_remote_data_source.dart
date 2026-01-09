@@ -203,6 +203,8 @@ Future<List<ConversationModel>> getConversations() async {
       user1: c.user1,
       user2: c.user2,
       updatedAt: c.updatedAt,
+      user1UnreadCount: c.user1UnreadCount,
+      user2UnreadCount: c.user2UnreadCount,
       otherUserId: otherUserId,
       otherUserName: u?['full_name'] as String?,
       otherUserProfileImage: u?['profile_image'] as String?,

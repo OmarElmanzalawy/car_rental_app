@@ -21,8 +21,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CarDetailScreen extends StatefulWidget {
-  CarDetailScreen({super.key, required this.model});
-
+  const CarDetailScreen({super.key, required this.model});
+  
   final CarModel model;
 
   @override

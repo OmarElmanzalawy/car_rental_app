@@ -51,7 +51,13 @@ class AppRoutes {
 final List<RouteBase> kappRoutes = [
   GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
   GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
-  GoRoute(path: AppRoutes.paymentMethod, builder: (context, state) => PaymentMethodScreen()),
+
+  GoRoute(path: AppRoutes.paymentMethod, builder: (context, state) {
+    final map = state.extra as Map<String,dynamic>;
+    final bookRentalCubit = map["bookRentalCubit"] as BookRentalCubit;
+    final carModel = map["carModel"] as CarModel;
+    return PaymentMethodScreen(bookRentalCubit: bookRentalCubit,carModel: carModel); 
+  }),
   GoRoute(
     path: AppRoutes.customerHome,
     builder: (context, state) => CustomerHomeScreen(),

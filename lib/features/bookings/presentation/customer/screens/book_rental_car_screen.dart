@@ -2,6 +2,7 @@ import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
+import 'package:car_rental_app/core/widgets/checkout_summary_card.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/widgets/labeled_value_card.dart';
 import 'package:car_rental_app/core/widgets/phone_textfield.dart';
 import 'package:car_rental_app/core/widgets/custom_textfield.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:shimmer/shimmer.dart';
 
 class BookRentalCarScreen extends StatefulWidget {
   const BookRentalCarScreen({
@@ -442,110 +442,10 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
-                                BlocBuilder<BookRentalCubit, BookRentalState>(
-                                  buildWhen: (previous, current) {
-                                    return previous.totalPrice !=
-                                            current.totalPrice ||
-                                        previous.rentalDuration !=
-                                            current.rentalDuration ||
-                                        previous.subtotoal !=
-                                            current.subtotoal ||
-                                        previous.isCalculatingPrice !=
-                                            current.isCalculatingPrice;
-                                  },
-                                  builder: (context, state) {
-                                    return state.isCalculatingPrice
-                                        ? Shimmer.fromColors(
-                                            baseColor: Colors.grey.shade300,
-                                            highlightColor:
-                                                Colors.grey.shade100,
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: size.height * 0.3,
-                                              decoration: BoxDecoration(
-                                                color: AppColors.surface,
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.05),
-                                                    blurRadius: 20,
-                                                    offset: const Offset(0, 5),
-                                                  ),
-                                                ],
-                                                border: Border.all(
-                                                  color: AppColors.border,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : Container(
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.surface,
-                                              borderRadius:
-                                                  BorderRadius.circular(14),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.05),
-                                                  blurRadius: 20,
-                                                  offset: const Offset(0, 5),
-                                                ),
-                                              ],
-                                              border: Border.all(
-                                                color: AppColors.border,
-                                              ),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 14,
-                                              vertical: 14,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                _SummaryRow(
-                                                  label: "Price per day",
-                                                  value:
-                                                      "\$${widget.carModel.pricePerDay.toStringAsFixed(0)}",
-                                                ),
-                                                const SizedBox(height: 8),
-                                                _SummaryRow(
-                                                  label: "Duration",
-                                                  value:
-                                                      "${state.rentalDuration} ${state.isHourly ? 'hours' : 'days'}",
-                                                ),
-                                                const SizedBox(height: 8),
-                                                _SummaryRow(
-                                                  label: "Subtotal",
-                                                  value:
-                                                      "\$${(state.subtotoal!.toStringAsFixed(0))}",
-                                                ),
-                                                const SizedBox(height: 8),
-                                                _SummaryRow(
-                                                  label: "Service fee",
-                                                  value:
-                                                      "\$${(state.subtotoal! * state.serviceFeeRate).toStringAsFixed(0)}",
-                                                ),
-                                                const SizedBox(height: 8),
-                                                _SummaryRow(
-                                                  label: "Tax",
-                                                  value:
-                                                      "\$${(state.subtotoal! * state.taxRate).toStringAsFixed(0)}",
-                                                ),
-                                                const SizedBox(height: 12),
-                                                const Divider(height: 1),
-                                                const SizedBox(height: 12),
-                                                _SummaryRow(
-                                                  label: "Total",
-                                                  value:
-                                                      "\$${state.totalPrice!.toStringAsFixed(2)}",
-                                                  isBold: true,
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                  },
+                                CheckoutSummaryCard(
+                                  bookRentalCubit: context.read<BookRentalCubit>(),
+                                  pricePerDay: widget.carModel.pricePerDay,
+                                  height: size.height * 0.3,
                                 ),
                                 const SizedBox(height: 20),
                                 SizedBox(
@@ -556,82 +456,63 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
                                     size: AdaptiveButtonSize.large,
                                     minSize: const Size(140, 44),
                                     label: "Proceed to payment",
-                                    onPressed: () {
-                                      context.push(AppRoutes.paymentMethod);
+                                    onPressed: () async{
+                                        final formValid =
+                                          _formKey.currentState?.validate() ??
+                                          false;
+                                      print(
+                                        formValid
+                                            ? "Form is valid"
+                                            : "not valid",
+                                      );
+                                      final s = context
+                                          .read<BookRentalCubit>()
+                                          .state;
+                                      final hasName =
+                                          (s.name?.trim().isNotEmpty ??
+                                              false) ||
+                                          _nameController.text
+                                              .trim()
+                                              .isNotEmpty;
+                                      final hasPhone =
+                                          (s.phoneNumber?.trim().isNotEmpty ??
+                                          false);
+                                      final hasAddress =
+                                          s.pickupAddress != null &&
+                                          s.pickupAddress!.trim().isNotEmpty;
+                                      // final hasDates =
+                                      //     s.pickupDate != null &&
+                                      //     s.dropOffDate != null;
+                                      if (!formValid ||
+                                          !hasName ||
+                                          !hasPhone ||
+                                          !hasAddress
+                                          // !hasDates
+                                          ) {
+                                        await DialogueService.showAdaptiveAlertDialog(
+                                          context,
+                                          title: "Incomplete form",
+                                          content:
+                                              "Please enter name, phone, pickup address, and select start and end.",
+                                          actions: [
+                                            AlertAction(
+                                              title: "OK",
+                                              onPressed: () {},
+                                                  
+                                              style: AlertActionStyle.primary,
+                                            ),
+                                          ],
+                                        );
+                                        return;
+                                      }
+                                      context.push(
+                                        AppRoutes.paymentMethod,
+                                        extra: {
+                                          "bookRentalCubit": context.read<BookRentalCubit>(),
+                                          "carModel": widget.carModel,
+                                        },
+                                      );
                                     },
-                                    // onPressed: () async {
-                                    //   final formValid =
-                                    //       _formKey.currentState?.validate() ??
-                                    //       false;
-                                    //   print(
-                                    //     formValid
-                                    //         ? "Form is valid"
-                                    //         : "not valid",
-                                    //   );
-                                    //   final s = context
-                                    //       .read<BookRentalCubit>()
-                                    //       .state;
-                                    //   final hasName =
-                                    //       (s.name?.trim().isNotEmpty ??
-                                    //           false) ||
-                                    //       _nameController.text
-                                    //           .trim()
-                                    //           .isNotEmpty;
-                                    //   final hasPhone =
-                                    //       (s.phoneNumber?.trim().isNotEmpty ??
-                                    //       false);
-                                    //   final hasAddress =
-                                    //       s.pickupAddress != null &&
-                                    //       s.pickupAddress!.trim().isNotEmpty;
-                                    //   final hasDates =
-                                    //       s.pickupDate != null &&
-                                    //       s.dropOffDate != null;
-                                    //   if (!formValid ||
-                                    //       !hasName ||
-                                    //       !hasPhone ||
-                                    //       !hasAddress ||
-                                    //       !hasDates) {
-                                    //     await DialogueService.showAdaptiveAlertDialog(
-                                    //       context,
-                                    //       title: "Incomplete form",
-                                    //       content:
-                                    //           "Please enter name, phone, pickup address, and select start and end.",
-                                    //       actions: [
-                                    //         AlertAction(
-                                    //           title: "OK",
-                                    //           onPressed: () =>
-                                    //               Navigator.of(context).pop(),
-                                    //           style: AlertActionStyle.primary,
-                                    //         ),
-                                    //       ],
-                                    //     );
-                                    //     return;
-                                    //   }
-                                    //   await context
-                                    //       .read<BookRentalCubit>()
-                                    //       .bookRentalCar(widget.carModel);
-                                    //   await context
-                                    //       .read<BookRentalCubit>()
-                                    //       .saveUserInfo(
-                                    //         name: s.name,
-                                    //         phoneNumber: s.phoneNumber,
-                                    //       );
-
-                                    //   //show success dialog
-                                    //   await DialogueService.showAdaptiveAlertDialog(
-                                    //     context,
-                                    //     title: "Success",
-                                    //     content:
-                                    //         "Your booking has been submitted. you will be notified if owner accepts your request.",
-                                    //     actions: [
-                                    //       AlertAction(
-                                    //         title: "OK",
-                                    //         onPressed: () => context.pop(),
-                                    //         style: AlertActionStyle.primary,
-                                    //       ),
-                                    //     ],
-                                    //   );
-                                    // },
                                     borderRadius: BorderRadius.circular(22),
                                   ),
                                 ),
@@ -665,34 +546,3 @@ class _BookRentalCarScreenState extends State<BookRentalCarScreen> {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
-    required this.label,
-    required this.value,
-    this.isBold = false,
-  });
-  final String label;
-  final String value;
-  final bool isBold;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 14, color: AppColors.textSecondary),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: isBold ? 18 : 16,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w600,
-            color: isBold ? AppColors.primary : Colors.black,
-          ),
-        ),
-      ],
-    );
-  }
-}

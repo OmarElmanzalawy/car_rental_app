@@ -4,6 +4,7 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/bookings/presentation/seller/screens/upcoming_rentals_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
+import 'package:car_rental_app/features/earnings/presentation/screens/earnings_screen.dart';
 import 'package:car_rental_app/features/home/data/nav_bar_data_source.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
@@ -46,9 +47,7 @@ class SellerHomeScreen extends StatelessWidget {
                     index: state.index,
                     children: [
                       const _DashboardContent(),
-                      const Center(
-                        child: Text("Earnings"),
-                      ),
+                      const EarningsScreen(),
                       const UpcomingRentalsScreen(),
                       const UsersListScreen(),
                       const ProfileScreen(),

@@ -148,6 +148,10 @@ Future<void> cancelBookings({required String rentalId,required String carId}) as
       await client.from("rentals").update({"status": RentalStatus.completed.name}).eq("id", rentalId);
       // mark the car as available
       await client.from("cars").update({"available": true}).eq("id", carId);
+
+      //IMPORTANT
+      //A trigger function is executed that inserts a new record into seller_earnings table and seller_wallets table
+      // the trigger function is called award_rental_completed
       
     }catch(e){
       print("something went wrong while confirming dropoff");

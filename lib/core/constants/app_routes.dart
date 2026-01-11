@@ -129,6 +129,7 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.carDetail,
+    name: "carDetail",
     builder: (context, state) {
       final model = state.extra as CarModel;
       return MultiBlocProvider(

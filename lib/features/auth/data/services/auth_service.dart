@@ -183,6 +183,12 @@ class AuthService {
         phoneNumber: user.phone,
       );
       await supabase.from('users').insert(model.toMap());
+
+
+      //IMPORTANT
+      //We also create a seller wallet if the user is a seller via db trigger
+      //This is automatically handled by the db trigger function create_wallet_for_new_seller
+
     }catch(e){
       print("error completing email verification");
       print(e.toString());

@@ -244,3 +244,19 @@ content (text) — The actual message or a summary like "Booking request for Tes
 car_id (uuid, FK, nullable) — Optional: link to the car being discussed.
 rental_id (uuid, FK, nullable) — Optional: link to the specific booking to accept/reject.
 created_at (timestamptz)
+
+### seller_earnings
+id,uuid,Primary key
+seller_id,uuid,Foreign Key -> users.id
+rental_id,uuid,Foreign Key -> rentals.id Unique
+car_id,uuid,Foreign Key -> cars.id
+gross_amount numeric default 0
+platform_fee numeric default 0
+net_earning numeric default 0
+created_at timestamptz
+
+### seller_wallets
+seller_id,uuid,Foreign Key -> users.id Primary key
+available_balance numeric default 0
+withdrawn_balance numeric default 0
+updated_at timestamptz

@@ -142,15 +142,15 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                             child: ActionButton(
                               label: "Pay Now",
                               onPressed: () async {
-                                // await widget.bookRentalCubit.bookRentalCar(
-                                //   widget.carModel,
-                                // );
-                                // await widget.bookRentalCubit.saveUserInfo(
-                                //   name: widget.bookRentalCubit.state.name,
-                                //   phoneNumber:
-                                //       widget.bookRentalCubit.state.phoneNumber,
-                                // );
-                                //show success dialog
+                                await widget.bookRentalCubit.bookRentalCar(
+                                  widget.carModel,
+                                );
+                                await widget.bookRentalCubit.saveUserInfo(
+                                  name: widget.bookRentalCubit.state.name,
+                                  phoneNumber:
+                                      widget.bookRentalCubit.state.phoneNumber,
+                                );
+                                // show success dialog
                                 await DialogueService.showAdaptiveAlertDialog(
                                   context,
                                   title: "Success",

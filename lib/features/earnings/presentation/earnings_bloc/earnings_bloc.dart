@@ -63,6 +63,7 @@ class EarningsBloc extends Bloc<EarningsEvent, EarningsState> {
     await _transactionsSub?.cancel();
     _transactionsSub = _dataSource.getSellerTransactions(_sellerId).listen(
       (transactions) {
+        print("new transactions update from stream");
         final transactionModels = transactions.map((e) => e.toDomain()).toList();
         add(_SellerTransactionsUpdated(transactionModels));
       },
@@ -75,6 +76,7 @@ class EarningsBloc extends Bloc<EarningsEvent, EarningsState> {
   ) async {
     await _walletSub?.cancel();
     _walletSub = _dataSource.getSellerWallet(_sellerId).listen((wallet) {
+      print("new wallet update from stream");
       add(_SellerWalletUpdated(wallet.toDomain()));
     });
   }
@@ -231,6 +233,6 @@ class EarningsBloc extends Bloc<EarningsEvent, EarningsState> {
   Future<void> close() async {
     await _transactionsSub?.cancel();
     await _walletSub?.cancel();
-    return super.close();
+    return super.close(); 
   }
 }

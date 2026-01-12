@@ -1,5 +1,6 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
+import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/earnings/presentation/earnings_bloc/earnings_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:car_rental_app/features/earnings/presentation/widgets/earnings_t
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class EarningsScreen extends StatelessWidget {
   const EarningsScreen({super.key});
@@ -64,6 +66,9 @@ class EarningsScreen extends StatelessWidget {
                                   availableBalanceText: availableText,
                                   lifetimeText: lifetimeText,
                                   withdrawnText: withdrawnText,
+                                  onWithdrawPressed: () {
+                                    context.push(AppRoutes.withdrawEarning);
+                                  },
                                 ),
                         ),
                       ),

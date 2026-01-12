@@ -19,6 +19,7 @@ import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
 import 'package:car_rental_app/features/payment/presentation/screens/add_payment_card_screen.dart';
 import 'package:car_rental_app/features/payment/presentation/screens/payment_method_screen.dart';
+import 'package:car_rental_app/features/payment/presentation/screens/withdraw_earning_screen.dart';
 import 'package:car_rental_app/features/reviews/presentation/review_cubit/review_cubit.dart';
 import 'package:car_rental_app/features/reviews/presentation/screens/review_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -43,6 +44,7 @@ class AppRoutes {
   static const String review = "/review";
   static const String paymentMethod = "/payment-method";
   static const String addPaymentCard = "/add-payment-card";
+  static const String withdrawEarning = "/withdraw-earning";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -61,6 +63,10 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.customerHome,
     builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.withdrawEarning,
+    builder: (context, state) => WithdrawEarningScreen(),
   ),
   GoRoute(
     path: AppRoutes.addPaymentCard,

@@ -7,17 +7,19 @@ class WithdrawAmountHeader extends StatelessWidget {
   const WithdrawAmountHeader({
     super.key,
     required this.amountController,
-    this.noteLabel = 'Add note',
-    this.title = 'Withdraw Amount',
+    this.title = 'Enter Amount',
   });
 
   final TextEditingController amountController;
   final String title;
-  final String noteLabel;
+  
 
   @override
   Widget build(BuildContext context) {
     return WithdrawDottedBackground(
+      // dotColor: Colors.black,
+      // dotOpacity: 0.5,
+      // dotRadius: 3,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
@@ -27,6 +29,7 @@ class WithdrawAmountHeader extends StatelessWidget {
         child: SafeArea(
           bottom: false,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 8),
               Text(
@@ -58,7 +61,7 @@ class _AmountField extends StatelessWidget {
     final selectionColor = Colors.white.withValues(alpha: 0.35);
     final textStyle = const TextStyle(
       color: Colors.white,
-      fontSize: 54,
+      fontSize: 60,
       fontWeight: FontWeight.w700,
       letterSpacing: 0.5,
     );
@@ -80,10 +83,13 @@ class _AmountField extends StatelessWidget {
             //add $ to the beginning of the text
             print(old.text);
             print(newVal.text);
-            if(newVal.text.isEmpty){
+            if (newVal.text.isNotEmpty && !newVal.text.contains("\$")){
+              return newVal.copyWith(text: "\$${newVal.text}" );
+            }else if(newVal.text.contains("\$") && newVal.text.length <=1){
+            return newVal.copyWith(text: newVal.text.replaceAll("\$", ""));
+            }else{
               return newVal;
             }
-            return newVal.copyWith(text: '\$${newVal.text}');
           })
         ],
         keyboardType: const TextInputType.numberWithOptions(decimal: true),

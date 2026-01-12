@@ -15,15 +15,13 @@ class WithdrawEarningScreen extends StatefulWidget {
 }
 
 class _WithdrawEarningScreenState extends State<WithdrawEarningScreen> {
-  final TextEditingController _amountController = TextEditingController(text: '100');
-  final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
 
   int _selectedAccountIndex = 0;
 
   @override
   void dispose() {
     _amountController.dispose();
-    _noteController.dispose();
     super.dispose();
   }
 
@@ -33,132 +31,119 @@ class _WithdrawEarningScreenState extends State<WithdrawEarningScreen> {
 
     return Material(
       child: AdaptiveScaffold(
+        enableBlur: false,
+        appBar: AdaptiveAppBar(
+          
+        ),
         body: Container(
-          color: AppColors.background,
-          child: Stack(
+          color: AppColors.primary,
+          child: Column(
             children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: size.height * 0.40,
-                    child: WithdrawAmountHeader(
-                      amountController: _amountController,
-                      noteLabel: _noteController.text.trim().isEmpty
-                          ? 'Add note'
-                          : 'Edit note',
-                      title: 'Withdraw Amount',
-                    ),
+              SizedBox(
+                height: size.height * 0.35,
+                child: WithdrawAmountHeader(
+                  amountController: _amountController,
+                  title: 'Enter Amount',
+                ),
+              ),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(26),
+                    topRight: Radius.circular(26),
                   ),
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(26),
-                          topRight: Radius.circular(26),
-                        ),
-                      ),
-                      child: SafeArea(
-                        top: false,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 52,
-                                height: 5,
-                                decoration: BoxDecoration(
-                                  color: AppColors.border,
-                                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      // borderRadius: BorderRadius.only(
+                      //   topLeft: Radius.circular(26),
+                      //   topRight: Radius.circular(26),
+                      // ),
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      left: false,
+                      right: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 52,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                color: AppColors.border,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Send to account',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 16),
-                              const Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Send Earning to',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  physics: const BouncingScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      WithdrawFromAccountTile(
-                                        bankName: 'Axis Bank',
-                                        maskedAccountNumber: 'XXXX XXXX 0124',
-                                        balanceText: '\$5000',
-                                        isSelected: _selectedAccountIndex == 0,
-                                        onPressed: () {
-                                          setState(() => _selectedAccountIndex = 0);
-                                        },
-                                        leading: _BankLogoBadge(
-                                          backgroundColor:
-                                              const Color(0xFFF7E9EC),
-                                          icon: Icons.account_balance,
-                                          iconColor: const Color(0xFFB00020),
-                                        ),
+                            ),
+                            const SizedBox(height: 12),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    WithdrawFromAccountTile(
+                                      bankName: 'Axis Bank',
+                                      maskedAccountNumber: 'XXXX XXXX 0124',
+                                      balanceText: '\$5000',
+                                      isSelected: _selectedAccountIndex == 0,
+                                      onPressed: () {
+                                        setState(() => _selectedAccountIndex = 0);
+                                      },
+                                      leading: _BankLogoBadge(
+                                        backgroundColor:
+                                            const Color(0xFFF7E9EC),
+                                        icon: Icons.account_balance,
+                                        iconColor: const Color(0xFFB00020),
                                       ),
-                                      const SizedBox(height: 12),
-                                      WithdrawFromAccountTile(
-                                        bankName: 'Icici Bank',
-                                        maskedAccountNumber: 'XXXX XXXX 0149',
-                                        balanceText: '\$2000',
-                                        isSelected: _selectedAccountIndex == 1,
-                                        onPressed: () {
-                                          setState(() => _selectedAccountIndex = 1);
-                                        },
-                                        leading: _BankLogoBadge(
-                                          backgroundColor:
-                                              const Color(0xFFFFF2E6),
-                                          icon: Icons.account_balance,
-                                          iconColor: const Color(0xFFB45309),
-                                        ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    WithdrawFromAccountTile(
+                                      bankName: 'Icici Bank',
+                                      maskedAccountNumber: 'XXXX XXXX 0149',
+                                      balanceText: '\$2000',
+                                      isSelected: _selectedAccountIndex == 1,
+                                      onPressed: () {
+                                        setState(() => _selectedAccountIndex = 1);
+                                      },
+                                      leading: _BankLogoBadge(
+                                        backgroundColor:
+                                            const Color(0xFFFFF2E6),
+                                        icon: Icons.account_balance,
+                                        iconColor: const Color(0xFFB45309),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              ActionButton(
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ActionButton(
                                 label: 'Withdraw Earnings',
                                 onPressed: () {},
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: Row(
-                    children: [
-                      AdaptiveButton.icon(
-                        onPressed: () => context.pop(),
-                        icon: Icons.arrow_back_ios_new,
-                        color: Colors.white.withValues(alpha: 0.18),
-                        iconColor: Colors.white,
-                        style: AdaptiveButtonStyle.glass,
-                        minSize: const Size(40, 40),
-                        size: AdaptiveButtonSize.small,
-                      ),
-                      const Spacer(),
-                      const SizedBox(width: 40, height: 40),
-                    ],
                   ),
                 ),
               ),

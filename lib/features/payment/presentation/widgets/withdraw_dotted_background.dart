@@ -21,7 +21,7 @@ class WithdrawDottedBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      painter: _DotsPainter(
+      foregroundPainter: _DotsPainter(
         dotColor: dotColor,
         dotOpacity: dotOpacity,
         dotRadius: dotRadius,
@@ -69,4 +69,3 @@ class _DotsPainter extends CustomPainter {
         oldDelegate.spacing != spacing;
   }
 }
-

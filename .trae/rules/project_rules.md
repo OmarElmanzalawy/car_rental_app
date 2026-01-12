@@ -255,8 +255,23 @@ platform_fee numeric default 0
 net_earning numeric default 0
 created_at timestamptz
 
+### seller_withdrawals
+id, uuid, Primary key
+seller_id,uuid,Foreign Key -> users.id
+withdrawal_amount numeric default 0
+created_at timestamptz
+
+### seller_transactions
+id, uuid, primary key
+seller_id,uuid,Foreign Key -> users.id
+type,transaction_type (enum),"e.g., 'rental_earning', 'platform_fee', 'withdrawal'"
+amount,float8
+created_at,timestamptz
+rental_id,uuid,Foreign Key -> seller_earnings.rental_id
+
 ### seller_wallets
 seller_id,uuid,Foreign Key -> users.id Primary key
 available_balance numeric default 0
 withdrawn_balance numeric default 0
 updated_at timestamptz
+

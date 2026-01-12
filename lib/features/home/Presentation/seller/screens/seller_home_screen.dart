@@ -5,6 +5,7 @@ import 'package:car_rental_app/core/widgets/platform_nav_bar.dart';
 import 'package:car_rental_app/features/bookings/presentation/seller/screens/upcoming_rentals_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
 import 'package:car_rental_app/features/earnings/presentation/screens/earnings_screen.dart';
+import 'package:car_rental_app/features/earnings/presentation/earnings_bloc/earnings_bloc.dart';
 import 'package:car_rental_app/features/home/data/nav_bar_data_source.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/blocs/seller_bloc/seller_bloc.dart';
@@ -33,6 +34,9 @@ class SellerHomeScreen extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => SellerBlocBloc()..add(const SellerListingsStarted()),
+        ),
+        BlocProvider(
+          create: (_) => EarningsBloc()..add(const InitEarningsEvent()),
         ),
         BlocProvider(create: (_) => CustomerProfileCubit()..init()),
       ],

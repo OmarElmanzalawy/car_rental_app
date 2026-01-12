@@ -11,7 +11,7 @@ class EarningsChartCard extends StatelessWidget {
     required this.rangeLabels,
     required this.selectedRangeIndex,
     required this.onRangeChanged,
-    required this.spots,
+    required this.values,
   });
 
   final String title;
@@ -19,10 +19,14 @@ class EarningsChartCard extends StatelessWidget {
   final List<String> rangeLabels;
   final int selectedRangeIndex;
   final ValueChanged<int> onRangeChanged;
-  final List<FlSpot> spots;
+  final List<double> values;
 
   @override
   Widget build(BuildContext context) {
+    final spots = List<FlSpot>.generate(
+      values.length,
+      (i) => FlSpot(i.toDouble(), values[i]),
+    );
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),

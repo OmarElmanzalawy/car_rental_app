@@ -47,6 +47,23 @@ enum MessageType{
   }
 }
 
+enum TransactionType{
+  rentalEarning,
+  platformFee,
+  withDrawal;
+
+  String get value{
+    switch (this) {
+      case rentalEarning:
+        return 'rental_earning';
+      case platformFee:
+        return 'platform_fee';
+      case withDrawal:
+        return 'withdrawal';
+    }
+  }
+}
+
 enum RentalStatus{
   //Waiting for seller approval
   pending,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
 import 'package:car_rental_app/features/bookings/data/models/rental_with_car_and_user_dto.dart';
@@ -9,9 +11,11 @@ import 'package:uuid/uuid.dart';
 
 abstract class BookingsDataSource {
   Future<List<Rentalwithcardto>> fetchBookings(String customerId);
+  Stream<List<Rentalwithcardto>> watchBookings(String customerId);
   Future<void> cancelBookings({required String rentalId,required String carId});
   Future<Map<String,dynamic>> fetchCarModel(String carId);
   Future<List<RentalWithCarAndUserDto>> fetchSellerUpcomingRentals();
+  Stream<List<RentalWithCarAndUserDto>> watchSellerUpcomingRentals();
   Future<void> confirmPickup(String rentalId);
   Future<void> confirmDropoff(String rentalId,String carId);
 }
@@ -34,7 +38,54 @@ class BookingsDatSourceImpl extends BookingsDataSource{
       .toList();
   }
 
-  //fetch booked cars from supabase
+  @override
+  Stream<List<RentalWithCarAndUserDto>> watchSellerUpcomingRentals() {
+    final sellerId = client.auth.currentUser!.id;
+
+    return Stream<List<RentalWithCarAndUserDto>>.multi((controller) async {
+      StreamSubscription<List<Map<String, dynamic>>>? sub;
+
+      try {
+        controller.add(await fetchSellerUpcomingRentals());
+
+        final carsRes = await client
+            .from('cars')
+            .select('id')
+            .eq('owner_id', sellerId);
+
+        final carIds = carsRes
+            .map<String>((e) => (e['id'] as String))
+            .toList(growable: false);
+
+        if (carIds.isEmpty) {
+          return;
+        }
+
+        sub = client
+            .from('rentals')
+            .stream(primaryKey: ['id'])
+            .inFilter('car_id', carIds)
+            .listen(
+          (_) async {
+            try {
+              controller.add(await fetchSellerUpcomingRentals());
+            } catch (e) {
+              controller.addError(e);
+            }
+          },
+          onError: controller.addError,
+        );
+      } catch (e) {
+        controller.addError(e);
+      }
+
+      controller.onCancel = () async {
+        await sub?.cancel();
+      };
+    });
+  }
+
+  //fetch booked cars from supabase (customer-side)
   @override
   Future<List<Rentalwithcardto>> fetchBookings(String customerId) async {
   final response = await client
@@ -49,6 +100,39 @@ class BookingsDatSourceImpl extends BookingsDataSource{
       .map<Rentalwithcardto>((e) => Rentalwithcardto.fromMap(e))
       .toList();
 }
+
+  @override
+  Stream<List<Rentalwithcardto>> watchBookings(String customerId) {
+    return Stream<List<Rentalwithcardto>>.multi((controller) async {
+      StreamSubscription<List<Map<String, dynamic>>>? sub;
+
+      try {
+        controller.add(await fetchBookings(customerId));
+
+        sub = client
+            .from('rentals')
+            .stream(primaryKey: ['id'])
+            .eq('customer_id', customerId)
+            .listen(
+          (_) async {
+            print("CUSTOMER STREAM NEW EVENT");
+            try {
+              controller.add(await fetchBookings(customerId));
+            } catch (e) {
+              controller.addError(e);
+            }
+          },
+          onError: controller.addError,
+        );
+      } catch (e) {
+        controller.addError(e);
+      }
+
+      controller.onCancel = () async {
+        await sub?.cancel();
+      };
+    });
+  }
 
 Future<Map<String,dynamic>> fetchCarModel(String carId)async{
   final response = await client

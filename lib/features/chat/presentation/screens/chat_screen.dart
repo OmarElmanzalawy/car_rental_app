@@ -168,7 +168,7 @@ class ChatScreen extends StatelessWidget {
                           }
 
                           return ListView.separated(
-                            padding: const EdgeInsets.only(top: 120),
+                            padding: const EdgeInsets.only(top: 120,bottom: 60),
                             itemCount: messages.length,
                             separatorBuilder: (_, __) => const SizedBox(height: 14),
                             itemBuilder: (context, index) {

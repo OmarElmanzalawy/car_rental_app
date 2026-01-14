@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:bloc/bloc.dart';
 import 'package:car_rental_app/core/services/dialogue_service.dart';
@@ -13,12 +15,16 @@ part 'seller_upcoming_rentals_state.dart';
 class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerUpcomingRentalsState> {
 
   final BookingsDatSourceImpl dataSource = BookingsDatSourceImpl(client: Supabase.instance.client);
+  StreamSubscription<List<RentalWithCarAndUserDto>>? _rentalsSub;
 
   SellerUpcomingRentalsBloc() : super(const SellerUpcomingRentalsState()) {
     on<SellerUpcomingCalendarStarted>(_onCalendarStarted);
     on<SellerUpcomingCalendarPrevPage>(_onCalendarPrevPage);
     on<SellerUpcomingCalendarNextPage>(_onCalendarNextPage);
     on<SellerUpcomingCalendarDateSelected>(_onCalendarDateSelected);
+    on<SellerUpcomingRentalsSubscribed>(_onRentalsSubscribed);
+    on<SellerUpcomingRentalsUpdated>(_onRentalsUpdated);
+    on<SellerUpcomingRentalsStreamFailed>(_onRentalsStreamFailed);
     on<SellerUpcomingRentalsFetched>(_onRentalsFetched);
     on<SellerUpcomingConfirmPickupEvent>(_onConfirmPickup);
     on<SellerUpcomingConfirmDropoffEvent>(_onConfirmDropoff);
@@ -34,10 +40,6 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
     }catch(e){
       DialogueService.showAdaptiveSnackBar(event.context, message: e.toString(),type: AdaptiveSnackBarType.error);
     }
-    
-    //reload rentals,
-    add(SellerUpcomingRentalsFetched());
-    
   }
 
   Future<void> _onConfirmDropoff(
@@ -50,10 +52,34 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
     }catch(e){
       DialogueService.showAdaptiveSnackBar(event.context, message: e.toString(),type: AdaptiveSnackBarType.error);
     }
+  }
 
-    //reload rentals,
-    add(SellerUpcomingRentalsFetched());
-    
+  Future<void> _onRentalsSubscribed(
+    SellerUpcomingRentalsSubscribed event,
+    Emitter<SellerUpcomingRentalsState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    await _rentalsSub?.cancel();
+    _rentalsSub = dataSource.watchSellerUpcomingRentals().listen(
+      (rentals) => add(SellerUpcomingRentalsUpdated(rentals: rentals)),
+      onError: (_) {
+        add(const SellerUpcomingRentalsStreamFailed());
+      },
+    );
+  }
+
+  void _onRentalsUpdated(
+    SellerUpcomingRentalsUpdated event,
+    Emitter<SellerUpcomingRentalsState> emit,
+  ) {
+    emit(state.copyWith(isLoading: false, rentals: event.rentals));
+  }
+
+  void _onRentalsStreamFailed(
+    SellerUpcomingRentalsStreamFailed event,
+    Emitter<SellerUpcomingRentalsState> emit,
+  ) {
+    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> _onRentalsFetched(
@@ -138,5 +164,11 @@ class SellerUpcomingRentalsBloc extends Bloc<SellerUpcomingRentalsEvent, SellerU
 
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  @override
+  Future<void> close() async {
+    await _rentalsSub?.cancel();
+    return super.close();
   }
 }

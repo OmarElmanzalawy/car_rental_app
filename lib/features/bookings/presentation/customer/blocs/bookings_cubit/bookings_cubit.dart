@@ -12,8 +12,22 @@ part 'bookings_state.dart';
 
 class BookingsCubit extends Cubit<BookingsState> {
   final BookingsDataSource repository;
+  StreamSubscription<List<Rentalwithcardto>>? _bookingsSub;
   BookingsCubit(this.repository) : super(BookingsState());
   
+  void subscribeBookings(String customerId) {
+    emit(state.copyWith(isLoading: true, hasError: false));
+    _bookingsSub?.cancel();
+    _bookingsSub = repository.watchBookings(customerId).listen(
+      (bookings) {
+        emit(state.copyWith(bookings: bookings, isLoading: false, hasError: false));
+      },
+      onError: (_) {
+        emit(state.copyWith(isLoading: false, hasError: true));
+      },
+    );
+  }
+
   Future<void> getBookings(String customerId) async {
     emit(state.copyWith(isLoading: true));
     // try {
@@ -56,7 +70,8 @@ class BookingsCubit extends Cubit<BookingsState> {
     // }
   }
   @override
-  Future<void> close() {
+  Future<void> close() async {
+    await _bookingsSub?.cancel();
     return super.close();
   }
 

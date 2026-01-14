@@ -35,13 +35,17 @@ class CustomerHomeScreen extends StatelessWidget {
             userId: Supabase.instance.client.auth.currentUser!.id,
           ),
         ),
-        BlocProvider(create: (context) => CarsBloc()..add(LoadCarsEvent())),
-        BlocProvider(create: (context) => BookingsCubit(BookingsDatSourceImpl(client: Supabase.instance.client))..getBookings(Supabase.instance.client.auth.currentUser!.id)),
+        BlocProvider(create: (context) => CarsBloc()..add(LoadCarsEvent()),),
+        BlocProvider(
+          create: (context) => BookingsCubit(
+            BookingsDatSourceImpl(client: Supabase.instance.client),
+          )..subscribeBookings(Supabase.instance.client.auth.currentUser!.id),
+        ),
+        // BlocProvider(create: (context) => BookingsCubit(BookingsDatSourceImpl(client: Supabase.instance.client))..getBookings(Supabase.instance.client.auth.currentUser!.id)),
         BlocProvider(create: (context) => CustomerProfileCubit()..init()),
       ],
       child: AdaptiveScaffold(
         body: Material(
-          color: Colors.transparent,
           child: Stack(
             children: [
               BlocBuilder<NavigationBarCubit, NavigationBarState>(

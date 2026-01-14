@@ -7,6 +7,23 @@ abstract class SellerUpcomingRentalsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class SellerUpcomingRentalsSubscribed extends SellerUpcomingRentalsEvent {
+  const SellerUpcomingRentalsSubscribed();
+}
+
+class SellerUpcomingRentalsUpdated extends SellerUpcomingRentalsEvent {
+  const SellerUpcomingRentalsUpdated({required this.rentals});
+
+  final List<RentalWithCarAndUserDto> rentals;
+
+  @override
+  List<Object> get props => [rentals];
+}
+
+class SellerUpcomingRentalsStreamFailed extends SellerUpcomingRentalsEvent {
+  const SellerUpcomingRentalsStreamFailed();
+}
+
 class SellerUpcomingRentalsFetched extends SellerUpcomingRentalsEvent {
   
 }

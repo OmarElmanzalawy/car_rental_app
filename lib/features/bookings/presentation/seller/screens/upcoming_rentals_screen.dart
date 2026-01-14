@@ -15,7 +15,9 @@ class UpcomingRentalsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SellerUpcomingRentalsBloc()..add(const SellerUpcomingCalendarStarted())..add(SellerUpcomingRentalsFetched()),
+      create: (_) => SellerUpcomingRentalsBloc()
+        ..add(const SellerUpcomingCalendarStarted())
+        ..add(const SellerUpcomingRentalsSubscribed()),
       child: const _UpcomingRentalsView(),
     );
   }

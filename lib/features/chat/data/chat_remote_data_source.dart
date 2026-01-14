@@ -23,6 +23,8 @@ abstract class ChatRemoteDataSource {
 
   Future<List<ConversationModel>> getConversations();
 
+  Stream<void> watchConversations();
+
   Stream<List<MessageModel>> getMessages({
     required String conversationId
   });
@@ -212,6 +214,38 @@ Future<List<ConversationModel>> getConversations() async {
     );
   }).toList();
 }
+
+  @override
+  Stream<void> watchConversations() {
+    final currentUserId = client.auth.currentUser!.id;
+
+    return Stream<void>.multi((controller) {
+      controller.add(null);
+
+      final sub1 = client
+          .from('conversations')
+          .stream(primaryKey: ['id'])
+          .eq('user_1', currentUserId)
+          .listen(
+        (_) => controller.add(null),
+        onError: controller.addError,
+      );
+
+      final sub2 = client
+          .from('conversations')
+          .stream(primaryKey: ['id'])
+          .eq('user_2', currentUserId)
+          .listen(
+        (_) => controller.add(null),
+        onError: controller.addError,
+      );
+
+      controller.onCancel = () async {
+        await sub1.cancel();
+        await sub2.cancel();
+      };
+    });
+  }
 
 
 

@@ -39,13 +39,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     emit(const ChatConversationsLoading());
-    try {
-      final List<ConversationModel> conversations =
-          await _chatRemoteDataSource.getConversations();
-      emit(ChatConversationsLoaded(conversations));
-    } catch (e) {
-      emit(ChatConversationsFailure(e.toString()));
-    }
+    await emit.forEach<List<ConversationModel>>(
+      _chatRemoteDataSource
+          .watchConversations()
+          .asyncMap((_) => _chatRemoteDataSource.getConversations()),
+      onData: (conversations) => ChatConversationsLoaded(conversations),
+      onError: (error, _) => ChatConversationsFailure(error.toString()),
+    );
   }
 
   Future<void> _onInitiateChatRequested(

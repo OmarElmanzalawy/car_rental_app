@@ -157,7 +157,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     int badgeCount = 0,
   }) {
     final isSelected = index == currentIndex;
-    final showBadge = index == 2 && badgeCount > 0;
+    final showBadge = badgeCount > 0;
     final badgeText = badgeCount > 99 ? "99+" : badgeCount.toString();
 
     final iconBase = Icon(

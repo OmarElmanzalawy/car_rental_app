@@ -67,7 +67,10 @@ class EarningsScreen extends StatelessWidget {
                                   lifetimeText: lifetimeText,
                                   withdrawnText: withdrawnText,
                                   onWithdrawPressed: () {
-                                    context.push(AppRoutes.withdrawEarning);
+                                    context.push(
+                                      AppRoutes.withdrawEarning,
+                                      extra: context.read<EarningsBloc>(),
+                                      );
                                   },
                                 ),
                         ),

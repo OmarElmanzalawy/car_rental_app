@@ -5,9 +5,12 @@ import 'package:car_rental_app/features/earnings/data/models/seller_wallet_dto.d
 import 'package:car_rental_app/features/earnings/domain/entities/seller_earning_model.dart';
 import 'package:car_rental_app/features/earnings/domain/entities/seller_transaction_model.dart';
 import 'package:car_rental_app/features/earnings/domain/entities/seller_wallet_model.dart';
+import 'package:car_rental_app/features/earnings/domain/entities/seller_withdrawal_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
+
+import 'package:uuid/uuid.dart';
 
 part 'earnings_event.dart';
 part 'earnings_state.dart';
@@ -28,6 +31,7 @@ class EarningsBloc extends Bloc<EarningsEvent, EarningsState> {
     on<_SellerWalletUpdated>(_onSellerWalletUpdated);
     on<_SellerTransactionsUpdated>(_onSellerTransactionsUpdated);
     on<_RentalHistoryRequested>(_onRentalHistoryRequested);
+    on<SellerWithdrawEvent>(_onSellerWithdraw);
   }
 
   final EarningsDataSource _dataSource;
@@ -227,6 +231,28 @@ class EarningsBloc extends Bloc<EarningsEvent, EarningsState> {
     }
 
     return values;
+  }
+
+  void _onSellerWithdraw(
+    SellerWithdrawEvent event,
+    Emitter<EarningsState> emit,
+  ) async {
+    
+    //check if seller can withdraw
+    if ((state.sellerWallet?.availableBalance ?? -100) < event.amount) {
+      emit(state.copyWith(isWithdrawalSuccess: false));
+      return;
+    }
+    
+    emit(state.copyWith(isWithdrawing: true));
+    final model = SellerWithdrawalModel(
+      id: Uuid().v4(),
+      sellerId: Supabase.instance.client.auth.currentUser!.id,
+      amount: event.amount,
+      createdAt: DateTime.now(),
+    );
+    final isSuccess = await _dataSource.withdrawBalance(_sellerId, model.toDto());
+    emit(state.copyWith(isWithdrawing: false, isWithdrawalSuccess: isSuccess));
   }
 
   @override

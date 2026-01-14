@@ -6,7 +6,6 @@ class WithdrawFromAccountTile extends StatelessWidget {
     super.key,
     required this.bankName,
     required this.maskedAccountNumber,
-    required this.balanceText,
     required this.isSelected,
     this.leading,
     this.onPressed,
@@ -14,7 +13,6 @@ class WithdrawFromAccountTile extends StatelessWidget {
 
   final String bankName;
   final String maskedAccountNumber;
-  final String balanceText;
   final bool isSelected;
   final Widget? leading;
   final VoidCallback? onPressed;
@@ -70,29 +68,6 @@ class WithdrawFromAccountTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Balance',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black.withValues(alpha: 0.48),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  balanceText,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 10),
             AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               curve: Curves.easeOut,

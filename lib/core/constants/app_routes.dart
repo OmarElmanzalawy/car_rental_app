@@ -10,6 +10,7 @@ import 'package:car_rental_app/features/bookings/presentation/customer/screens/b
 import 'package:car_rental_app/features/chat/domain/entities/conversation_model.dart';
 import 'package:car_rental_app/features/chat/presentation/chat_bloc/chat_bloc.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
+import 'package:car_rental_app/features/earnings/presentation/earnings_bloc/earnings_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/car_detail_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/screens/customer_home_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/screens/map_screen.dart';
@@ -66,7 +67,12 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.withdrawEarning,
-    builder: (context, state) => WithdrawEarningScreen(),
+    builder: (context, state) {
+      final EarningsBloc earningsBloc = state.extra as EarningsBloc;
+      return WithdrawEarningScreen(
+        earningsBloc: earningsBloc,
+      );
+    } ,
   ),
   GoRoute(
     path: AppRoutes.addPaymentCard,

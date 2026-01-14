@@ -1,11 +1,12 @@
 import 'package:car_rental_app/features/earnings/data/models/seller_earning_dto.dart';
 import 'package:car_rental_app/features/earnings/data/models/seller_transaction_dto.dart';
 import 'package:car_rental_app/features/earnings/data/models/seller_wallet_dto.dart';
+import 'package:car_rental_app/features/earnings/data/models/seller_withdrawal_dto.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class  EarningsDataSource {
   Stream<SellerWalletDto> getSellerWallet(String sellerId);
-  Future<void> withdrawBalance(String sellerId, double amount);
+  Future<bool> withdrawBalance(String sellerId, SellerWithdrawalDto dto);
   Stream<List<SellerTransactionDto>> getSellerTransactions(String sellerId); 
   Future<List<SellerEarningDto>> getSellerEarnings(String sellerId);
   Future<List<Map<String, dynamic>>> getRentalHistoryDetails(List<String> rentalIds);
@@ -38,8 +39,15 @@ class EarningsDataSourceImpl implements EarningsDataSource {
   }
 
   @override
-  Future<void> withdrawBalance(String sellerId, double amount) async {
-    // TODO: implement withDrawBalance
+  Future<bool> withdrawBalance(String sellerId, SellerWithdrawalDto dto) async {
+    try{
+      await client.from('seller_withdrawals').insert(dto.toJson());
+      return true;
+    }catch(e){
+      print("error while inserting seller withdrawal");
+      print(e.toString());
+      return false;
+    }
     
   }
 

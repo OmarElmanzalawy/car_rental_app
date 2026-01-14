@@ -24,15 +24,19 @@ class EarningsState extends Equatable {
     this.selectedRangeIndex = 1,
     this.chartValues = const [],
     this.rentalHistoryByRentalId = const {},
+    this.isWithdrawing = false,
+    this.isWithdrawalSuccess,
   });
 
   final List<SellerTransactionModel> sellerTransactions;
   final List<SellerEarningModel> sellerEarnings;
   final SellerWalletModel? sellerWallet;
   final bool isFetching;
+  final bool isWithdrawing;
   final int selectedRangeIndex;
   final List<double> chartValues;
   final Map<String, RentalHistoryInfo> rentalHistoryByRentalId;
+  final bool? isWithdrawalSuccess;
 
 
   EarningsState copyWith({
@@ -41,6 +45,8 @@ class EarningsState extends Equatable {
     SellerWalletModel? sellerWallet,
     bool? isFetching,
     int? selectedRangeIndex,
+    bool? isWithdrawing,
+    bool? isWithdrawalSuccess,
     List<double>? chartValues,
     Map<String, RentalHistoryInfo>? rentalHistoryByRentalId,
   }) {
@@ -49,6 +55,8 @@ class EarningsState extends Equatable {
       sellerEarnings: sellerEarnings ?? this.sellerEarnings,
       sellerWallet: sellerWallet ?? this.sellerWallet,
       isFetching: isFetching ?? this.isFetching,
+      isWithdrawing: isWithdrawing ?? this.isWithdrawing,
+      isWithdrawalSuccess: isWithdrawalSuccess ?? this.isWithdrawalSuccess,
       selectedRangeIndex: selectedRangeIndex ?? this.selectedRangeIndex,
       chartValues: chartValues ?? this.chartValues,
       rentalHistoryByRentalId:
@@ -65,5 +73,7 @@ class EarningsState extends Equatable {
     selectedRangeIndex,
     chartValues,
     rentalHistoryByRentalId,
+    isWithdrawing,
+    isWithdrawalSuccess,
   ];
 }

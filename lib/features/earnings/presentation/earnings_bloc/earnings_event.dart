@@ -32,6 +32,15 @@ class GetSellerEarningsEvent extends EarningsEvent {
   const GetSellerEarningsEvent();
 }
 
+class SellerWithdrawEvent extends EarningsEvent {
+  const SellerWithdrawEvent(this.amount);
+
+  final double amount;
+
+  @override
+  List<Object> get props => [amount];
+}
+
 final class _SellerWalletUpdated extends EarningsEvent {
   const _SellerWalletUpdated(this.wallet);
 
@@ -58,3 +67,5 @@ final class _RentalHistoryRequested extends EarningsEvent {
   @override
   List<Object> get props => [rentalIds];
 }
+
+

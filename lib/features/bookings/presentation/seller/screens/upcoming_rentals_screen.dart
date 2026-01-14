@@ -29,7 +29,7 @@ class _UpcomingRentalsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final headerHeight = size.height * 0.25;
+    final headerHeight = size.height * 0.265;
 
     const tileWidth = 54.0;
     const spacing = 10.0;

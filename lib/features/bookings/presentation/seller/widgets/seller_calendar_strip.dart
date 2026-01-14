@@ -15,8 +15,10 @@ class SellerCalendarStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return SizedBox(
-      height: 74,
+      // height: 74,
+      height: size.height * 0.08,
       child: Row(
         children: List.generate(
           dates.length,

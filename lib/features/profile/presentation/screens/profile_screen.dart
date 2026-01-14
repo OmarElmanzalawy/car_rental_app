@@ -1,14 +1,14 @@
 import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/constants/app_colors.dart';
 import 'package:car_rental_app/core/constants/app_routes.dart';
-import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
+import 'package:car_rental_app/core/widgets/action_button.dart';
+import 'package:car_rental_app/features/auth/Presentation/auth_cubit/auth_cubit.dart';
 import 'package:car_rental_app/features/profile/presentation/cubit/customer_profile_cubit.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_avatar_editor.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_info_row.dart';
 import 'package:car_rental_app/features/profile/presentation/widgets/profile_section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -115,22 +115,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 24),
                 SizedBox(
                   width: size.width,
-                  child: AdaptiveButton(
-                    style: AdaptiveButtonStyle.prominentGlass,
-                    textColor: Colors.white,
-                    minSize: Size(size.width * 0.5, 44),
-                    color: AppColors.primary,
-                    onPressed: () async {
-                      final response = await AuthService.signOut();
-                      if (!mounted) return;
-                      if (response.success) {
-                        context.go(AppRoutes.login);
-                      }
+                  child: BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      return ActionButton(
+                                      label: "Log out",
+                                      isLoading: state.isLoading,
+                                      liquidGlassSize: AdaptiveButtonSize.large,
+                                       isLiquidGlass: true,
+                                       liquidGlassStyle: AdaptiveButtonStyle.prominentGlass,
+                                       onPressed: () async {
+                                        await context.read<AuthCubit>().signOut(context);
+                                      },
+                                    );
                     },
-                    label: "Log out",
                   ),
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 90),
               ],
             ),
           ),

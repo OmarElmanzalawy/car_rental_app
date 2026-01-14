@@ -1,3 +1,4 @@
+import 'package:adaptive_platform_ui/adaptive_platform_ui.dart';
 import 'package:car_rental_app/core/utils/app_utils.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
@@ -26,7 +27,7 @@ import 'package:car_rental_app/features/reviews/presentation/screens/review_scre
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/book_rental_cubit/book_rental_cubit.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class AppRoutes {
   static const String signup = "/signup";
@@ -80,7 +81,13 @@ final List<RouteBase> kappRoutes = [
   ),
   GoRoute(
     path: AppRoutes.verified,
-    builder: (context, state) => CustomerHomeScreen(),
+    builder: (context, state) => const AdaptiveScaffold(
+      body: Material(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    ),
   ),
   GoRoute(
     path: AppRoutes.review,

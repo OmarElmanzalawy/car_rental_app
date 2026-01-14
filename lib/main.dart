@@ -4,10 +4,12 @@ import 'package:car_rental_app/core/constants/app_routes.dart';
 import 'package:car_rental_app/core/constants/app_theme.dart';
 import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/core/services/routing_service.dart';
-import 'package:car_rental_app/features/auth/data/services/auth_service.dart';
+import 'package:car_rental_app/features/auth/data/auth_service.dart';
+import 'package:car_rental_app/features/auth/Presentation/auth_cubit/auth_cubit.dart';
 import 'package:car_rental_app/features/bookings/data/geocoding_api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:car_rental_app/core/services/startup_service.dart';
@@ -31,8 +33,24 @@ final _router = GoRouter(
 
     // 1) Deep link handling takes priority
     if (uri.startsWith('com.meshwari.app://auth-callback')) {
-      //Add user to database
-      // Route only once and allow /verified through
+      final qp = state.uri.queryParameters;
+      final fragment = state.uri.fragment;
+
+      final hasError = qp.containsKey('error') ||
+          qp.containsKey('error_code') ||
+          uri.contains('error=') ||
+          fragment.contains('error=') ||
+          fragment.contains('error_code=');
+
+      final hasCode = qp.containsKey('code') ||
+          qp.containsKey('access_token') ||
+          fragment.contains('code=') ||
+          fragment.contains('access_token=');
+
+      if (hasError || (!hasCode && !isLoggedIn)) {
+        return AppRoutes.signup;
+      }
+
       if (loc != AppRoutes.verified) return AppRoutes.verified;
       return null;
     }
@@ -43,6 +61,7 @@ final _router = GoRouter(
       AppRoutes.login,
       AppRoutes.phoneAuth,
       AppRoutes.verifyOtp,
+      AppRoutes.verified,
     }.contains(loc);
 
     // Not logged in → gate non-auth routes to signup
@@ -52,7 +71,7 @@ final _router = GoRouter(
 
     // Logged in → skip signup/login screens
     if (isLoggedIn && (loc == AppRoutes.signup || loc == AppRoutes.login)) {
-      final role = await AuthService.getUserRole();
+      final role = await AuthDataSourceImpl(Supabase.instance.client).getUserRole();
       if(role == UserType.customer){
         return AppRoutes.customerHome;
       }else{
@@ -83,53 +102,63 @@ class _MainAppState extends State<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveApp.router(
-      routerConfig: _router,
-      themeMode: ThemeMode.light,
-      cupertinoLightTheme: CupertinoThemeData(
-        scaffoldBackgroundColor: AppColors.background,
-        primaryColor: AppColors.primary,
+    return BlocProvider(
+      create: (context) => AuthCubit(
+        authService: AuthDataSourceImpl(Supabase.instance.client),
       ),
-      materialLightTheme: AppTheme.lightTheme.copyWith(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            iconColor: Colors.white,
-            surfaceTintColor: AppColors.primary,
+      child: AdaptiveApp.router(
+        routerConfig: _router,
+        themeMode: ThemeMode.light,
+        cupertinoLightTheme: CupertinoThemeData(
+          scaffoldBackgroundColor: AppColors.background,
+          barBackgroundColor: AppColors.background,
+          primaryColor: AppColors.primary,
+        ),
+        materialLightTheme: AppTheme.lightTheme.copyWith(
+          appBarTheme: AppBarThemeData(
+            backgroundColor: AppColors.background,
+            elevation: 0,
+            surfaceTintColor: Colors.transparent
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              iconColor: Colors.white,
+              surfaceTintColor: AppColors.primary,
+            ),
+          ),
+          timePickerTheme: TimePickerThemeData(
+            backgroundColor: AppColors.background,
+            hourMinuteColor: AppColors.silverAccent,
+            dialBackgroundColor: AppColors.silverAccent,
+            confirmButtonStyle: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+            ),
+            cancelButtonStyle: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
+            dayPeriodColor: Colors.blue,
+            dayPeriodTextColor: Colors.black,
+            hourMinuteTextColor: Colors.black,
+            dialHandColor: AppColors.primary,
+          ),
+          scaffoldBackgroundColor: AppColors.background,
+          primaryColor: AppColors.primary,
+          textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+              overlayColor: Colors.transparent,  
+              splashFactory: NoSplash.splashFactory,
+            ),
           ),
         ),
-        timePickerTheme: TimePickerThemeData(
-          backgroundColor: AppColors.background,
-          hourMinuteColor: AppColors.silverAccent,
-          dialBackgroundColor: AppColors.silverAccent,
-          confirmButtonStyle: TextButton.styleFrom(
-            foregroundColor: AppColors.primary,
-          ),
-          cancelButtonStyle: TextButton.styleFrom(
-            foregroundColor: Colors.red,
-          ),
-          dayPeriodColor: Colors.blue,
-          dayPeriodTextColor: Colors.black,
-          hourMinuteTextColor: Colors.black,
-          dialHandColor: AppColors.primary,
-        ),
-        scaffoldBackgroundColor: AppColors.background,
-        primaryColor: AppColors.primary,
-        textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            overlayColor: Colors.transparent,  
-            splashFactory: NoSplash.splashFactory,
-          ),
-        ),
+        localizationsDelegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en', 'US')],
       ),
-      localizationsDelegates: const [
-        // Add material localizations
-        DefaultMaterialLocalizations.delegate,
-        DefaultCupertinoLocalizations.delegate,
-        DefaultWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en', 'US')],
     );
   }
 }

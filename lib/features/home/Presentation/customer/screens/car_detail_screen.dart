@@ -166,7 +166,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                   ),
                                   SizedBox(width: 4),
                                   Text(
-                                    "${widget.model.rating}",
+                                    "${widget.model.rating.toStringAsFixed(1)}",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -439,7 +439,7 @@ class _CarDetailScreenState extends State<CarDetailScreen> {
                                       Icon(Icons.star, color: Colors.amber),
                                       const SizedBox(width: 4),
                                       Text(
-                                        "${widget.model.rating}",
+                                        "${widget.model.rating.toStringAsFixed(1)}",
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,

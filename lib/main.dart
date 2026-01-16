@@ -22,7 +22,7 @@ void main() async{
 
 final _router = GoRouter(
   navigatorKey: AppRoutes.rootNavigatorKey,
-  initialLocation: AppRoutes.onboarding,
+  initialLocation: AppRoutes.signup,
   routes: kappRoutes,
   redirect: (context, state) async{
     print("full location: ${state.uri.toString()}");
@@ -66,16 +66,19 @@ final _router = GoRouter(
     }.contains(loc);
 
     // Not logged in → gate non-auth routes to signup
-    if (!isLoggedIn && !isAuthRoute && loc != AppRoutes.signup) {
-      return AppRoutes.onboarding;
+    if (!isLoggedIn && !isAuthRoute) {
+      return AppRoutes.signup;
     }
 
-    // Logged in → skip signup/login screens
-    if (isLoggedIn && (loc == AppRoutes.signup || loc == AppRoutes.login)) {
+    // Logged in → skip auth/onboarding screens
+    if (isLoggedIn &&
+        (loc == AppRoutes.signup ||
+            loc == AppRoutes.login ||
+            loc == AppRoutes.onboarding)) {
       final role = await AuthDataSourceImpl(Supabase.instance.client).getUserRole();
-      if(role == UserType.customer){
+      if (role == UserType.customer) {
         return AppRoutes.customerHome;
-      }else{
+      } else {
         return AppRoutes.sellerHome;
       }
     }

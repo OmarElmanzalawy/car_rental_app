@@ -4,6 +4,7 @@ import 'package:car_rental_app/features/auth/Presentation/screens/login_screen.d
 import 'package:car_rental_app/features/auth/Presentation/screens/phone_auth_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/signup_screen.dart';
 import 'package:car_rental_app/features/auth/Presentation/screens/verify_otp_screen.dart';
+import 'package:car_rental_app/core/constants/enums.dart';
 import 'package:car_rental_app/features/bookings/data/models/RentalWithCarDto.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/bookings/presentation/customer/blocs/date_picker_bloc/date_picker_bloc.dart';
@@ -19,6 +20,7 @@ import 'package:car_rental_app/features/home/Presentation/seller/blocs/add_listi
 import 'package:car_rental_app/features/home/Presentation/seller/screens/add_car_listing_screen.dart';
 import 'package:car_rental_app/features/home/Presentation/seller/screens/seller_home_screen.dart';
 import 'package:car_rental_app/features/home/domain/entities/car_model.dart';
+import 'package:car_rental_app/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:car_rental_app/features/payment/presentation/screens/add_payment_card_screen.dart';
 import 'package:car_rental_app/features/payment/presentation/screens/payment_method_screen.dart';
 import 'package:car_rental_app/features/payment/presentation/screens/withdraw_earning_screen.dart';
@@ -47,13 +49,18 @@ class AppRoutes {
   static const String paymentMethod = "/payment-method";
   static const String addPaymentCard = "/add-payment-card";
   static const String withdrawEarning = "/withdraw-earning";
+  static const String onboarding = "/onboarding";
 
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
 }
 
 final List<RouteBase> kappRoutes = [
-  GoRoute(path: AppRoutes.signup, builder: (context, state) => SignupScreen()),
+  GoRoute(
+    path: AppRoutes.signup,
+    builder: (context, state) =>
+        SignupScreen(initialUserType: state.extra as UserType?),
+  ),
   GoRoute(path: AppRoutes.login, builder: (context, state) => LoginScreen()),
 
   GoRoute(path: AppRoutes.paymentMethod, builder: (context, state) {
@@ -65,6 +72,10 @@ final List<RouteBase> kappRoutes = [
   GoRoute(
     path: AppRoutes.customerHome,
     builder: (context, state) => CustomerHomeScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.onboarding,
+    builder: (context, state) => OnboardingScreen(),
   ),
   GoRoute(
     path: AppRoutes.withdrawEarning,

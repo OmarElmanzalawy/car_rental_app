@@ -22,7 +22,7 @@ void main() async{
 
 final _router = GoRouter(
   navigatorKey: AppRoutes.rootNavigatorKey,
-  initialLocation: AppRoutes.signup,
+  initialLocation: AppRoutes.onboarding,
   routes: kappRoutes,
   redirect: (context, state) async{
     print("full location: ${state.uri.toString()}");
@@ -62,11 +62,12 @@ final _router = GoRouter(
       AppRoutes.phoneAuth,
       AppRoutes.verifyOtp,
       AppRoutes.verified,
+      AppRoutes.onboarding,
     }.contains(loc);
 
     // Not logged in → gate non-auth routes to signup
     if (!isLoggedIn && !isAuthRoute && loc != AppRoutes.signup) {
-      return AppRoutes.signup;
+      return AppRoutes.onboarding;
     }
 
     // Logged in → skip signup/login screens

@@ -12,7 +12,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:go_router/go_router.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+  SignupScreen({super.key, this.initialUserType});
+
+  final UserType? initialUserType;
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -25,7 +27,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   final TextEditingController _nameController = TextEditingController();
 
-  UserType _userType = UserType.customer;
+  late UserType _userType;
+
+  @override
+  void initState() {
+    super.initState();
+    _userType = widget.initialUserType ?? UserType.customer;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +47,6 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 const SizedBox(height: 20),
                 SizedBox(
-                  // width: double.infinity,
-                  // color: Colors.red,
                   child: Image.asset(
                     "assets/images/logo.png",
                     width: 250,

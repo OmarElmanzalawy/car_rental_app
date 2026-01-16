@@ -15,7 +15,7 @@ class OnboardingRoleSelectionPage extends StatelessWidget {
       child: Column(
         children: [
           const Text(
-            'How do you want to use Meshwari?',
+            'What\'s your goal?',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 26,
@@ -31,8 +31,8 @@ class OnboardingRoleSelectionPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OnboardingRoleOptionTile(
-                    title: '🚗 I want to rent a car',
-                    icon: Icons.directions_car_filled_outlined,
+                    title: 'I want to rent a car',
+                    icon: Icons.directions_car_filled,
                     isSelected: state.userRole == UserType.customer,
                     onTap: () => context.read<OnboardingCubit>().setUserRole(
                           UserType.customer,
@@ -40,8 +40,8 @@ class OnboardingRoleSelectionPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   OnboardingRoleOptionTile(
-                    title: '💵 I want to list my car',
-                    icon: Icons.storefront_outlined,
+                    title: 'I want to list my car',
+                    icon: Icons.attach_money,
                     isSelected: state.userRole == UserType.seller,
                     onTap: () => context.read<OnboardingCubit>().setUserRole(
                           UserType.seller,

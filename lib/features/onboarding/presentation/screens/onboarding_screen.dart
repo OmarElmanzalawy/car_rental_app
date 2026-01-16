@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                 final primaryLabel = isRoleSelection
                     ? 'Continue'
-                    : (state.currentPage == 0 ? 'Get Started' : 'Next');
+                    : 'Next';
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),

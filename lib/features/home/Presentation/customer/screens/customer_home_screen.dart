@@ -7,6 +7,8 @@ import 'package:car_rental_app/features/bookings/presentation/customer/blocs/boo
 import 'package:car_rental_app/features/bookings/presentation/customer/screens/bookings_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/chat_screen.dart';
 import 'package:car_rental_app/features/chat/presentation/screens/users_list_screen.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/cars_filtered_result.dart';
+import 'package:car_rental_app/features/home/Presentation/customer/widgets/extended_car_filter_sheet.dart';
 import 'package:car_rental_app/features/home/data/nav_bar_data_source.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/cars_bloc/cars_bloc.dart';
 import 'package:car_rental_app/features/home/Presentation/customer/blocs/nav_bar_cubit/navigation_bar_cubit.dart';
@@ -95,6 +97,7 @@ class _HomeContent extends StatelessWidget {
         child: BlocBuilder<CarsBloc, CarsState>(
           builder: (context, state) {
             print(state.status);
+            print("car bloc rebuild");
             final brands = AppUtils.fetchUniqueBrands(state.allCars.map((e) => e.brand).toList());
             return Stack(
               // clipBehavior: Clip.none,
@@ -176,7 +179,23 @@ class _HomeContent extends StatelessWidget {
                             ),
                             const SizedBox(width: 10),
                             AdaptiveButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                //shows extended filter sheet
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  enableDrag: false,
+                                  backgroundColor: Colors.transparent,
+                                  sheetAnimationStyle: AnimationStyle(
+                                    curve: Curves.bounceInOut,
+                                    reverseCurve: Curves.bounceInOut,
+                                  ),
+                                  builder:(context) {
+                                    return const ExtendedCarFilterSheet();
+                                  },
+                                );
+                              },
                               icon: Icons.tune,
                               size: AdaptiveButtonSize.small,
                               color: AppColors.primary,
@@ -230,6 +249,10 @@ class _HomeContent extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 30),
+                            //If in filter mode then display filtered results instead
+                            state.inFilterMode ? 
+                            const CarsFilteredResult()
+                            :
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [

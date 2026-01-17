@@ -9,6 +9,7 @@ class CarsState {
   final List<CarModel> allCars;
   final String? message;
   final String? selectedBrand;
+  final bool inFilterMode;
 
   const CarsState({
     this.status = CarsStatus.loading,
@@ -17,6 +18,7 @@ class CarsState {
     this.allCars = const [],
     this.message,
     this.selectedBrand,
+    this.inFilterMode = false,
   });
 
   CarsState copyWith({
@@ -27,6 +29,7 @@ class CarsState {
     String? message,
     String? selectedBrand,
     bool selectedBrandChanged = false,
+    bool? inFilterMode,
   }) {
     return CarsState(
       status: status ?? this.status,
@@ -36,6 +39,7 @@ class CarsState {
       allCars: allCars ?? this.allCars,
       selectedBrand:
           selectedBrandChanged ? selectedBrand : this.selectedBrand,
+      inFilterMode: inFilterMode ?? this.inFilterMode,
     );
   }
 }

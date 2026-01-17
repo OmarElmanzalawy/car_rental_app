@@ -60,5 +60,10 @@ class CarsBloc extends Bloc<CarsEvent, CarsState> {
         ),
       );
     });
+
+    on<ApplyFilterEvent>((event, emit) async {
+      print("entering bloc apply filter event");
+      emit(state.copyWith(inFilterMode: true));      
+    });
   }
 }

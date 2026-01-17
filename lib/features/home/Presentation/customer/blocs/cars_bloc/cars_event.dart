@@ -11,6 +11,12 @@ class LoadCarsEvent extends CarsEvent {
 }
 
 
+class ApplyFilterEvent extends CarsEvent {
+  // final FilterModel filterModel;
+  // const ApplyFilterEvent(this.filterModel);
+}
+
+
 class FilterCarsByBrandEvent extends CarsEvent {
   final String brand;
   const FilterCarsByBrandEvent(this.brand);
